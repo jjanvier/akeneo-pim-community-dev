@@ -8,6 +8,7 @@ app/console_local
 app/archive/*
 app/cache/*
 app/config/*_local.yml
+app/config/parameters_*.yml
 app/logs/*
 app/import/*
 app/export/*

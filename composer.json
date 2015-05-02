@@ -27,6 +27,8 @@
         "doctrine/doctrine-bundle": "1.4.0",
         "doctrine/doctrine-fixtures-bundle": "2.2.0",
         "doctrine/doctrine-migrations-bundle": "1.0.0",
+        "doctrine/mongodb-odm": "v1.0.0-beta12@dev",
+        "doctrine/mongodb-odm-bundle": "v3.0.0-BETA6@dev",
         "doctrine/migrations": "1.0.0-alpha3@alpha",
         "doctrine/orm": "2.5.0",
         "dompdf/dompdf" : "0.6.1",

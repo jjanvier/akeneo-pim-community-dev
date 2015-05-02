@@ -22,7 +22,12 @@ class AppKernel extends Kernel
             new Acme\Bundle\AppBundle\AcmeAppBundle(),
         ];
 
-        if (in_array($this->getEnvironment(), array('dev', 'test', 'behat'))) {
+        $isDevEnvironment = false;
+        if (preg_match('/(dev$)|(test$)|(behat$)/', $this->getEnvironment())) {
+            $isDevEnvironment = true;
+        }
+
+        if ($isDevEnvironment) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
@@ -36,6 +41,10 @@ class AppKernel extends Kernel
             $this->getPimBundles(),
             $bundles
         );
+
+        if (preg_match('/mongo/', $this->getEnvironment())) {
+            $bundles[] = new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle();
+        }
 
         return $bundles;
     }
