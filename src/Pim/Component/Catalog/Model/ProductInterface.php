@@ -8,6 +8,7 @@ use Akeneo\Component\Versioning\Model\VersionableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Pim\Bundle\CommentBundle\Model\CommentSubjectInterface;
 use Pim\Component\Catalog\Exception\MissingIdentifierException;
+use Pim\Component\TemplateAttribute\TemplateAttribute;
 
 /**
  * Product interface
@@ -325,4 +326,11 @@ interface ProductInterface extends
      * @return ProductInterface
      */
     public function setFamilyId($familyId);
+
+    public function setTemplateAttribute(TemplateAttribute $templateAttribute);
+
+    /**
+     * @return TemplateAttribute
+     */
+    public function getTemplateAttribute();
 }
