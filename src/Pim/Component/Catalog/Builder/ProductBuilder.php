@@ -15,6 +15,7 @@ use Pim\Component\Catalog\Repository\AssociationTypeRepositoryInterface;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Pim\Component\Catalog\Repository\CurrencyRepositoryInterface;
 use Pim\Component\Catalog\Repository\FamilyRepositoryInterface;
+use Pim\Component\TemplateAttribute\TemplateAttribute;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -94,21 +95,16 @@ class ProductBuilder implements ProductBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function createProduct($identifier = null, $familyCode = null)
+    public function createProduct($identifier = null, TemplateAttribute $templateAttribute)
     {
         $product = new $this->productClass();
+        $product->setTemplateAttribute($templateAttribute);
 
         $identifierAttribute = $this->attributeRepository->getIdentifier();
         $productValue = $this->addProductValue($product, $identifierAttribute, null, null);
 
         if (null !== $identifier) {
             $productValue->setData($identifier);
-        }
-
-        if (null !== $familyCode) {
-            $family = $this->familyRepository->findOneByIdentifier($familyCode);
-            $product->setFamily($family);
-            $this->addBooleanToProduct($product);
         }
 
         $event = new GenericEvent($product);
@@ -118,6 +114,8 @@ class ProductBuilder implements ProductBuilderInterface
     }
 
     /**
+     * Create the empty product values of the product's template.
+     *
      * {@inheritdoc}
      */
     public function addMissingProductValues(ProductInterface $product, array $channels = null, array $locales = null)
@@ -309,13 +307,12 @@ class ProductBuilder implements ProductBuilderInterface
     protected function getExpectedAttributes(ProductInterface $product)
     {
         $attributes = [];
-        $productAttributes = $product->getAttributes();
-        foreach ($productAttributes as $attribute) {
-            $attributes[$attribute->getCode()] = $attribute;
-        }
 
-        if ($family = $product->getFamily()) {
-            foreach ($family->getAttributes() as $attribute) {
+        if (null !== $templateAttribute = $product->getTemplateAttribute()) {
+            foreach ($templateAttribute->getRegularAttributes() as $attribute) {
+                $attributes[$attribute->getCode()] = $attribute;
+            }
+            foreach ($templateAttribute->getVariantAttributes() as $attribute) {
                 $attributes[$attribute->getCode()] = $attribute;
             }
         }
