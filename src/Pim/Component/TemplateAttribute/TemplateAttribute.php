@@ -45,29 +45,53 @@ class TemplateAttribute
     }
 
     /**
+     * Regular attributes indexed by attribute code
+     *
      * @return AttributeInterface[]
      */
     public function getRegularAttributes()
     {
         $attrs = [];
         foreach ($this->regularBricks as $regularBrick) {
-            $attrs = array_merge($attrs, $regularBrick->getAttributes());
+            foreach ($regularBrick->getAttributes() as $attribute) {
+                $attrs[$attribute->getCode()] = $attribute;
+            }
         }
 
         return $attrs;
     }
 
     /**
+     * Variant attributes indexed by attribute code
+     *
      * @return AttributeInterface[]
      */
     public function getVariantAttributes()
     {
         $attrs = [];
         foreach ($this->variantBricks as $variantBrick) {
-            $attrs = array_merge($attrs, [$variantBrick->getVariantAttribute()]);
+            foreach ($variantBrick->getVariantAttribute() as $attribute) {
+                $attrs[$attribute->getCode()] = $attribute;
+            }
         }
 
         return $attrs;
+    }
+
+    /**
+     * @return Brick[]
+     */
+    public function getRegularBricks()
+    {
+        return $this->regularBricks;
+    }
+
+    /**
+     * @return Brick[]
+     */
+    public function getVariantBricks()
+    {
+        return $this->variantBricks;
     }
 
     /*
