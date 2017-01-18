@@ -24,8 +24,11 @@ $brick2 = new Brick([$attrs[3], $attrs[4]]);
 $brick3 = new Brick([$attrs[5], $attrs[6]], $attrColor);
 $brick4 = new Brick([$attrs[7], $attrs[8]], $attrSize);
 
+// no variation
 $template1 = new TemplateAttribute([$brick1], 'template 1');
+// 1 level variation
 $template2 = new TemplateAttribute([$brick1, $brick2, $brick3], 'template 2');
+// 2 levels variation
 $template3 = new TemplateAttribute([$brick1, $brick2, $brick3, $brick4], 'template 3');
 
 $builder = $c->get('pim_catalog.builder.product');
