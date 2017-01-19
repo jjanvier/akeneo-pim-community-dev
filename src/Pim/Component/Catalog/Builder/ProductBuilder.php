@@ -309,12 +309,7 @@ class ProductBuilder implements ProductBuilderInterface
         $attributes = [];
 
         if (null !== $templateAttribute = $product->getTemplateAttribute()) {
-            foreach ($templateAttribute->getRegularAttributes() as $attribute) {
-                $attributes[$attribute->getCode()] = $attribute;
-            }
-            foreach ($templateAttribute->getVariantAttributes() as $attribute) {
-                $attributes[$attribute->getCode()] = $attribute;
-            }
+            $attributes = $templateAttribute->getAttributes();
         }
 
         return $attributes;
