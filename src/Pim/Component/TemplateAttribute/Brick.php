@@ -7,7 +7,9 @@ use Pim\Component\Catalog\Model\AttributeInterface;
 class Brick
 {
     private $isVariant;
+    /** @var AttributeInterface */
     private $variantAttribute;
+    /** @var AttributeInterface[] */
     private $attributes = [];
 
     /**
@@ -22,7 +24,7 @@ class Brick
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isVariant()
     {
@@ -38,7 +40,7 @@ class Brick
     }
 
     /**
-     * @return array
+     * @return AttributeInterface[]
      */
     public function getAttributes()
     {

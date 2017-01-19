@@ -2,6 +2,7 @@
 
 use \Pim\Component\TemplateAttribute\Brick;
 use \Pim\Component\TemplateAttribute\TemplateAttribute;
+use \Pim\Component\TemplateAttribute\TemplateAttributeLevel;
 
 $loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 
@@ -21,21 +22,46 @@ $attrSize = $attrRepository->findOneByIdentifier('clothing_size');
 
 $brick1 = new Brick([$attrs[0], $attrs[1], $attrs[2]]);
 $brick2 = new Brick([$attrs[3], $attrs[4]]);
-$brick3 = new Brick([$attrs[5], $attrs[6]], $attrColor);
-$brick4 = new Brick([$attrs[7], $attrs[8]], $attrSize);
+$brick3 = new Brick([$attrs[10], $attrs[11], $attrs[12], $attrs[13]]);
+$brick4 = new Brick([$attrs[5], $attrs[6]], $attrColor);
+$brick5 = new Brick([$attrs[7], $attrs[8]], $attrSize);
 
-// no variation
-$template1 = new TemplateAttribute([$brick1], 'template 1');
-// 1 level variation
-$template2 = new TemplateAttribute([$brick1, $brick2, $brick3], 'template 2');
-// 2 levels variation
-$template3 = new TemplateAttribute([$brick1, $brick2, $brick3, $brick4], 'template 3');
+// no variation, 1 level
+$template1 = new TemplateAttribute(
+    [
+        new TemplateAttributeLevel([$brick1])
+    ],
+    'template 1'
+);
+
+// variations on 1 level, 2 levels total
+$template2 = new TemplateAttribute(
+    [
+        new TemplateAttributeLevel([$brick1, $brick2]),
+        new TemplateAttributeLevel([$brick3], $brick4)
+    ],
+    'template 2'
+);
+
+// variations on 2 level, 3 levels total
+$template3 = new TemplateAttribute(
+    [
+        new TemplateAttributeLevel([$brick1]),
+        new TemplateAttributeLevel([$brick2, $brick3], $brick4),
+        new TemplateAttributeLevel([], $brick5),
+    ],
+    'template 3'
+);
+
+echo (string) $template1;
+echo (string) $template2;
+echo (string) $template3;
+
 
 $builder = $c->get('pim_catalog.builder.product');
 $saver = $c->get('pim_catalog.saver.product');
 
-$product = $builder->createProduct('foo', $template1);
+$product = $builder->createProduct('foo', $template3);
 $builder->addMissingProductValues($product);
 
-$generator = new \Pim\Component\TemplateAttribute\ProductsGenerator($builder, $saver);
-$generator->generate($template2);
+var_dump($product);
