@@ -1,0 +1,2 @@
+parameters:
+    acme_range.entity.range.class: Acme\Bundle\RangeBundle\Model\Range

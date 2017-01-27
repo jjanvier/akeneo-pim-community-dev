@@ -1,0 +1,8 @@
+parameters:
+    acme_range.factory.range.class: Acme\Bundle\RangeBundle\Factory\RangeFactory
+
+services:
+    acme_range.factory.range:
+        class: %acme_range.factory.range.class%
+        arguments:
+            - '%acme_range.entity.range.class%'
