@@ -1,8 +1,20 @@
 parameters:
     acme_range.factory.range.class: Acme\Bundle\RangeBundle\Factory\RangeFactory
+    acme_range.factory.product_value.range.class: Acme\Bundle\RangeBundle\Factory\ProductValue\RangeProductValueFactory
 
 services:
     acme_range.factory.range:
-        class: %acme_range.factory.range.class%
+        class: '%acme_range.factory.range.class%'
         arguments:
             - '%acme_range.entity.range.class%'
+
+    acme_range.factory.product_value.range:
+        class: '%acme_range.factory.product_value.range.class%'
+        public: false
+        arguments:
+            - '@acme_range.factory.range'
+            - '%acme_range.entity.product_value.range.class%'
+            - 'acme_type_range'
+        tags:
+            - { name: pim_catalog.factory.product_value }
+
