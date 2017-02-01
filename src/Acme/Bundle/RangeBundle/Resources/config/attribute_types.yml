@@ -1,0 +1,12 @@
+parameters:
+    acme_range.attributetype.range.class: Acme\Bundle\RangeBundle\AttributeType\RangeType
+
+services:
+    acme_range.attributetype.range:
+        class: '%acme_range.attributetype.range.class%'
+        arguments:
+            - 'range'
+            - ''
+            - '@pim_catalog.validator.constraint_guesser.chained_attribute'
+        tags:
+            - { name: pim_catalog.attribute_type, alias: acme_type_range, entity: '%pim_catalog.entity.product.class%' }
