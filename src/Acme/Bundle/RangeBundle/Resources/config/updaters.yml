@@ -6,3 +6,13 @@ services:
             - ['acme_type_range']
         tags:
             - { name: 'pim_catalog.updater.setter' }
+
+    acme_range.updater.copier.range_value:
+        class: '%pim_catalog.updater.copier.value.class%'
+        parent: pim_catalog.updater.copier.abstract
+        arguments:
+            - '@pim_serializer'
+            - ['acme_type_range']
+            - ['acme_type_range']
+        tags:
+            - { name: 'pim_catalog.updater.copier' }

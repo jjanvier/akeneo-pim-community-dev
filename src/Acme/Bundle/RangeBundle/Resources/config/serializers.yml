@@ -1,0 +1,16 @@
+parameters:
+    acme_range.normalizer.standard.product.range.class: Acme\Bundle\RangeBundle\Normalizer\Standard\Product\RangeNormalizer
+    acme_range.normalizer.storage.product.range.class: Acme\Bundle\RangeBundle\Normalizer\Storage\Product\RangeNormalizer
+
+services:
+    acme_range.normalizer.standard.product.range:
+            class: '%acme_range.normalizer.standard.product.range.class%'
+            tags:
+                - { name: pim_serializer.normalizer, priority: 90 }
+
+    acme_range.normalizer.storage.product.range:
+        class: '%acme_range.normalizer.storage.product.range.class%'
+        arguments:
+            - '@acme_range.normalizer.standard.product.range'
+        tags:
+            - { name: pim_serializer.normalizer, priority: 90 }

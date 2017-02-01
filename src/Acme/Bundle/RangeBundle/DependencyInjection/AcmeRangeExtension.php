@@ -23,6 +23,7 @@ class AcmeRangeExtension extends Extension
         $loader->load('attribute_types.yml');
         $loader->load('entities.yml');
         $loader->load('factories.yml');
+        $loader->load('serializers.yml');
         $loader->load('updaters.yml');
     }
 }
