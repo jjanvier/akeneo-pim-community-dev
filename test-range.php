@@ -2,6 +2,7 @@
 <?php
 
 use Acme\Bundle\RangeBundle\AttributeType\RangeType;
+use Acme\Bundle\RangeBundle\Model\Range;
 use Symfony\Component\Debug\Debug;
 
 echo getDatetime()."Boot Symfony kernel...\n";
@@ -25,6 +26,8 @@ $attributeSaver = $container->get('pim_catalog.saver.attribute');
 $productBuilder = $container->get('pim_catalog.builder.product');
 $productUpdater = $container->get('pim_catalog.updater.product');
 $productSaver = $container->get('pim_catalog.saver.product');
+$productDetacher = $container->get('akeneo_storage_utils.doctrine.object_detacher');
+$productRepository = $container->get('pim_catalog.repository.product');
 
 echo getDatetime()."Check if there is an attribute of type range...\n";
 
@@ -61,6 +64,28 @@ $productUpdater->update($product, [
 
 echo getDatetime()."Save the product...\n";
 $productSaver->save($product);
+
+echo getDatetime()."Detach the saved product...\n";
+$productDetacher->detach($product);
+
+echo getDatetime()."Get the product...\n";
+$product = $productRepository->findOneByIdentifier($identifier);
+$rangeValue = $product->getValue('range');
+
+echo getDatetime()."Test the product range value...\n";
+$range = $rangeValue->getData();
+if (!$range instanceof Range) {
+    echo "\n    \"Range\" object expected in product value, get \"".gettype($range)."\"\n";
+}
+
+$fromData = $range->getFromData();
+$toData = $range->getToData();
+
+if (0 === $fromData && 42 === $toData) {
+    echo "\n    Product contains expected range: from 0 to 42\n";
+} else {
+    echo "\n    Error: expected range was from 0 to 42, product actually contain from ".$fromData." to ".$toData."\n";
+}
 
 /**
  * @return string
