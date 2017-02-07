@@ -28,7 +28,7 @@ class VersionRepository extends EntityRepository implements VersionRepositoryInt
     {
         return $this->findBy(
             ['resourceId' => $resourceId, 'resourceName' => $resourceName, 'pending' => false],
-            ['loggedAt' => 'desc']
+            ['version' => 'desc']
         );
     }
 
