@@ -102,10 +102,6 @@ class FixturesLoader
         //         "/project/features/Context/catalog/footwear/jobs.yml"
         //         "/project/features/PimEnterprise/Behat/Context/../../../Context/catalog/footwear/jobs.yml"
         // ]
-        if (empty($files)) {
-            return;
-        }
-
         $replacePaths = [];
         foreach ($files as $file) {
             $tokens = explode(DIRECTORY_SEPARATOR, $file);
