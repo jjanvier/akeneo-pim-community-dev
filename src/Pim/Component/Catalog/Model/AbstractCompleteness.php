@@ -32,6 +32,9 @@ abstract class AbstractCompleteness implements CompletenessInterface
     /** @var ProductInterface */
     protected $product;
 
+    /** @var AttributeInterface[] */
+    protected $missingAttributes = [];
+
     /**
      * {@inheritdoc}
      */
@@ -73,7 +76,7 @@ abstract class AbstractCompleteness implements CompletenessInterface
      */
     public function getRatio()
     {
-        return $this->ratio;
+        return 100 * $this->missingCount / $this->requiredCount;
     }
 
     /**
@@ -136,6 +139,35 @@ abstract class AbstractCompleteness implements CompletenessInterface
     public function setProduct(ProductInterface $product)
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMissingAttributes()
+    {
+        return $this->missingAttributes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setMissingAttributes(array $missingAttributes)
+    {
+        $this->missingAttributes = $missingAttributes;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addMissingAttribute(AttributeInterface $attribute)
+    {
+        $this->missingCount++;
+        $this->missingAttributes[] = $attribute;
 
         return $this;
     }
