@@ -21,12 +21,6 @@ parameters:
     pim_serializer.normalizer.flat.price.class:             Pim\Bundle\VersioningBundle\Normalizer\Flat\PriceNormalizer
     pim_serializer.normalizer.flat.file.class:              Pim\Bundle\VersioningBundle\Normalizer\Flat\FileNormalizer
 
-    # Denormalizers
-    pim_serializer.denormalizer.flat.family.class:            Pim\Bundle\VersioningBundle\Denormalizer\Flat\FamilyDenormalizer
-    pim_serializer.denormalizer.flat.category.class:          Pim\Bundle\VersioningBundle\Denormalizer\Flat\CategoryDenormalizer
-    pim_serializer.denormalizer.flat.group.class:             Pim\Bundle\VersioningBundle\Denormalizer\Flat\GroupDenormalizer
-    pim_serializer.denormalizer.flat.association.class:       Pim\Bundle\VersioningBundle\Denormalizer\Flat\AssociationDenormalizer
-
 services:
     pim_versioning.serializer.normalizer.flat.product:
         class: '%pim_serializer.normalizer.flat.product.class%'
