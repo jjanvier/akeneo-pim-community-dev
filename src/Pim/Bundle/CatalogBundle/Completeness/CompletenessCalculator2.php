@@ -18,7 +18,7 @@ use Pim\Component\Catalog\Model\ProductValueInterface;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class CompletenessCalculator
+class CompletenessCalculator2
 {
     /** @var ProductValueFactory */
     protected $productValueFactory;
@@ -81,7 +81,7 @@ class CompletenessCalculator
                 $completeness->setLocale($locale);
 
                 $completenesses[$missingValue->getScope()][$missingValue->getLocale()] = $completeness;
-                $requiredCount[$missingValue->getScope()][$missingValue->getLocale()] = 1;
+                $requiredCount[$missingValue->getScope()][$missingValue->getLocale()] = 0;
             }
 
             $requiredCount[$missingValue->getScope()][$missingValue->getLocale()]++;
@@ -91,6 +91,8 @@ class CompletenessCalculator
             $completeness->addMissingAttribute($missingValue->getAttribute());
             $completeness->setRequiredCount($requiredCount[$missingValue->getScope()][$missingValue->getLocale()]);
         }
+
+        return $completenesses;
     }
 
     /**
@@ -98,14 +100,19 @@ class CompletenessCalculator
      *
      * @return ProductValueCollection
      */
-    protected function getRequiredProductValueCollection(FamilyInterface $family)
+    protected function getRequiredProductValueCollections(FamilyInterface $family)
     {
-        $required = new ProductValueCollection();
+        $productValueCollections = [];
 
         foreach ($family->getAttributeRequirements() as $attributeRequirement) {
             foreach ($attributeRequirement->getChannel()->getLocales() as $locale) {
+                $requiredProductValueCollection = new ProductValueCollection();
+
                 if ($attributeRequirement->isRequired()) {
-                    $required->add(
+                    $channelCode = $attributeRequirement->getChannelCode();
+                    $localeCode = $locale->getCode();
+
+                    $requiredProductValueCollection->add(
                         $this->productValueFactory->create(
                             $attributeRequirement->getAttribute(),
                             $attributeRequirement->getChannelCode(),
@@ -114,9 +121,11 @@ class CompletenessCalculator
                         )
                     );
                 }
+
+                $productValueCollections[$channelCode][$localeCode] = $requiredProductValueCollection;
             }
         }
 
-        return $required;
+        return $productValueCollections;
     }
 }
