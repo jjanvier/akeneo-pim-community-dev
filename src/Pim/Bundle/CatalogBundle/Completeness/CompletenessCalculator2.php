@@ -45,6 +45,7 @@ class CompletenessCalculator2
     }
 
     /**
+     * Generates a two dimensional array of completenesses indexed by locale and channel.
      *
      * @param ProductInterface $product
      *
@@ -57,50 +58,29 @@ class CompletenessCalculator2
         }
 
         $completenesses = [];
-        $requiredCount = [];
-        $requiredValues = $this->getRequiredProductValueCollections($product->getFamily());
+        $requiredProductValueCollectionsList = $this->getRequiredProductValueCollections($product->getFamily());
         $actualValues = $product->getValues();
 
-        $missingValues = $actualValues->filter(
-            function (ProductValueInterface $value) use ($requiredValues) {
-                // Not precise enough here
-                // Create method isDataEmpty in ProductValueInterface
-                return null !== $requiredValues->getByCodes(
-                    $value->getAttribute()->getCode(),
-                    $value->getScope(),
-                    $value->getLocale()
+        foreach ($requiredProductValueCollectionsList as $channelCode => $requiredProductValueCollections) {
+            foreach ($requiredProductValueCollections as $localeCode => $requiredProductValueCollection) {
+                $completenesses[$channelCode][$localeCode] = $this->generateCompleteness(
+                    $requiredProductValueCollection,
+                    $actualValues,
+                    $channelCode,
+                    $localeCode
                 );
             }
-        );
-
-        /** @var ProductValueInterface $missingValue */
-        foreach ($missingValues as $missingValue) {
-            if (!isset($completenesses[$missingValue->getScope()][$missingValue->getLocale()])) {
-                // maybe rework the Completeness object to have an immutable model that is part of the product
-                // this could allow to automatically calculate the missing and ratio
-                $completeness = new Completeness();
-                $channel = $this->channelRepository->findOneByIdentifier($missingValue->getScope());
-                $locale = $this->localeRepository->findOneByIdentifier($missingValue->getLocale());
-
-                $completeness->setChannel($channel);
-                $completeness->setLocale($locale);
-
-                $completenesses[$missingValue->getScope()][$missingValue->getLocale()] = $completeness;
-                $requiredCount[$missingValue->getScope()][$missingValue->getLocale()] = 0;
-            }
-
-            $requiredCount[$missingValue->getScope()][$missingValue->getLocale()]++;
-
-            /** @var CompletenessInterface $completeness */
-            $completeness = $completenesses[$missingValue->getScope()][$missingValue->getLocale()];
-            $completeness->addMissingAttribute($missingValue->getAttribute());
-            $completeness->setRequiredCount($requiredCount[$missingValue->getScope()][$missingValue->getLocale()]);
         }
 
         return $completenesses;
     }
 
     /**
+     * Generates a two dimensional array indexed by scope and locale containing the required product value collections.
+     *
+     * This method takes into account the localizable and scopable characteristic of the product value (meaning a
+     * product value can be added to multiple productValueCollection if not localizable for instance).
+     *
      * @param FamilyInterface $family
      *
      * @return array
@@ -136,6 +116,9 @@ class CompletenessCalculator2
     }
 
     /**
+     * Add the (empty) required product value to the right product value collections depending on the localizable and
+     * scopable characteristics of product value.
+     *
      * @param ProductValueInterface      $value
      * @param ProductValueCollection[][] $collectionOfProductValueCollections
      */
@@ -150,5 +133,45 @@ class CompletenessCalculator2
                 }
             }
         }
+    }
+
+    /**
+     * Generate one completeness for given requiredProductValue, channelcode, localeCode and the product values to
+     * compare.
+     *
+     * @param ProductValueCollection $requiredProductValueCollection
+     * @param ProductValueCollection $actualValues
+     * @param string                 $channelCode
+     * @param string                 $localeCode
+     *
+     * @return CompletenessInterface
+     */
+    private function generateCompleteness($requiredProductValueCollection, $actualValues, $channelCode, $localeCode)
+    {
+        $channel = $this->channelRepository->findOneByIdentifier($channelCode);
+        $locale = $this->localeRepository->findOneByIdentifier($localeCode);
+
+        $completeness = new Completeness();
+        $completeness->setChannel($channel);
+        $completeness->setLocale($locale);
+
+        $requiredCount = 0;
+
+        foreach ($requiredProductValueCollection as $requiredProductValue) {
+            $productValue = $actualValues->getByCodes(
+                $requiredProductValue->getAttribute()->getCode(),
+                $requiredProductValue->getScope(),
+                $requiredProductValue->getLocale()
+            );
+
+            if (null === $productValue) {
+                $completeness->addMissingAttribute($requiredProductValue->getAttribute());
+                $requiredCount++;
+            }
+        }
+
+        $completeness->setRequiredCount($requiredCount);
+
+        return $completeness;
     }
 }
