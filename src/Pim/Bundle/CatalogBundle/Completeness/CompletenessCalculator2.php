@@ -29,6 +29,11 @@ class CompletenessCalculator2
     /** @var CachedObjectRepositoryInterface */
     protected $localeRepository;
 
+    /**
+     * @param ProductValueFactory             $productValueFactory
+     * @param CachedObjectRepositoryInterface $channelRepository
+     * @param CachedObjectRepositoryInterface $localeRepository
+     */
     public function __construct(
         ProductValueFactory $productValueFactory,
         CachedObjectRepositoryInterface $channelRepository,
@@ -53,7 +58,7 @@ class CompletenessCalculator2
 
         $completenesses = [];
         $requiredCount = [];
-        $requiredValues = $this->getRequiredProductValueCollection($product->getFamily());
+        $requiredValues = $this->getRequiredProductValueCollections($product->getFamily());
         $actualValues = $product->getValues();
 
         $missingValues = $actualValues->filter(
@@ -98,7 +103,7 @@ class CompletenessCalculator2
     /**
      * @param FamilyInterface $family
      *
-     * @return ProductValueCollection
+     * @return array
      */
     protected function getRequiredProductValueCollections(FamilyInterface $family)
     {
@@ -106,26 +111,44 @@ class CompletenessCalculator2
 
         foreach ($family->getAttributeRequirements() as $attributeRequirement) {
             foreach ($attributeRequirement->getChannel()->getLocales() as $locale) {
-                $requiredProductValueCollection = new ProductValueCollection();
-
                 if ($attributeRequirement->isRequired()) {
                     $channelCode = $attributeRequirement->getChannelCode();
                     $localeCode = $locale->getCode();
 
-                    $requiredProductValueCollection->add(
-                        $this->productValueFactory->create(
-                            $attributeRequirement->getAttribute(),
-                            $attributeRequirement->getChannelCode(),
-                            $locale->getCode(),
-                            null
-                        )
+                    $attribute = $attributeRequirement->getAttribute();
+                    $value =$this->productValueFactory->create(
+                        $attribute,
+                        $attribute->isScopable()? $channelCode : null,
+                        $attribute->isLocalizable() ? $localeCode : null,
+                        null
                     );
-                }
 
-                $productValueCollections[$channelCode][$localeCode] = $requiredProductValueCollection;
+                    if (!isset($productValueCollections[$channelCode][$localeCode])) {
+                        $productValueCollections[$channelCode][$localeCode] = new ProductValueCollection();
+                    }
+
+                    $this->addValueToCollections($value, $productValueCollections);
+                }
             }
         }
 
         return $productValueCollections;
+    }
+
+    /**
+     * @param ProductValueInterface      $value
+     * @param ProductValueCollection[][] $collectionOfProductValueCollections
+     */
+    protected function addValueToCollections(ProductValueInterface $value, array $collectionOfProductValueCollections)
+    {
+        foreach ($collectionOfProductValueCollections as $channelCode => $productValueCollections) {
+            foreach ($productValueCollections as $localeCode => $productValueCollection) {
+                if ((null === $value->getScope() || $channelCode = $value->getScope()) &&
+                    (null === $value->getLocale() || $localeCode = $value->getLocale())
+                ) {
+                    $productValueCollection->add($value);
+                }
+            }
+        }
     }
 }
