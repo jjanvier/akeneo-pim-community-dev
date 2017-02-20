@@ -11,15 +11,14 @@ use Pim\Component\Catalog\Model\ProductInterface;
 use Pim\Component\Catalog\Model\ProductValueCollection;
 use Pim\Component\Catalog\Model\ProductValueCollectionInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * Calculates the completeness of a product given a family
- *
- * @author    Samir Boulil <samir.boulil@akeneo.com>
+ * @author    Damien Carcel (damien.carcel@akeneo.com)
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
- * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-class CompletenessCalculator2
+class CompletenessCalculator3
 {
     /** @var ProductValueFactory */
     protected $productValueFactory;
@@ -30,19 +29,25 @@ class CompletenessCalculator2
     /** @var CachedObjectRepositoryInterface */
     protected $localeRepository;
 
+    /** @var NormalizerInterface */
+    protected $normalizer;
+
     /**
      * @param ProductValueFactory             $productValueFactory
      * @param CachedObjectRepositoryInterface $channelRepository
      * @param CachedObjectRepositoryInterface $localeRepository
+     * @param NormalizerInterface             $normalizer
      */
     public function __construct(
         ProductValueFactory $productValueFactory,
         CachedObjectRepositoryInterface $channelRepository,
-        CachedObjectRepositoryInterface $localeRepository
+        CachedObjectRepositoryInterface $localeRepository,
+        NormalizerInterface $normalizer
     ) {
         $this->productValueFactory = $productValueFactory;
         $this->channelRepository = $channelRepository;
         $this->localeRepository = $localeRepository;
+        $this->normalizer = $normalizer;
     }
 
     /**
@@ -60,13 +65,13 @@ class CompletenessCalculator2
 
         $completenesses = [];
         $requiredProductValueCollectionsList = $this->getRequiredProductValueCollections($product->getFamily());
-        $actualValues = $product->getValues();
+        $actualProductValueCollection = $product->getValues();
 
         foreach ($requiredProductValueCollectionsList as $channelCode => $requiredProductValueCollections) {
             foreach ($requiredProductValueCollections as $localeCode => $requiredProductValueCollection) {
                 $completenesses[$channelCode][$localeCode] = $this->generateCompleteness(
                     $requiredProductValueCollection,
-                    $actualValues,
+                    $actualProductValueCollection,
                     $channelCode,
                     $localeCode
                 );
@@ -141,7 +146,7 @@ class CompletenessCalculator2
      * compare.
      *
      * @param ProductValueCollectionInterface $requiredProductValueCollection
-     * @param ProductValueCollectionInterface $actualValues
+     * @param ProductValueCollectionInterface $actualProductValueCollection
      * @param string                          $channelCode
      * @param string                          $localeCode
      *
@@ -149,12 +154,18 @@ class CompletenessCalculator2
      */
     private function generateCompleteness(
         ProductValueCollectionInterface $requiredProductValueCollection,
-        ProductValueCollectionInterface $actualValues,
+        ProductValueCollectionInterface $actualProductValueCollection,
         $channelCode,
         $localeCode
     ) {
         $channel = $this->channelRepository->findOneByIdentifier($channelCode);
         $locale = $this->localeRepository->findOneByIdentifier($localeCode);
+
+        $requiredStandardProductValues = $requiredProductValueCollection->getKeys();
+        $actualStandardProductValues = $requiredProductValueCollection->getKeys();
+
+        // Or implement the diff in the ProductValueCollection
+        $missingKeys = array_diff($requiredStandardProductValues, $actualStandardProductValues);
 
         $completeness = new Completeness();
         $completeness->setChannel($channel);
@@ -162,17 +173,11 @@ class CompletenessCalculator2
 
         $requiredCount = 0;
 
-        foreach ($requiredProductValueCollection as $requiredProductValue) {
-            $productValue = $actualValues->getByCodes(
-                $requiredProductValue->getAttribute()->getCode(),
-                $requiredProductValue->getScope(),
-                $requiredProductValue->getLocale()
-            );
+        foreach ($missingKeys as $key) {
+            $productValue = $actualProductValueCollection->getByKey($key);
+            $completeness->addMissingAttribute($productValue->getAttribute());
 
-            if (null === $productValue) {
-                $completeness->addMissingAttribute($requiredProductValue->getAttribute());
-                $requiredCount++;
-            }
+            $requiredCount++;
         }
 
         $completeness->setRequiredCount($requiredCount);
