@@ -101,7 +101,7 @@ services:
         arguments:
             - '@service_container'
         tags:
-            - { name: doctrine.event_subscriber }
+            - { name: doctrine.orm.entity_listener }
 
     pim_catalog.event_subscriber.load_product_template_values:
         class: '%pim_catalog.event_subscriber.load_product_template_values.class%'

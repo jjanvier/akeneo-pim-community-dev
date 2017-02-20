@@ -2,9 +2,7 @@
 
 namespace Pim\Bundle\CatalogBundle\EventSubscriber;
 
-use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-use Doctrine\ORM\Events;
 use Pim\Component\Catalog\Factory\ProductValueCollectionFactory;
 use Pim\Component\Catalog\Factory\ProductValueFactory;
 use Pim\Component\Catalog\Model\ProductInterface;
@@ -19,12 +17,8 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  * @author    Julien Janvier <j.janvier@gmail.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *
- * TODO: we could use an Entity Listener instead (need to upgrade bundle to 1.3)
- * TODO: cf. http://symfony.com/doc/current/bundles/DoctrineBundle/entity-listeners.html
- * TODO: cf. http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html#entity-listeners
  */
-class LoadProductValuesSubscriber implements EventSubscriber
+class LoadProductValuesSubscriber
 {
     /** @var ContainerInterface */
     protected $container;
@@ -57,29 +51,15 @@ class LoadProductValuesSubscriber implements EventSubscriber
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getSubscribedEvents()
-    {
-        return [
-            Events::postLoad
-        ];
-    }
-
-    /**
      * Here we load the real object values from the raw values field.
      * We also add the identifier as a regular value so that it can be used in the product
      * edit form transparently.
      *
+     * @param ProductInterface   $product
      * @param LifecycleEventArgs $event
      */
-    public function postLoad(LifecycleEventArgs $event)
+    public function postLoad(ProductInterface $product, LifecycleEventArgs $event)
     {
-        $product = $event->getObject();
-        if (!$product instanceof ProductInterface) {
-            return;
-        }
-
         $identifierValue = $this->getProductValueFactory()->create(
             $this->getAttributeRepository()->getIdentifier(),
             null,
