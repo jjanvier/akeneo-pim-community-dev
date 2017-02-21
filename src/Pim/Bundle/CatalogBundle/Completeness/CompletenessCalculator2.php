@@ -97,7 +97,7 @@ class CompletenessCalculator2
                     $localeCode = $locale->getCode();
 
                     $attribute = $attributeRequirement->getAttribute();
-                    $value =$this->productValueFactory->create(
+                    $value = $this->productValueFactory->create(
                         $attribute,
                         $attribute->isScopable()? $channelCode : null,
                         $attribute->isLocalizable() ? $localeCode : null,
@@ -127,8 +127,8 @@ class CompletenessCalculator2
     {
         foreach ($collectionOfProductValueCollections as $channelCode => $productValueCollections) {
             foreach ($productValueCollections as $localeCode => $productValueCollection) {
-                if ((null === $value->getScope() || $channelCode = $value->getScope()) &&
-                    (null === $value->getLocale() || $localeCode = $value->getLocale())
+                if ((null === $value->getScope() || null !== $channelCode = $value->getScope()) &&
+                    (null === $value->getLocale() || null !== $localeCode = $value->getLocale())
                 ) {
                     $productValueCollection->add($value);
                 }
@@ -169,6 +169,7 @@ class CompletenessCalculator2
                 $requiredProductValue->getLocale()
             );
 
+            //TODO: more use cases to check but OK for the POC
             if (null === $productValue) {
                 $completeness->addMissingAttribute($requiredProductValue->getAttribute());
                 $requiredCount++;
