@@ -174,6 +174,10 @@ abstract class AbstractCompleteness implements CompletenessInterface
      */
     public function addMissingAttribute(AttributeInterface $attribute)
     {
+        if ($this->missingAttributes->contains($attribute)) {
+            return $this;
+        }
+
         $this->missingCount++;
         $this->missingAttributes->add($attribute);
 

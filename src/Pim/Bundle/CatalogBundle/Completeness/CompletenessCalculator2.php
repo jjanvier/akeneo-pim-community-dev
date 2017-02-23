@@ -65,6 +65,7 @@ class CompletenessCalculator2
         foreach ($requiredProductValueCollectionsList as $channelCode => $requiredProductValueCollections) {
             foreach ($requiredProductValueCollections as $localeCode => $requiredProductValueCollection) {
                 $completenesses[$channelCode][$localeCode] = $this->generateCompleteness(
+                    $product,
                     $requiredProductValueCollection,
                     $actualValues,
                     $channelCode,
@@ -140,6 +141,7 @@ class CompletenessCalculator2
      * Generate one completeness for given requiredProductValue, channelcode, localeCode and the product values to
      * compare.
      *
+     * @param ProductInterface                $product
      * @param ProductValueCollectionInterface $requiredProductValueCollection
      * @param ProductValueCollectionInterface $actualValues
      * @param string                          $channelCode
@@ -148,6 +150,7 @@ class CompletenessCalculator2
      * @return CompletenessInterface
      */
     private function generateCompleteness(
+        ProductInterface $product,
         ProductValueCollectionInterface $requiredProductValueCollection,
         ProductValueCollectionInterface $actualValues,
         $channelCode,
@@ -157,6 +160,7 @@ class CompletenessCalculator2
         $locale = $this->localeRepository->findOneByIdentifier($localeCode);
 
         $completeness = new Completeness();
+        $completeness->setProduct($product);
         $completeness->setChannel($channel);
         $completeness->setLocale($locale);
 
