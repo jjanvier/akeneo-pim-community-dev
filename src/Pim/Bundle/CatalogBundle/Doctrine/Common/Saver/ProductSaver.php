@@ -67,6 +67,8 @@ class ProductSaver implements SaverInterface, BulkSaverInterface
         $this->completenessManager->schedule($product);
 
         $this->objectManager->persist($product);
+        $this->objectManager->flush();
+        $this->objectManager->merge($product);
 
 //        $this->completenessManager->generateMissingForProduct($product);
         $completenesses = $this->completenessCalculator->calculate($product);
@@ -75,6 +77,7 @@ class ProductSaver implements SaverInterface, BulkSaverInterface
                 $this->objectManager->persist($completeness);
             }
         }
+
         $this->objectManager->flush();
 
         $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($product, $options));

@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -11,7 +12,14 @@ $c = $kernel->getContainer();
 $saver = $c->get('pim_catalog.saver.product');
 $builder = $c->get('pim_catalog.builder.product');
 $updater = $c->get('pim_catalog.updater.product');
+$remover = $c->get('pim_catalog.remover.product');
+$repository = $c->get('pim_catalog.repository.product');
 $calculator = $c->get('pim_catalog.completeness.calculator');
+
+$previousProduct = $repository->findOneByIdentifier('foo');
+if (null !== $previousProduct) {
+    $remover->remove($previousProduct);
+}
 
 $aFamily = $c->get('pim_catalog.repository.family')->findOneByIdentifier('camcorders');
 $aProduct = $builder->createProduct('foo', $aFamily->getCode());
