@@ -7,6 +7,7 @@ use Akeneo\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Component\StorageUtils\StorageEvents;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
+use Pim\Bundle\CatalogBundle\Completeness\CompletenessCalculator2;
 use Pim\Component\Catalog\Manager\CompletenessManager;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -30,19 +31,25 @@ class ProductSaver implements SaverInterface, BulkSaverInterface
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
+    /** @var CompletenessCalculator2 */
+    protected $completenessCalculator;
+
     /**
      * @param ObjectManager            $om
      * @param CompletenessManager      $completenessManager
      * @param EventDispatcherInterface $eventDispatcher
+     * @param CompletenessCalculator2  $completenessCalculator
      */
     public function __construct(
         ObjectManager $om,
         CompletenessManager $completenessManager,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        CompletenessCalculator2 $completenessCalculator
     ) {
         $this->objectManager = $om;
         $this->completenessManager = $completenessManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->completenessCalculator = $completenessCalculator;
     }
 
     /**
@@ -57,12 +64,18 @@ class ProductSaver implements SaverInterface, BulkSaverInterface
         $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($product, $options));
 
         // TODO: Temporary fix to allow the PIM to install. To remove once new storage works.
-        // $this->completenessManager->schedule($product);
+        $this->completenessManager->schedule($product);
 
         $this->objectManager->persist($product);
-        $this->objectManager->flush();
 
-        // $this->completenessManager->generateMissingForProduct($product);
+//        $this->completenessManager->generateMissingForProduct($product);
+        $completenesses = $this->completenessCalculator->calculate($product);
+        foreach ($completenesses as $channel => $channelCompletenesses) {
+            foreach ($channelCompletenesses as $locale => $completeness) {
+                $this->objectManager->persist($completeness);
+            }
+        }
+        $this->objectManager->flush();
 
         $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($product, $options));
     }
