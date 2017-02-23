@@ -1,0 +1,10 @@
+parameters:
+    pim_catalog.completeness.calculator.class: 'Pim\Bundle\CatalogBundle\Completeness\CompletenessCalculator2'
+
+services:
+    pim_catalog.completeness.calculator:
+        class: '%pim_catalog.completeness.calculator.class%'
+        arguments:
+            - '@pim_catalog.factory.product_value'
+            - '@pim_catalog.repository.cached_channel'
+            - '@pim_catalog.repository.cached_locale'
