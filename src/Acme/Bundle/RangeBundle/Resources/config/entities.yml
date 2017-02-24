@@ -1,0 +1,3 @@
+parameters:
+    acme_range.entity.range.class: Acme\Bundle\RangeBundle\Model\Range
+    acme_range.entity.product_value.range.class: Acme\Bundle\RangeBundle\Model\RangeProductValue
