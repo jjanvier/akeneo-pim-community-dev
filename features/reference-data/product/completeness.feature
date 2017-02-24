@@ -61,6 +61,7 @@ Feature: Display the completeness of a product with reference data
       | mobile  | fr_FR  | warning | 25%   |
       | tablet  | fr_FR  | warning | 25%   |
 
+  @integration-test
   Scenario: Successfully display the completeness of the products with reference data in the grid
     Given I am on the products page
     And I switch the locale to "en_US"

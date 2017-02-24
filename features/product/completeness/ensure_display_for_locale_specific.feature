@@ -24,6 +24,7 @@ Feature: Proper completeness display for locale specific attributes
     And I am logged in as "Mary"
 
   @jira https://akeneo.atlassian.net/browse/PIM-4771
+  @integration-test
   Scenario: Well display completeness for locale specific attributes
     Given I am on the "foo" product page
     And I open the "Completeness" panel
@@ -39,6 +40,7 @@ Feature: Proper completeness display for locale specific attributes
       | ecommerce | fr_FR  | warning | Locale Specific, Name | 33%   |
 
   @jira https://akeneo.atlassian.net/browse/PIM-4771
+  @integration-test
   Scenario: Well display completeness for locale specific attributes
     Given I am on the "bar" product page
     And I open the "Completeness" panel

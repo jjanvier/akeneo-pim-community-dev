@@ -44,6 +44,7 @@ Feature: Display the completeness of a product
       | mobile  | fr_FR  | success |                | 100%  |
       | tablet  | fr_FR  | warning | Description    | 89%   |
 
+  @integration-test
   Scenario: Update completeness when family requirements change
     Given I am on the "sneakers" family page
     And I visit the "Attributes" tab

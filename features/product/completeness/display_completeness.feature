@@ -52,6 +52,7 @@ Feature: Display the completeness of a product
       | tablet  | en_US  | warning | [name], [description], [price], [rating], [side_view], [size] | 25%   |
 
   @jira https://akeneo.atlassian.net/browse/PIM-5190
+  @integration-test
   Scenario: Successfully display the completeness of the products with medias after a save
     Given I am on the "sneakers" product page
     And I save the product
