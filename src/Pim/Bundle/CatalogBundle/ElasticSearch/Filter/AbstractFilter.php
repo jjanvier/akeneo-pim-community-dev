@@ -99,4 +99,22 @@ abstract class AbstractFilter implements FilterInterface
             );
         }
     }
+
+    /**
+     * TODO: Path should be calculated elsewhere
+     * TODO: AttributeType '-text' should match exactly the attribute type (pim_catalog_text)
+     *
+     * @param AttributeInterface $attribute
+     * @param string             $locale
+     * @param string             $scope
+     *
+     * @return string
+     */
+    protected function getAttributePath(AttributeInterface $attribute, $locale, $scope)
+    {
+        $locale = (null === $locale) ? '<all_locales>' : $locale;
+        $scope = (null === $scope) ? '<all_channels>' : $scope;
+
+        return 'values.' . $attribute->getCode() . '-text.' . $locale . '.' . $scope;
+    }
 }
