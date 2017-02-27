@@ -34,30 +34,27 @@ class FamilyFilter extends AbstractFilter implements FieldFilterInterface
         switch ($operator) {
             case Operators::IN_LIST:
                 $clause = [
-                    'filter' => [
-                        'terms' => [
-                            'family' => $value
-                        ]
+                    'terms' => [
+                        'family' => $value
                     ]
                 ];
+                $this->clauses->addFilterClause($clause);
                 break;
             case Operators::NOT_IN_LIST:
                 $clause = [
-                    'must_not' => [ // no scoring here (should be called 'filter_not'?)
-                        'terms' => [
-                            'family' => $value
-                        ]
+                    'terms' => [
+                        'family' => $value
                     ]
                 ];
+                $this->clauses->addMustNotClause($clause);
                 break;
             case Operators::IS_EMPTY:
                 $clause = [
-                    'must_not' => [ 
-                        'exists' => [
-                            'field' => 'family'
-                        ]
+                    'exists' => [
+                        'field' => 'family'
                     ]
                 ];
+                $this->clauses->addMustNotClause($clause);
                 break;
             case Operators::IS_NOT_EMPTY:
                 $clause = [
@@ -65,12 +62,11 @@ class FamilyFilter extends AbstractFilter implements FieldFilterInterface
                         'field' => 'family'
                     ]
                 ];
+                $this->clauses->addFilterClause($clause);
                 break;
             default:
                 throw new InvalidArgumentException('TODO');
         }
-
-        $this->clauses[] = $clause;
 
         return $this;
     }

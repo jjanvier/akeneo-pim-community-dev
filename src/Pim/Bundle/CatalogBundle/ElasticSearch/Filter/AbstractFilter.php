@@ -9,7 +9,7 @@ use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
 
 abstract class AbstractFilter implements FilterInterface
 {
-    /** @var array */
+    /** @var Clauses */
     protected $clauses;
 
     /** @var array */
@@ -72,9 +72,9 @@ abstract class AbstractFilter implements FilterInterface
         return $this->supportedFields;
     }
 
-    public function setQueryBuilder($queryBuilder)
+    public function setQueryBuilder($clauses)
     {
-        // TODO: no sense now, should be dropped from the interface
+        $this->clauses = $clauses;
     }
 
     /**
