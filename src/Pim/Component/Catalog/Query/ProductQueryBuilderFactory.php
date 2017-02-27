@@ -3,9 +3,7 @@
 namespace Pim\Component\Catalog\Query;
 
 use Akeneo\Component\StorageUtils\Cursor\CursorFactoryInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectManager;
-use Pim\Bundle\CatalogBundle\ElasticSearch\Filter\Clauses;
 use Pim\Component\Catalog\Query\Filter\FilterRegistryInterface;
 use Pim\Component\Catalog\Query\Sorter\SorterRegistryInterface;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
@@ -80,8 +78,8 @@ class ProductQueryBuilderFactory implements ProductQueryBuilderFactoryInterface
             'scope'  => $options['default_scope']
         ]);
 
-        $clauses = new Clauses();
-        $pqb->setQueryBuilder($clauses);
+        $qb = $this->createQueryBuilder($options);
+        $pqb->setQueryBuilder($qb);
 
         foreach ($options['filters'] as $filter) {
             $pqb->addFilter($filter['field'], $filter['operator'], $filter['value'], $filter['context']);
