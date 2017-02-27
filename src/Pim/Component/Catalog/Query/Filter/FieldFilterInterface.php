@@ -26,6 +26,7 @@ interface FieldFilterInterface extends FilterInterface
      * @throws PropertyException
      *
      * @return FieldFilterInterface
+     * TODO: we should return simply the little piece of the field
      */
     public function addFieldFilter($field, $operator, $value, $locale = null, $scope = null, $options = []);
 

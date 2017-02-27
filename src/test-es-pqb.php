@@ -17,6 +17,5 @@ $products = $pqb->execute();
 
 echo sprintf("%d products found...\n", $products->count());
 foreach ($products as $product) {
-    echo $product->getIdentifier();
-    echo "\n";
+    echo sprintf("Identifier=%s - MySQL ID=%s\n", $product->getIdentifier(), $product->getId());
 }
