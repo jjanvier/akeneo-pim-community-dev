@@ -173,8 +173,10 @@ class CompletenessCalculator2
                 $requiredProductValue->getLocale()
             );
 
-            //TODO: more use cases to check but OK for the POC
-            if (null === $productValue) {
+            //TODO: another possibility here is to use the ProductValueCompleteCheckerInterface
+            //TODO: that's maybe the best first to move to do, it requires less changes
+            //TODO: and is maybe an easier idea to consider for the team
+            if (null === $productValue || !$productValue->isComplete()) {
                 $completeness->addMissingAttribute($requiredProductValue->getAttribute());
                 $requiredCount++;
             }

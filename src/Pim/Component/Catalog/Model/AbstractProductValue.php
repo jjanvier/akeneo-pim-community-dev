@@ -5,6 +5,7 @@ namespace Pim\Component\Catalog\Model;
 use Akeneo\Component\FileStorage\Model\FileInfoInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Pim\Component\Catalog\AttributeTypes;
 
 /**
  * Abstract product value
@@ -268,6 +269,28 @@ abstract class AbstractProductValue implements ProductValueInterface
         return $this->getData() === $productValue->getData() &&
             $this->scope === $productValue->getScope() &&
             $this->locale === $productValue->getLocale();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isComplete()
+    {
+        $data = $this->getData();
+
+        if (AttributeTypes::PRICE_COLLECTION === $this->attribute->getAttributeType()) {
+            return $this->isCompletePrice();
+        }
+
+        if (null === $data
+            || '' === $data
+            || [] === $data
+            || ($data instanceof \Countable && 0 === count($data))
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -580,5 +603,42 @@ abstract class AbstractProductValue implements ProductValueInterface
         $this->prices = $prices;
 
         return $this;
+    }
+
+    protected function isCompletePrice()
+    {
+        $channel = $this->scope;
+
+        // the value has no channel, which mens the attribute is not scopable
+        // here we'll check only the data we have in the product value
+        // TODO: we CAN NOT test here all the activated currencies, but that's what we should do :(
+        if (null === $channel) {
+            foreach ($this->getData() as $price) {
+                if (null === $price->getData()) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // the value has a channel, which mens the attribute is scopable
+        // here we'll check if all currencies of the channel are filled in
+        $expectedCurrencies = array_map(
+            function ($currency) {
+                return $currency->getCode();
+            },
+            $channel->getCurrencies()->toArray()
+        );
+
+        foreach ($expectedCurrencies as $currency) {
+            foreach ($this->getData() as $price) {
+                if ($price->getCurrency() === $currency && null === $price->getData()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

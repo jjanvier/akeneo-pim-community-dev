@@ -152,6 +152,13 @@ interface ProductValueInterface
     public function isEqual(ProductValueInterface $productValue);
 
     /**
+     * Checks if the product value is complete.
+     *
+     * @return bool
+     */
+    public function isComplete();
+
+    /**
      * @return string
      */
     public function __toString();
