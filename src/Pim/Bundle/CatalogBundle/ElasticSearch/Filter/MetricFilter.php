@@ -2,6 +2,8 @@
 
 namespace Pim\Bundle\CatalogBundle\ElasticSearch\Filter;
 
+use Akeneo\Bundle\MeasureBundle\Convert\MeasureConverter;
+use Akeneo\Bundle\MeasureBundle\Manager\MeasureManager;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Pim\Component\Catalog\Exception\InvalidArgumentException;
@@ -12,24 +14,36 @@ use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * String Filter
+ * Metric Filter
  */
-class StringFilter extends AbstractFilter implements AttributeFilterInterface
+class MetricFilter extends AbstractFilter implements AttributeFilterInterface
 {
     /** @var OptionsResolver */
     protected $resolver;
 
+    /** @var MeasureManager */
+    protected $measureManager;
+
+    /** @var MeasureConverter */
+    protected $measureConverter;
+
     /**
      * @param AttributeValidatorHelper $attrValidatorHelper
+     * @param MeasureManager           $measureManager
+     * @param MeasureConverter         $measureConverter
      * @param array                    $supportedAttributeTypes
      * @param array                    $supportedOperators
      */
     public function __construct(
         AttributeValidatorHelper $attrValidatorHelper,
+        MeasureManager $measureManager,
+        MeasureConverter $measureConverter,
         array $supportedAttributeTypes = [],
         array $supportedOperators = []
     ) {
         $this->attrValidatorHelper = $attrValidatorHelper;
+        $this->measureManager = $measureManager;
+        $this->measureConverter = $measureConverter;
         $this->supportedAttributeTypes = $supportedAttributeTypes;
         $this->supportedOperators = $supportedOperators;
 
@@ -61,12 +75,31 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
         $this->checkLocaleAndScope($attribute, $locale, $scope);
 
         if (Operators::IS_EMPTY !== $operator && Operators::IS_NOT_EMPTY !== $operator) {
-            $this->checkValue($options['field'], $value);
+            $this->checkValue($attribute, $value);
+            $value = $this->convertValue($attribute, $value);
         }
 
         $attributePath = $this->getAttributePath($attribute, $locale, $scope);
 
         switch ($operator) {
+            case Operators::LOWER_THAN:
+                $clause = [
+                    'range' => [
+                        $attributePath => ['lt' => $value]
+                    ]
+                ];
+                $this->clauses->addFilterClause($clause);
+
+                break;
+            case Operators::LOWER_OR_EQUAL_THAN:
+                $clause = [
+                    'range' => [
+                        $attributePath => ['lte' => $value]
+                    ]
+                ];
+                $this->clauses->addFilterClause($clause);
+
+                break;
             case Operators::EQUALS:
                 $clause = [
                     'term' => [
@@ -74,15 +107,25 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                     ]
                 ];
                 $this->clauses->addFilterClause($clause);
-                break;
 
-            case Operators::NOT_EQUAL:
+                break;
+            case Operators::GREATER_OR_EQUAL_THAN:
                 $clause = [
-                    'term' => [
-                        $attributePath => $value
+                    'range' => [
+                        $attributePath => ['gte' => $value]
                     ]
                 ];
-                $this->clauses->addMustNotClause($clause);
+                $this->clauses->addFilterClause($clause);
+
+                break;
+            case Operators::GREATER_THAN:
+                $clause = [
+                    'range' => [
+                        $attributePath => ['gt' => $value]
+                    ]
+                ];
+                $this->clauses->addFilterClause($clause);
+
                 break;
             case Operators::IS_EMPTY:
                 $clause = [
@@ -91,6 +134,7 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                     ]
                 ];
                 $this->clauses->addMustNotClause($clause);
+
                 break;
             case Operators::IS_NOT_EMPTY:
                 $clause = [
@@ -99,46 +143,16 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                     ]
                 ];
                 $this->clauses->addFilterClause($clause);
-                break;
 
-            case Operators::CONTAINS:
-                $clause = [
-                    'query_string' => [
-                        'default_field' => $attributePath,
-                        'query' => '*' . $value . '*'
-                    ]
-                ];
-                $this->clauses->addFilterClause($clause);
                 break;
-
-            case Operators::DOES_NOT_CONTAIN:
+            case Operators::NOT_EQUAL:
                 $clause = [
-                    'query_string' => [
-                        'default_field' => $attributePath,
-                        'query' => '*' . $value . '*'
+                    'term' => [
+                        $attributePath => $value
                     ]
                 ];
                 $this->clauses->addMustNotClause($clause);
-                break;
 
-            case Operators::STARTS_WITH:
-                $clause = [
-                    'query_string' => [
-                        'default_field' => $attributePath,
-                        'query' => $value . '*'
-                    ]
-                ];
-                $this->clauses->addFilterClause($clause);
-                break;
-
-            case Operators::ENDS_WITH:
-                $clause = [
-                    'query_string' => [
-                        'default_field' => $attributePath,
-                        'query' => '*' . $value
-                    ]
-                ];
-                $this->clauses->addFilterClause($clause);
                 break;
             default:
                 throw new InvalidArgumentException('TODO');
@@ -150,31 +164,82 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
     /**
      * Check if value is valid
      *
-     * @param string $field
-     * @param mixed  $value
+     * @param AttributeInterface $attribute
+     * @param mixed              $data
+     *
+     * @throws InvalidPropertyTypeException
+     * @throws InvalidPropertyException
      */
-    protected function checkValue($field, $value)
+    protected function checkValue(AttributeInterface $attribute, $data)
     {
-        if (is_array($value)) {
-            foreach ($value as $scalarValue) {
-                $this->checkScalarValue($field, $scalarValue);
-            }
-        } else {
-            $this->checkScalarValue($field, $value);
+        if (!is_array($data)) {
+            throw InvalidPropertyTypeException::arrayExpected($attribute->getCode(), static::class, $data);
+        }
+
+        if (!array_key_exists('amount', $data)) {
+            throw InvalidPropertyTypeException::arrayKeyExpected(
+                $attribute->getCode(),
+                'amount',
+                static::class,
+                $data
+            );
+        }
+
+        if (!array_key_exists('unit', $data)) {
+            throw InvalidPropertyTypeException::arrayKeyExpected(
+                $attribute->getCode(),
+                'unit',
+                static::class,
+                $data
+            );
+        }
+
+        if (null !== $data['amount'] && !is_numeric($data['amount'])) {
+            throw InvalidPropertyTypeException::validArrayStructureExpected(
+                $attribute->getCode(),
+                sprintf('key "amount" has to be a numeric, "%s" given', gettype($data['amount'])),
+                static::class,
+                $data
+            );
+        }
+
+        if (!is_string($data['unit'])) {
+            throw InvalidPropertyTypeException::validArrayStructureExpected(
+                $attribute->getCode(),
+                sprintf('key "unit" has to be a string, "%s" given', gettype($data['unit'])),
+                static::class,
+                $data
+            );
+        }
+
+        if (!array_key_exists(
+            $data['unit'],
+            $this->measureManager->getUnitSymbolsForFamily($attribute->getMetricFamily())
+        )) {
+            throw InvalidPropertyException::validEntityCodeExpected(
+                $attribute->getCode(),
+                'unit',
+                sprintf(
+                    'The unit does not exist in the attribute\'s family "%s"',
+                    $attribute->getMetricFamily()
+                ),
+                static::class,
+                $data['unit']
+            );
         }
     }
 
     /**
-     * @param string $field
-     * @param mixed  $value
+     * @param AttributeInterface $attribute
+     * @param array              $data
      *
-     * @throws InvalidPropertyTypeException
+     * @return float
      */
-    protected function checkScalarValue($field, $value)
+    protected function convertValue(AttributeInterface $attribute, array $data)
     {
-        if (!is_string($value) && null !== $value) {
-            throw InvalidPropertyTypeException::stringExpected($field, static::class, $value);
-        }
+        $this->measureConverter->setFamily($attribute->getMetricFamily());
+
+        return $this->measureConverter->convertBaseToStandard($data['unit'], $data['amount']);
     }
 
     /**

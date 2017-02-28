@@ -159,16 +159,16 @@ services:
 #        tags:
 #            - { name: 'pim_catalog.doctrine.query.filter', priority: 30 }
 #
-#    pim_catalog.doctrine.query.filter.metric:
-#        class: '%pim_catalog.doctrine.query.filter.metric.class%'
-#        arguments:
-#            - '@pim_catalog.validator.helper.attribute'
-#            - '@akeneo_measure.manager'
-#            - '@akeneo_measure.measure_converter'
-#            - ['pim_catalog_metric']
-#            - ['<', '<=', '=', '>=', '>', 'EMPTY', 'NOT EMPTY', '!=']
-#        tags:
-#            - { name: 'pim_catalog.doctrine.query.filter', priority: 30 }
+    pim_catalog.doctrine.query.filter.metric:
+        class: '%pim_catalog.doctrine.query.filter.metric.class%'
+        arguments:
+            - '@pim_catalog.validator.helper.attribute'
+            - '@akeneo_measure.manager'
+            - '@akeneo_measure.measure_converter'
+            - ['pim_catalog_metric']
+            - ['<', '<=', '=', '>=', '>', 'EMPTY', 'NOT EMPTY', '!=']
+        tags:
+            - { name: 'pim_catalog.doctrine.query.filter', priority: 30 }
 #
 #    pim_catalog.doctrine.query.filter.number:
 #        class: '%pim_catalog.doctrine.query.filter.number.class%'
