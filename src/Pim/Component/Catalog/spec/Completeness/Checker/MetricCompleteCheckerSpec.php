@@ -3,6 +3,7 @@
 namespace spec\Pim\Component\Catalog\Completeness\Checker;
 
 use PhpSpec\ObjectBehavior;
+use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\ChannelInterface;
 use Pim\Component\Catalog\Model\LocaleInterface;
@@ -21,31 +22,90 @@ class MetricCompleteCheckerSpec extends ObjectBehavior
         AttributeInterface $attribute
     ) {
         $productValue->getAttribute()->willReturn($attribute);
-        $attribute->getAttributeType()->willReturn('pim_catalog_metric');
+        $attribute->getAttributeType()->willReturn(AttributeTypes::METRIC);
         $this->supportsValue($productValue)->shouldReturn(true);
 
         $attribute->getAttributeType()->willReturn('other');
         $this->supportsValue($productValue)->shouldReturn(false);
     }
 
-    public function it_succesfully_checks_complete_metric(
+    public function it_successfully_checks_complete_metric(
         ProductValueInterface $value,
-        ChannelInterface $channel,
-        LocaleInterface $locale,
         MetricInterface $metric
     ) {
-        $value->getMetric()->willReturn(null);
-        $this->isComplete($value, $channel, $locale)->shouldReturn(false);
+        $value->getMetric()->willReturn($metric);
 
-        $value->getMetric()->willReturn([]);
-        $this->isComplete($value, $channel, $locale)->shouldReturn(false);
+        $metric->getData()->willReturn(200);
+        $metric->getBaseData()->willReturn(2);
+        $metric->getUnit()->willReturn('CENTIMETER');
+        $metric->getBaseUnit()->willReturn('METER');
+        $this->isComplete($value)->shouldReturn(true);
+
+        $metric->getData()->willReturn(0);
+        $metric->getBaseData()->willReturn(0);
+        $metric->getUnit()->willReturn('GRAM');
+        $metric->getBaseUnit()->willReturn('KILOGRAM');
+        $this->isComplete($value)->shouldReturn(true);
+    }
+
+    public function it_checks_empty_value(ProductValueInterface $value)
+    {
+        $value->getMetric()->willReturn(null);
+        $this->isComplete($value)->shouldReturn(false);
+    }
+
+    public function it_checks_incomplete_metric(
+        ProductValueInterface $value,
+        MetricInterface $metric
+    ) {
+        $value->getMetric()->willReturn($metric);
 
         $metric->getData()->willReturn(null);
-        $value->getMetric()->willReturn($metric);
-        $this->isComplete($value, $channel, $locale)->shouldReturn(false);
+        $metric->getBaseData()->willReturn(2);
+        $metric->getUnit()->willReturn('CENTIMETER');
+        $metric->getBaseUnit()->willReturn('METER');
+        $this->isComplete($value)->shouldReturn(false);
 
-        $metric->getData()->willReturn('foobar');
-        $value->getMetric()->willReturn($metric);
-        $this->isComplete($value, $channel, $locale)->shouldReturn(true);
+        $metric->getData()->willReturn(200);
+        $metric->getBaseData()->willReturn(null);
+        $metric->getUnit()->willReturn('CENTIMETER');
+        $metric->getBaseUnit()->willReturn('METER');
+        $this->isComplete($value)->shouldReturn(false);
+
+        $metric->getData()->willReturn(200);
+        $metric->getBaseData()->willReturn(2);
+        $metric->getUnit()->willReturn(null);
+        $metric->getBaseUnit()->willReturn('METER');
+        $this->isComplete($value)->shouldReturn(false);
+
+        $metric->getData()->willReturn(200);
+        $metric->getBaseData()->willReturn(2);
+        $metric->getUnit()->willReturn('CENTIMETER');
+        $metric->getBaseUnit()->willReturn(null);
+        $this->isComplete($value)->shouldReturn(false);
+
+        $metric->getData()->willReturn('');
+        $metric->getBaseData()->willReturn(2);
+        $metric->getUnit()->willReturn('CENTIMETER');
+        $metric->getBaseUnit()->willReturn('METER');
+        $this->isComplete($value)->shouldReturn(false);
+
+        $metric->getData()->willReturn(200);
+        $metric->getBaseData()->willReturn('');
+        $metric->getUnit()->willReturn('CENTIMETER');
+        $metric->getBaseUnit()->willReturn('METER');
+        $this->isComplete($value)->shouldReturn(false);
+
+        $metric->getData()->willReturn(200);
+        $metric->getBaseData()->willReturn(2);
+        $metric->getUnit()->willReturn('');
+        $metric->getBaseUnit()->willReturn('METER');
+        $this->isComplete($value)->shouldReturn(false);
+
+        $metric->getData()->willReturn(200);
+        $metric->getBaseData()->willReturn(2);
+        $metric->getUnit()->willReturn('CENTIMETER');
+        $metric->getBaseUnit()->willReturn('');
+        $this->isComplete($value)->shouldReturn(false);
     }
 }

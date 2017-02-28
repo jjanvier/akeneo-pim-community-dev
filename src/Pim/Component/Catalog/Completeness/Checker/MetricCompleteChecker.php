@@ -2,11 +2,14 @@
 
 namespace Pim\Component\Catalog\Completeness\Checker;
 
+use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Model\ChannelInterface;
 use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 
 /**
+ * Check if a metric collection value is complete or not.
+ *
  * @author    JM Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
@@ -23,7 +26,19 @@ class MetricCompleteChecker implements ProductValueCompleteCheckerInterface
     ) {
         $metric = $productValue->getMetric();
 
-        if (!$metric || null === $metric->getData()) {
+        if (null === $metric) {
+            return false;
+        }
+
+        if (null === $metric->getData() ||
+            null === $metric->getBaseData() ||
+            null === $metric->getUnit() ||
+            null === $metric->getBaseUnit() ||
+            '' === $metric->getData() ||
+            '' === $metric->getBaseData() ||
+            '' === $metric->getUnit() ||
+            '' === $metric->getBaseUnit()
+        ) {
             return false;
         }
 
@@ -35,6 +50,6 @@ class MetricCompleteChecker implements ProductValueCompleteCheckerInterface
      */
     public function supportsValue(ProductValueInterface $productValue)
     {
-        return 'pim_catalog_metric' === $productValue->getAttribute()->getAttributeType();
+        return AttributeTypes::METRIC === $productValue->getAttribute()->getAttributeType();
     }
 }
