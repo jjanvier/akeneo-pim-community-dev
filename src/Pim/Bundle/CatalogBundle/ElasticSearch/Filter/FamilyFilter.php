@@ -3,6 +3,7 @@
 namespace Pim\Bundle\CatalogBundle\ElasticSearch\Filter;
 
 use Pim\Component\Catalog\Exception\InvalidArgumentException;
+use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Query\Filter\FieldFilterHelper;
 use Pim\Component\Catalog\Query\Filter\FieldFilterInterface;
 use Pim\Component\Catalog\Query\Filter\Operators;
@@ -84,5 +85,21 @@ class FamilyFilter extends AbstractFilter implements FieldFilterInterface
         foreach ($values as $value) {
             FieldFilterHelper::checkIdentifier($field, $value, static::class);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getAttributeType(AttributeInterface $attribute)
+    {
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSuffixPath()
+    {
+        return '';
     }
 }

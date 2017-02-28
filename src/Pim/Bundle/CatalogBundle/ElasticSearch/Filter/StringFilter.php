@@ -190,4 +190,26 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
         $resolver->setRequired(['field']);
         $resolver->setDefined(['locale', 'scope']);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getAttributeType(AttributeInterface $attribute)
+    {
+        if ('pim_catalog_text' === $attribute->getAttributeType()) {
+            return '-text';
+        } elseif ('pim_catalog_textarea' === $attribute->getAttributeType()) {
+            return '-text_area';
+        }
+
+        throw new InvalidArgumentException('Unknown attribute type');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSuffixPath()
+    {
+        return '';
+    }
 }

@@ -252,4 +252,24 @@ class MetricFilter extends AbstractFilter implements AttributeFilterInterface
         $resolver->setRequired(['field']);
         $resolver->setDefined(['locale', 'scope']);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getAttributeType(AttributeInterface $attribute)
+    {
+        if ('pim_catalog_metric' === $attribute->getAttributeType()) {
+            return '-metric';
+        }
+
+        throw new InvalidArgumentException('Unknown attribute type');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSuffixPath()
+    {
+        return '.base_data';
+    }
 }

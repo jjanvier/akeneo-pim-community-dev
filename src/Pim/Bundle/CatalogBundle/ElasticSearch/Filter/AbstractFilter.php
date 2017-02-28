@@ -114,7 +114,25 @@ abstract class AbstractFilter implements FilterInterface
     {
         $locale = (null === $locale) ? '<all_locales>' : $locale;
         $scope = (null === $scope) ? '<all_channels>' : $scope;
+        $attributeType = $this->getAttributeType($attribute);
+        $suffixPath = $this->getSuffixPath();
 
-        return 'values.' . $attribute->getCode() . '-metric.' . $scope . '.' . $locale . '.base_data';
+        return 'values.' . $attribute->getCode() . $attributeType . '.' . $scope . '.' . $locale . $suffixPath;
     }
+
+    /**
+     * TODO: This is not (never) the filter's job to do that. Should be reworked along with the analyzers suffixes
+     *
+     * @param AttributeInterface $attribute
+     *
+     * @return string
+     */
+    abstract protected function getAttributeType(AttributeInterface $attribute);
+
+    /**
+     * TODO: This is not (never) the filter's job to do that. Should be reworked along with the analyzers suffixes
+     *
+     * @return string
+     */
+    abstract protected function getSuffixPath();
 }
