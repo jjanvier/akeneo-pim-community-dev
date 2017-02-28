@@ -16,6 +16,9 @@ use Pim\Component\Catalog\Model\ProductValueInterface;
  * @author    Julien Janvier <j.janvier@gmail.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *
+ * @internal for internal use only, please use the \Pim\Component\Catalog\Completeness\CompletenessGeneratorInterface
+ *           to calculate the completeness on a product
  */
 class SimpleCompleteChecker implements ProductValueCompleteCheckerInterface
 {
