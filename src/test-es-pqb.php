@@ -44,11 +44,23 @@ $c = $kernel->getContainer();
 //    echo sprintf("Identifier=%s - MySQL ID=%s\n", $product->getIdentifier(), $product->getId());
 //}
 
-// Complex request: search for camcorders with "sony" in their names and "performance" in their description
+// Complex request 1: search for camcorders with "sony" in their names and "performance" in their description
+//$pqb = $c->get('pim_catalog.query.product_query_builder_factory')->create();
+//$pqb->addFilter('family', Operators::IN_LIST, ['camcorders']);
+//$pqb->addFilter('name', Operators::CONTAINS, 'sony');
+//$pqb->addFilter('description', Operators::CONTAINS, 'performance', ['locale' => 'en_US', 'scope' => 'print']);
+//
+//$products = $pqb->execute();
+//
+//echo sprintf("%d products found...\n", $products->count());
+//foreach ($products as $product) {
+//    echo sprintf("Identifier=%s - MySQL ID=%s\n", $product->getIdentifier(), $product->getId());
+//}
+
+// Complex request 2: search for camcorders with "sony" in their names and "performance" in their description
 $pqb = $c->get('pim_catalog.query.product_query_builder_factory')->create();
-$pqb->addFilter('family', Operators::IN_LIST, ['camcorders']);
-$pqb->addFilter('name', Operators::CONTAINS, 'sony');
-$pqb->addFilter('description', Operators::CONTAINS, 'performance', ['locale' => 'en_US', 'scope' => 'print']);
+$pqb->addFilter('name', Operators::IS_EMPTY, null);
+$pqb->addFilter('weight', Operators::LOWER_THAN, ['amount' => 3, 'unit' => 'KILOGRAM']);
 
 $products = $pqb->execute();
 
