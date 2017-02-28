@@ -115,6 +115,6 @@ abstract class AbstractFilter implements FilterInterface
         $locale = (null === $locale) ? '<all_locales>' : $locale;
         $scope = (null === $scope) ? '<all_channels>' : $scope;
 
-        return 'values.' . $attribute->getCode() . '-text.' . $locale . '.' . $scope;
+        return 'values.' . $attribute->getCode() . '-metric.' . $scope . '.' . $locale . '.base_data';
     }
 }

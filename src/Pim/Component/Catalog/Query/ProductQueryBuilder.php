@@ -91,6 +91,7 @@ class ProductQueryBuilder implements ProductQueryBuilderInterface
         $esQuery = ['query' => [ 'bool' => $clauses], '_source' => ['identifier']];
 
         $response = $esClient->search(['index' => 'product_index', 'type' => 'pim_catalog_product', 'body' => $esQuery]);
+        var_dump('Number of hits found in ES: ' . $response['hits']['total']);
         $identifiers = [];
         foreach ($response['hits']['hits'] as $hit) {
             $identifiers[] = $hit['_source']['identifier'];

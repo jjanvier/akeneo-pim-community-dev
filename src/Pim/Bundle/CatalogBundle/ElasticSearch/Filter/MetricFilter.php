@@ -74,8 +74,8 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                     ]
                 ];
                 $this->clauses->addFilterClause($clause);
-
                 break;
+
             case Operators::NOT_EQUAL:
                 $clause = [
                     'term' => [
@@ -83,7 +83,6 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                     ]
                 ];
                 $this->clauses->addMustNotClause($clause);
-
                 break;
             case Operators::IS_EMPTY:
                 $clause = [
@@ -92,7 +91,6 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                     ]
                 ];
                 $this->clauses->addMustNotClause($clause);
-
                 break;
             case Operators::IS_NOT_EMPTY:
                 $clause = [
@@ -101,8 +99,8 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                     ]
                 ];
                 $this->clauses->addFilterClause($clause);
-
                 break;
+
             case Operators::CONTAINS:
                 $clause = [
                     'query_string' => [
@@ -111,8 +109,8 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                     ]
                 ];
                 $this->clauses->addFilterClause($clause);
-
                 break;
+
             case Operators::DOES_NOT_CONTAIN:
                 $clause = [
                     'query_string' => [
@@ -121,8 +119,8 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                     ]
                 ];
                 $this->clauses->addMustNotClause($clause);
-
                 break;
+
             case Operators::STARTS_WITH:
                 $clause = [
                     'query_string' => [
@@ -131,8 +129,8 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                     ]
                 ];
                 $this->clauses->addFilterClause($clause);
-
                 break;
+
             case Operators::ENDS_WITH:
                 $clause = [
                     'query_string' => [
@@ -141,7 +139,6 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                     ]
                 ];
                 $this->clauses->addFilterClause($clause);
-                
                 break;
             default:
                 throw new InvalidArgumentException('TODO');
