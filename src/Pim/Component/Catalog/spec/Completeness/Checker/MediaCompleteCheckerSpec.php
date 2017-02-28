@@ -3,6 +3,7 @@
 namespace spec\Pim\Component\Catalog\Completeness\Checker;
 
 use Akeneo\Component\FileStorage\Model\FileInfo;
+use Akeneo\Component\FileStorage\Model\FileInfoInterface;
 use PhpSpec\ObjectBehavior;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\ChannelInterface;
@@ -30,22 +31,29 @@ class MediaCompleteCheckerSpec extends ObjectBehavior
 
     public function it_succesfully_checks_complete_media(
         ProductValueInterface $value,
-        ChannelInterface $channel,
-        LocaleInterface $locale,
-        FileInfo $media
+        FileInfoInterface $media
     ) {
+        $value->getMedia()->willReturn($media);
+        $media->getKey()->willReturn('just-a-media');
+        $this->isComplete($value)->shouldReturn(true);
+    }
+
+    public function it_checks_empty_value(ProductValueInterface $value)
+    {
         $value->getMedia()->willReturn(null);
-        $this->isComplete($value, $channel, $locale)->shouldReturn(false);
+        $this->isComplete($value)->shouldReturn(false);
+    }
 
-        $value->getMedia()->willReturn([]);
-        $this->isComplete($value, $channel, $locale)->shouldReturn(false);
-
-        $media->__toString()->willReturn('');
+    public function it_checks_incomplete_media(
+        ProductValueInterface $value,
+        FileInfoInterface $media
+    ) {
         $value->getMedia()->willReturn($media);
-        $this->isComplete($value, $channel, $locale)->shouldReturn(false);
 
-        $media->__toString()->willReturn('other');
-        $value->getMedia()->willReturn($media);
-        $this->isComplete($value, $channel, $locale)->shouldReturn(true);
+        $media->getKey()->willReturn(null);
+        $this->isComplete($value)->shouldReturn(false);
+
+        $media->getKey()->willReturn('');
+        $this->isComplete($value)->shouldReturn(false);
     }
 }

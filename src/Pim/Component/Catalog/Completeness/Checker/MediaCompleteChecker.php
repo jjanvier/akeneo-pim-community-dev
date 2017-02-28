@@ -8,6 +8,8 @@ use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 
 /**
+ * Check if a media collection value is complete or not.
+ *
  * @author    JM Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
@@ -24,7 +26,11 @@ class MediaCompleteChecker implements ProductValueCompleteCheckerInterface
     ) {
         $media = $productValue->getMedia();
 
-        if (!$media || '' === $media->__toString()) {
+        if (null === $media) {
+            return false;
+        }
+
+        if (null === $media->getKey() || '' === $media->getKey()) {
             return false;
         }
 
