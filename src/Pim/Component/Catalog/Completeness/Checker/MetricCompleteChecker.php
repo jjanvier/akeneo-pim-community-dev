@@ -8,7 +8,7 @@ use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 
 /**
- * Check if a metric collection value is complete or not.
+ * Check if a metric collection data is complete or not.
  *
  * @author    JM Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)

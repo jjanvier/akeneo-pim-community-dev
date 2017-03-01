@@ -8,7 +8,7 @@ use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 
 /**
- * Check if a product price collection data value is filled in or not.
+ * Check if a product price collection data is filled in or not.
  *
  * @author    JM Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
