@@ -2,11 +2,14 @@
 
 namespace Pim\Component\Catalog\Completeness\Checker;
 
+use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Model\ChannelInterface;
 use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 
 /**
+ * Check if a product price collection data value is filled in or not.
+ *
  * @author    JM Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
@@ -24,12 +27,8 @@ class PriceCompleteChecker implements ProductValueCompleteCheckerInterface
         ChannelInterface $channel = null,
         LocaleInterface $locale = null
     ) {
-        $expectedCurrencies = array_map(
-            function ($currency) {
-                return $currency->getCode();
-            },
-            $channel->getCurrencies()->toArray()
-        );
+        $expectedCurrencies = $this->getCurrencyCodesToCheck($channel);
+
         foreach ($expectedCurrencies as $currency) {
             foreach ($productValue->getData() as $price) {
                 if ($price->getCurrency() === $currency && null === $price->getData()) {
@@ -46,6 +45,23 @@ class PriceCompleteChecker implements ProductValueCompleteCheckerInterface
      */
     public function supportsValue(ProductValueInterface $productValue)
     {
-        return 'pim_catalog_price_collection' === $productValue->getAttribute()->getAttributeType();
+        return AttributeTypes::PRICE_COLLECTION === $productValue->getAttribute()->getAttributeType();
+    }
+
+    /**
+     * @param ChannelInterface|null $channel
+     *
+     * @return array
+     */
+    private function getCurrencyCodesToCheck(ChannelInterface $channel = null)
+    {
+        if (null === $channel) {
+           return [];
+        }
+
+        return array_map(
+            function ($currency) { return $currency->getCode(); },
+            $channel->getCurrencies()->toArray()
+        );
     }
 }

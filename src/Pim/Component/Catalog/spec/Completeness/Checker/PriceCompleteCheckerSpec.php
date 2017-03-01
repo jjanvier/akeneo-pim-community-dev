@@ -30,7 +30,7 @@ class PriceCompleteCheckerSpec extends ObjectBehavior
         $this->supportsValue($productValue)->shouldReturn(false);
     }
 
-    public function it_succesfully_checks_complete_price_collection(
+    public function it_successfully_checks_complete_price_collection(
         ProductValueInterface $value,
         ChannelInterface $channel,
         LocaleInterface $locale,
@@ -55,7 +55,7 @@ class PriceCompleteCheckerSpec extends ObjectBehavior
         $this->isComplete($value, $channel, $locale)->shouldReturn(true);
     }
 
-    public function it_succesfully_checks_incomplete_price_collection(
+    public function it_successfully_checks_incomplete_price_collection(
         ProductValueInterface $value,
         ChannelInterface $channel,
         LocaleInterface $locale,
@@ -74,5 +74,10 @@ class PriceCompleteCheckerSpec extends ObjectBehavior
 
         $value->getData()->willReturn([$price1]);
         $this->isComplete($value, $channel, $locale)->shouldReturn(false);
+    }
+
+    public function it_considers_the_prices_as_complete_if_there_is_no_channel(ProductValueInterface $value)
+    {
+        $this->isComplete($value)->shouldReturn(true);
     }
 }
