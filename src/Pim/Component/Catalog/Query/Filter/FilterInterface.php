@@ -12,6 +12,8 @@ namespace Pim\Component\Catalog\Query\Filter;
 interface FilterInterface
 {
     /**
+     * TODO: we don't care in the filters
+     *
      * Inject the query builder
      *
      * @param \Doctrine\ORM\QueryBuilder|\Doctrine\ODM\MongoDB\Query\Builder $queryBuilder

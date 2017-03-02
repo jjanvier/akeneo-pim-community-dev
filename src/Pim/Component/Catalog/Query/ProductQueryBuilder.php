@@ -3,6 +3,8 @@
 namespace Pim\Component\Catalog\Query;
 
 use Akeneo\Component\StorageUtils\Cursor\CursorFactoryInterface;
+use Elasticsearch\ClientBuilder;
+use Pim\Bundle\CatalogBundle\ElasticSearch\Filter\Clauses;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Query\Filter\AttributeFilterInterface;
 use Pim\Component\Catalog\Query\Filter\FieldFilterHelper;
@@ -44,6 +46,9 @@ class ProductQueryBuilder implements ProductQueryBuilderInterface
     /** @var array */
     protected $rawFilters = [];
 
+    /** @var Clauses */
+    protected $clauses;
+
     /**
      * Constructor
      *
@@ -64,6 +69,7 @@ class ProductQueryBuilder implements ProductQueryBuilderInterface
         $this->filterRegistry = $filterRegistry;
         $this->sorterRegistry = $sorterRegistry;
         $this->cursorFactory = $cursorFactory;
+        $this->clauses = new Clauses();
 
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
@@ -75,7 +81,27 @@ class ProductQueryBuilder implements ProductQueryBuilderInterface
      */
     public function execute()
     {
-        return $this->cursorFactory->createCursor($this->getQueryBuilder());
+        $clauses = array_merge(
+            //$this->qb is actually the ArrayCollection of clauses
+            $this->clauses->getMustNotClauses(),
+            $this->clauses->getFilterClauses()
+        );
+
+        $esClient = ClientBuilder::create()->build();
+        $esQuery = ['query' => [ 'bool' => $clauses], '_source' => ['identifier']];
+
+        $response = $esClient->search(['index' => 'product_index', 'type' => 'pim_catalog_product', 'body' => $esQuery]);
+        var_dump('Number of hits found in ES: ' . $response['hits']['total']);
+        $identifiers = [];
+        foreach ($response['hits']['hits'] as $hit) {
+            $identifiers[] = $hit['_source']['identifier'];
+        }
+
+        $qb = $this->getQueryBuilder();
+        $qb->where('o.identifier IN (:identifiers)');
+        $qb->setParameter('identifiers', $identifiers);
+
+        return $this->cursorFactory->createCursor($qb);
     }
 
     /**
@@ -196,7 +222,7 @@ class ProductQueryBuilder implements ProductQueryBuilderInterface
      */
     protected function addFieldFilter(FieldFilterInterface $filter, $field, $operator, $value, array $context)
     {
-        $filter->setQueryBuilder($this->getQueryBuilder());
+        $filter->setQueryBuilder($this->clauses);
         $filter->addFieldFilter($field, $operator, $value, $context['locale'], $context['scope'], $context);
 
         return $this;
@@ -223,7 +249,7 @@ class ProductQueryBuilder implements ProductQueryBuilderInterface
         $locale = $attribute->isLocalizable() ? $context['locale'] : null;
         $scope = $attribute->isScopable() ? $context['scope'] : null;
 
-        $filter->setQueryBuilder($this->getQueryBuilder());
+        $filter->setQueryBuilder($this->clauses);
         $filter->addAttributeFilter($attribute, $operator, $value, $locale, $scope, $context);
 
         return $this;
@@ -241,7 +267,7 @@ class ProductQueryBuilder implements ProductQueryBuilderInterface
      */
     protected function addFieldSorter(FieldSorterInterface $sorter, $field, $direction, array $context)
     {
-        $sorter->setQueryBuilder($this->getQueryBuilder());
+        $sorter->setQueryBuilder($this->clauses);
         $sorter->addFieldSorter($field, $direction, $context['locale'], $context['scope']);
 
         return $this;
@@ -263,7 +289,7 @@ class ProductQueryBuilder implements ProductQueryBuilderInterface
         $direction,
         array $context
     ) {
-        $sorter->setQueryBuilder($this->getQueryBuilder());
+        $sorter->setQueryBuilder($this->clauses);
         $sorter->addAttributeSorter($attribute, $direction, $context['locale'], $context['scope']);
 
         return $this;
