@@ -27,8 +27,8 @@ class SimpleCompleteChecker implements ProductValueCompleteCheckerInterface
      */
     public function isComplete(
         ProductValueInterface $productValue,
-        ChannelInterface $channel = null,
-        LocaleInterface $locale = null
+        ChannelInterface $channel,
+        LocaleInterface $locale
     ) {
         $data = $productValue->getData();
 
@@ -52,8 +52,11 @@ class SimpleCompleteChecker implements ProductValueCompleteCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsValue(ProductValueInterface $productValue)
-    {
+    public function supportsValue(
+        ProductValueInterface $productValue,
+        ChannelInterface $channel,
+        LocaleInterface $locale
+    ) {
         return true;
     }
 

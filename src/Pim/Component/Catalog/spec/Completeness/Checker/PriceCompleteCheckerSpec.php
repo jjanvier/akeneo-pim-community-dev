@@ -20,14 +20,16 @@ class PriceCompleteCheckerSpec extends ObjectBehavior
 
     public function it_suports_price_collection_attribute(
         ProductValueInterface $productValue,
-        AttributeInterface $attribute
+        AttributeInterface $attribute,
+        ChannelInterface $channel,
+        LocaleInterface $locale
     ) {
         $productValue->getAttribute()->willReturn($attribute);
         $attribute->getAttributeType()->willReturn('pim_catalog_price_collection');
-        $this->supportsValue($productValue)->shouldReturn(true);
+        $this->supportsValue($productValue, $channel, $locale)->shouldReturn(true);
 
         $attribute->getAttributeType()->willReturn('other');
-        $this->supportsValue($productValue)->shouldReturn(false);
+        $this->supportsValue($productValue, $channel, $locale)->shouldReturn(false);
     }
 
     public function it_successfully_checks_complete_price_collection(
@@ -74,10 +76,5 @@ class PriceCompleteCheckerSpec extends ObjectBehavior
 
         $value->getData()->willReturn([$price1]);
         $this->isComplete($value, $channel, $locale)->shouldReturn(false);
-    }
-
-    public function it_considers_the_prices_as_complete_if_there_is_no_channel(ProductValueInterface $value)
-    {
-        $this->isComplete($value)->shouldReturn(true);
     }
 }

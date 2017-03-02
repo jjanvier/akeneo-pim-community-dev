@@ -16,14 +16,14 @@ class ChainedProductValueCompleteCheckerSpec extends ObjectBehavior
         $this->shouldImplement('Pim\Component\Catalog\Completeness\Checker\ProductValueCompleteCheckerInterface');
     }
 
-    public function it_succesfully_checks_incomplete_attribute(
+    public function it_successfully_checks_incomplete_attribute(
         ProductValueInterface $value,
         ChannelInterface $channel,
         LocaleInterface $locale,
         ProductValueCompleteCheckerInterface $completenessChecker,
         AttributeInterface $attribute
     ) {
-        $completenessChecker->supportsValue($value)->willReturn(true);
+        $completenessChecker->supportsValue($value, $channel, $locale)->willReturn(true);
         $completenessChecker->isComplete($value, $channel, $locale)->willReturn(false);
 
         $this->addProductValueChecker($completenessChecker);
@@ -34,7 +34,7 @@ class ChainedProductValueCompleteCheckerSpec extends ObjectBehavior
         $this->isComplete($value, $channel, $locale)->shouldReturn(false);
     }
 
-    public function it_succesfully_checks_simple_complete_attribute(
+    public function it_successfully_checks_simple_complete_attribute(
         ProductValueInterface $value,
         ChannelInterface $channel,
         LocaleInterface $locale
@@ -46,7 +46,7 @@ class ChainedProductValueCompleteCheckerSpec extends ObjectBehavior
         $this->isComplete($value, $channel, $locale)->shouldReturn(true);
     }
 
-    public function it_succesfully_checks_complete_attribute(
+    public function it_successfully_checks_complete_attribute(
         ProductValueInterface $value,
         ChannelInterface $channel,
         LocaleInterface $locale,
@@ -58,7 +58,7 @@ class ChainedProductValueCompleteCheckerSpec extends ObjectBehavior
 
         $this->addProductValueChecker($completenessChecker);
 
-        $completenessChecker->supportsValue($value)->willReturn(true);
+        $completenessChecker->supportsValue($value, $channel, $locale)->willReturn(true);
         $completenessChecker->isComplete($value, $channel, $locale)->willReturn(true);
 
         $this->isComplete($value, $channel, $locale)->shouldReturn(true);

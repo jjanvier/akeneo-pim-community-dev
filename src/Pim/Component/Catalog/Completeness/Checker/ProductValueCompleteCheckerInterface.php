@@ -27,14 +27,20 @@ interface ProductValueCompleteCheckerInterface
      */
     public function isComplete(
         ProductValueInterface $productValue,
-        ChannelInterface $channel = null,
-        LocaleInterface $locale = null
+        ChannelInterface $channel,
+        LocaleInterface $locale
     );
 
     /**
      * @param ProductValueInterface $productValue
+     * @param ChannelInterface      $channel
+     * @param LocaleInterface       $locale
      *
      * @return bool
      */
-    public function supportsValue(ProductValueInterface $productValue);
+    public function supportsValue(
+        ProductValueInterface $productValue,
+        ChannelInterface $channel,
+        LocaleInterface $locale
+    );
 }

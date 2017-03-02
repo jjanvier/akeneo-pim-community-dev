@@ -24,8 +24,8 @@ class MetricCompleteChecker implements ProductValueCompleteCheckerInterface
      */
     public function isComplete(
         ProductValueInterface $productValue,
-        ChannelInterface $channel = null,
-        LocaleInterface $locale = null
+        ChannelInterface $channel,
+        LocaleInterface $locale
     ) {
         $metric = $productValue->getMetric();
 
@@ -51,8 +51,11 @@ class MetricCompleteChecker implements ProductValueCompleteCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsValue(ProductValueInterface $productValue)
-    {
+    public function supportsValue(
+        ProductValueInterface $productValue,
+        ChannelInterface $channel,
+        LocaleInterface $locale
+    ) {
         return AttributeTypes::METRIC === $productValue->getAttribute()->getAttributeType();
     }
 }

@@ -26,11 +26,11 @@ class ChainedProductValueCompleteChecker implements ProductValueCompleteCheckerI
      */
     public function isComplete(
         ProductValueInterface $productValue,
-        ChannelInterface $channel = null,
-        LocaleInterface $locale = null
+        ChannelInterface $channel,
+        LocaleInterface $locale
     ) {
         foreach ($this->productValueCheckers as $productValueChecker) {
-            if ($productValueChecker->supportsValue($productValue)
+            if ($productValueChecker->supportsValue($productValue, $channel, $locale)
                 && !$productValueChecker->isComplete($productValue, $channel, $locale)
             ) {
                 return false;
@@ -43,10 +43,13 @@ class ChainedProductValueCompleteChecker implements ProductValueCompleteCheckerI
     /**
      * {@inheritdoc}
      */
-    public function supportsValue(ProductValueInterface $productValue)
-    {
+    public function supportsValue(
+        ProductValueInterface $productValue,
+        ChannelInterface $channel,
+        LocaleInterface $locale
+    ) {
         foreach ($this->productValueCheckers as $productValueChecker) {
-            if ($productValueChecker->supportsValue($productValue)) {
+            if ($productValueChecker->supportsValue($productValue, $channel, $locale)) {
                 return true;
             }
         }

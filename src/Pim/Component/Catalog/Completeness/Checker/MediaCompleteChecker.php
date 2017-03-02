@@ -24,8 +24,8 @@ class MediaCompleteChecker implements ProductValueCompleteCheckerInterface
      */
     public function isComplete(
         ProductValueInterface $productValue,
-        ChannelInterface $channel = null,
-        LocaleInterface $locale = null
+        ChannelInterface $channel,
+        LocaleInterface $locale
     ) {
         $media = $productValue->getMedia();
 
@@ -43,8 +43,11 @@ class MediaCompleteChecker implements ProductValueCompleteCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsValue(ProductValueInterface $productValue)
-    {
+    public function supportsValue(
+        ProductValueInterface $productValue,
+        ChannelInterface $channel,
+        LocaleInterface $locale
+    ) {
         return AttributeTypes::BACKEND_TYPE_MEDIA === $productValue->getAttribute()->getBackendType();
     }
 }
