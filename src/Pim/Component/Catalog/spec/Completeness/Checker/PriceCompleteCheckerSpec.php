@@ -10,6 +10,7 @@ use Pim\Component\Catalog\Model\CurrencyInterface;
 use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductPriceInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
+use Prophecy\Argument;
 
 class PriceCompleteCheckerSpec extends ObjectBehavior
 {
@@ -43,6 +44,8 @@ class PriceCompleteCheckerSpec extends ObjectBehavior
         ProductPriceInterface $price2
     ) {
         $channel->getCurrencies()->willReturn($arrayCollection);
+        $arrayCollection->map(Argument::any())->willReturn(['USD', 'EUR']);
+
         $arrayCollection->toArray()->willReturn([$currency1, $currency2]);
 
         $currency1->getCode()->willReturn('USD');
@@ -67,7 +70,7 @@ class PriceCompleteCheckerSpec extends ObjectBehavior
         ProductPriceInterface $price1
     ) {
         $channel->getCurrencies()->willReturn($arrayCollection);
-        $arrayCollection->toArray()->willReturn([$currency1, $currency2]);
+        $arrayCollection->map(Argument::any())->willReturn(['USD', 'EUR']);
 
         $currency1->getCode()->willReturn('USD');
 

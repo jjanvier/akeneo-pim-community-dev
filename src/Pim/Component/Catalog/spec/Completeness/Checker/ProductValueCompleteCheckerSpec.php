@@ -9,7 +9,7 @@ use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 use Pim\Component\Catalog\Completeness\Checker\ProductValueCompleteCheckerInterface;
 
-class ChainedProductValueCompleteCheckerSpec extends ObjectBehavior
+class ProductValueCompleteCheckerSpec extends ObjectBehavior
 {
     function it_is_a_completeness_checker()
     {

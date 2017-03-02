@@ -28,7 +28,9 @@ class PriceCompleteChecker implements ProductValueCompleteCheckerInterface
         ChannelInterface $channel,
         LocaleInterface $locale
     ) {
-        $expectedCurrencies = $this->getCurrencyCodesToCheck($channel);
+        $expectedCurrencies = $channel->getCurrencies()->map(function($currency) {
+            return $currency->getCode();
+        });
 
         foreach ($expectedCurrencies as $currency) {
             foreach ($productValue->getData() as $price) {
@@ -50,18 +52,5 @@ class PriceCompleteChecker implements ProductValueCompleteCheckerInterface
         LocaleInterface $locale
     ) {
         return AttributeTypes::PRICE_COLLECTION === $productValue->getAttribute()->getAttributeType();
-    }
-
-    /**
-     * @param ChannelInterface|null $channel
-     *
-     * @return array
-     */
-    private function getCurrencyCodesToCheck(ChannelInterface $channel)
-    {
-        return array_map(
-            function ($currency) { return $currency->getCode(); },
-            $channel->getCurrencies()->toArray()
-        );
     }
 }
