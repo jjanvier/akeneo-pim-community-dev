@@ -62,7 +62,7 @@ class SimpleCompleteChecker implements ProductValueCompleteCheckerInterface
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      *
      * @return bool
      */
