@@ -1,14 +1,13 @@
 parameters:
-    pim_catalog.completeness.checker.chained.class: Pim\Component\Catalog\Completeness\Checker\ChainedProductValueCompleteChecker
-    pim_catalog.completeness.checker.media.class:   Pim\Component\Catalog\Completeness\Checker\MediaCompleteChecker
-    pim_catalog.completeness.checker.metric.class:  Pim\Component\Catalog\Completeness\Checker\MetricCompleteChecker
-    pim_catalog.completeness.checker.price.class:   Pim\Component\Catalog\Completeness\Checker\PriceCompleteChecker
-    pim_catalog.completeness.checker.simple.class:  Pim\Component\Catalog\Completeness\Checker\SimpleCompleteChecker
+    pim_catalog.completeness.checker.class: Pim\Component\Catalog\Completeness\Checker\ProductValueCompleteChecker
+    pim_catalog.completeness.checker.media.class: Pim\Component\Catalog\Completeness\Checker\MediaCompleteChecker
+    pim_catalog.completeness.checker.metric.class: Pim\Component\Catalog\Completeness\Checker\MetricCompleteChecker
+    pim_catalog.completeness.checker.price.class: Pim\Component\Catalog\Completeness\Checker\PriceCompleteChecker
+    pim_catalog.completeness.checker.simple.class: Pim\Component\Catalog\Completeness\Checker\SimpleCompleteChecker
 
 services:
-    pim_catalog.completeness.checker.chained:
-        class: '%pim_catalog.completeness.checker.chained.class%'
-        public: false
+    pim_catalog.completeness.checker:
+        class: '%pim_catalog.completeness.checker.class%'
 
     pim_catalog.completeness.checker.media:
         class: '%pim_catalog.completeness.checker.media.class%'

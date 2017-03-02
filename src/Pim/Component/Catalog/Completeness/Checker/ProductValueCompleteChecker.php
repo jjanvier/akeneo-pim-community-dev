@@ -14,14 +14,13 @@ use Pim\Component\Catalog\Model\ProductValueInterface;
  * Then it delegates to the internal checkers the responsibility to check the completeness
  * depending on the value's attribute type.
  *
+ * You **have to** call "supportsValue" before calling "isComplete".
+ *
  * @author    JM Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *
- * @internal for internal use only, please use the \Pim\Component\Catalog\Completeness\CompletenessGeneratorInterface
- *           to calculate the completeness on a product
  */
-class ChainedProductValueCompleteChecker implements ProductValueCompleteCheckerInterface
+class ProductValueCompleteChecker implements ProductValueCompleteCheckerInterface
 {
     /** @var ProductValueCompleteCheckerInterface[] */
     protected $productValueCheckers = [];
