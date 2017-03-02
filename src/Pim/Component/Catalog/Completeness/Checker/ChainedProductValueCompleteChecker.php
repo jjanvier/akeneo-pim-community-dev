@@ -8,6 +8,11 @@ use Pim\Component\Catalog\Model\ProductValueInterface;
 
 /**
  * Chained checker that contains all the product value completeness checkers.
+ * It's the front checker that should be used to determine if a value is complete on a given couple channel/locale.
+ *
+ * This checkers supports values that are compatible with the given couple locale/scope.
+ * Then it delegates to the internal checkers the responsibility to check the completeness
+ * depending on the value's attribute type.
  *
  * @author    JM Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2015 Akeneo SAS (http://www.akeneo.com)
@@ -31,13 +36,13 @@ class ChainedProductValueCompleteChecker implements ProductValueCompleteCheckerI
     ) {
         foreach ($this->productValueCheckers as $productValueChecker) {
             if ($productValueChecker->supportsValue($productValue, $channel, $locale)
-                && !$productValueChecker->isComplete($productValue, $channel, $locale)
+                && $productValueChecker->isComplete($productValue, $channel, $locale)
             ) {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -48,13 +53,21 @@ class ChainedProductValueCompleteChecker implements ProductValueCompleteCheckerI
         ChannelInterface $channel,
         LocaleInterface $locale
     ) {
-        foreach ($this->productValueCheckers as $productValueChecker) {
-            if ($productValueChecker->supportsValue($productValue, $channel, $locale)) {
-                return true;
-            }
+        if (null !== $productValue->getScope() && $channel !== $productValue->getScope()) {
+            return false;
         }
 
-        return false;
+        if (null !== $productValue->getLocale() && $locale !== $productValue->getLocale()) {
+            return false;
+        }
+
+        if ($productValue->getAttribute()->isLocaleSpecific() &&
+            !$productValue->getAttribute()->hasLocaleSpecific($locale)
+        ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
