@@ -3,6 +3,21 @@
 namespace Pim\Bundle\CatalogBundle\ElasticSearch;
 
 /**
+ * TODO: /////////////////////////////////////////////////////////////////////////////////
+ *
+ * For now we call this class "Builder", because that's what it does. It builds iteratively the final ES query
+ * and renders it as a php array when needed. Instances of this class are set in the filters (setQueryBuilder) so that
+ * each filters has the possibility to add it's own small condition to the query thanks to this SQB object.
+ *
+ * That is fine, and that's what we did in the previous version. But what we want to do instead is get rid of this
+ * Search Query builder class and have each of the filters capable of modifying the data directly (because they are the
+ * real builder parts in this architecture). So this class only becomes a data holder (which filter are allowed to
+ * modify)and is capable of returning a full featured working query using getQuery(). This SearchQuery could easily
+ * implement a more generic class which interface could support Doctrine ORM Queries, etc.. just something generic
+ * enough.
+ *
+ * TODO: /////////////////////////////////////////////////////////////////////////////////
+ *
  * This stateful class holds the multiple parts of an Elastic Search search query.
  *
  * In two different arrays, it keeps track of the conditions where:
