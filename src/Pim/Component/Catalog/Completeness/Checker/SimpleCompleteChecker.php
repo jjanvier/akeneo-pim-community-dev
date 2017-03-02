@@ -7,10 +7,10 @@ use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 
 /**
- * Check if a product value data is filled in or not. This checker should be registered as the last one so that
+ * Check if a product value data is complete or not. This checker should be registered as the last one so that
  * other particular checker (metric, prices etc..) can be called before.
  *
- * This way we provide a simple way to check if a custom attribute type data is filled in or not.
+ * This way we provide a simple way to check if a custom attribute type value is complete or not.
  * For more complex use case, a custom checker should be written.
  *
  * @author    Julien Janvier <j.janvier@gmail.com>
