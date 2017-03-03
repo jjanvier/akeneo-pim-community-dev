@@ -7,7 +7,7 @@ namespace Pim\Bundle\CatalogBundle\ElasticSearch;
  *
  * For now we call this class "Builder", because that's what it does. It builds iteratively the final ES query
  * and renders it as a php array when needed. Instances of this class are set in the filters (setQueryBuilder) so that
- * each filters has the possibility to add it's own small condition to the query thanks to this SQB object.
+ * each filters has the possibility to add its own small condition to the query thanks to this SQB object.
  *
  * That is fine, and that's what we did in the previous version. But what we want to do instead is get rid of this
  * Search Query builder class and have each of the filters capable of modifying the data directly (because they are the
