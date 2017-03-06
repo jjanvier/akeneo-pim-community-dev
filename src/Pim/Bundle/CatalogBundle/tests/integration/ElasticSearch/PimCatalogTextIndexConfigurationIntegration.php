@@ -1,6 +1,6 @@
 <?php
 
-namespace Pim\Bundle\CatalogBundle\tests\integration\ElasticSearch\Query;
+namespace Pim\Bundle\CatalogBundle\tests\integration\ElasticSearch;
 
 use Elasticsearch\ClientBuilder;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class QueryStringFieldIntegration extends KernelTestCase
+class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
 {
     /** TODO: Also could be generated from configuration */
     const INDEX_NAME = 'product_index_test';
@@ -46,7 +46,7 @@ class QueryStringFieldIntegration extends KernelTestCase
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-text',
+                            'default_field' => 'name-pim_catalog_text',
                             'query'         => 'an*',
                         ],
                     ],
@@ -66,7 +66,7 @@ class QueryStringFieldIntegration extends KernelTestCase
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-text',
+                            'default_field' => 'name-pim_catalog_text',
                             'query'         => 'My\\ product*',
                         ],
                     ],
@@ -79,46 +79,6 @@ class QueryStringFieldIntegration extends KernelTestCase
         $this->assertProducts($productsFound, ['product_1']);
     }
 
-    public function testEndWithOperator()
-    {
-        $query = $this->createSearchQuery([
-            'query' => [
-                'bool' => [
-                    'filter' => [
-                        'query_string' => [
-                            'default_field' => 'name-text.reverse',
-                            'query'         => 'name*',
-                        ],
-                    ],
-                ],
-            ],
-        ]);
-
-        $productsFound = $this->getSearchQueryResults($query);
-
-        $this->assertProducts($productsFound, ['product_3', 'product_5']);
-    }
-
-    public function testEndWithOperatorWithWhiteSpace()
-    {
-        $query = $this->createSearchQuery([
-            'query' => [
-                'bool' => [
-                    'filter' => [
-                        'query_string' => [
-                            'default_field' => 'name-text.reverse',
-                            'query'         => 'this\\ name*',
-                        ],
-                    ],
-                ],
-            ],
-        ]);
-
-        $productsFound = $this->getSearchQueryResults($query);
-
-        $this->assertProducts($productsFound, ['product_3']);
-    }
-
     public function testContainsOperator()
     {
         $query = $this->createSearchQuery([
@@ -126,7 +86,7 @@ class QueryStringFieldIntegration extends KernelTestCase
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-text',
+                            'default_field' => 'name-pim_catalog_text',
                             'query'         => '*Love*',
                         ],
                     ],
@@ -146,7 +106,7 @@ class QueryStringFieldIntegration extends KernelTestCase
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-text',
+                            'default_field' => 'name-pim_catalog_text',
                             'query'         => '*Love\\ this*',
                         ],
                     ],
@@ -164,13 +124,15 @@ class QueryStringFieldIntegration extends KernelTestCase
         $query = $this->createSearchQuery([
             'query' => [
                 'bool' => [
-
                     'must_not' => [
                         'query_string' => [
-                            'default_field' => 'name-text',
+                            'default_field' => 'name-pim_catalog_text',
                             'query'         => '*Love*',
                         ],
                     ],
+                    'filter' => [
+                        'exists' => ['field' => 'name-pim_catalog_text'],
+                    ]
                 ],
             ],
         ]);
@@ -187,7 +149,29 @@ class QueryStringFieldIntegration extends KernelTestCase
                 'query' => [
                     'bool' => [
                         'filter' => [
-                            'missing' => ['field' => 'name-text'],
+                            'query_string' => [
+                                'default_field' => 'name-pim_catalog_text',
+                                'query'         => 'I-love.dots',
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $productsFound = $this->getSearchQueryResults($query);
+
+        $this->assertProducts($productsFound, ['product_8']);
+    }
+
+    public function testEmptyOperator()
+    {
+        $query = $this->createSearchQuery(
+            [
+                'query' => [
+                    'bool' => [
+                        'must_not' => [
+                            'exists' => ['field' => 'name-pim_catalog_text'],
                         ],
                     ],
                 ],
@@ -203,14 +187,48 @@ class QueryStringFieldIntegration extends KernelTestCase
     {
         $query = $this->createSearchQuery([
             'query' => [
-                'bool' => [
-                    'filter' => [
-                        'missing' => ['field' => 'name-text'],
-
+                'match_all' => new \stdClass(),
+            ],
+            'sort'  => [
+                [
+                    'name-pim_catalog_text.raw' => [
+                        'order'   => 'asc',
+                        'missing' => '_first',
                     ],
                 ],
             ],
         ]);
+
+        $productsFound = $this->getSearchQueryResults($query);
+
+        $this->assertProducts(
+            $productsFound,
+            ['product_4', 'product_5', 'product_2', 'product_8', 'product_7', 'product_6', 'product_1', 'product_3']
+        );
+    }
+
+    public function testSortDescending()
+    {
+        $query = $this->createSearchQuery([
+            'query' => [
+                'match_all' => new \stdClass(),
+            ],
+            'sort'  => [
+                [
+                    'name-pim_catalog_text.raw' => [
+                        'order'   => 'desc',
+                        'missing' => '_last',
+                    ],
+                ],
+            ],
+        ]);
+
+        $productsFound = $this->getSearchQueryResults($query);
+
+        $this->assertProducts(
+            $productsFound,
+            ['product_3', 'product_1', 'product_6', 'product_7', 'product_8', 'product_2', 'product_5', 'product_4']
+        );
     }
 
     /**
@@ -232,43 +250,40 @@ class QueryStringFieldIntegration extends KernelTestCase
     {
         $products = [
             [
-                'sku_ident' => 'product_1',
-                'name-text' => 'My product',
+                'sku-pim_catalog_identifier' => 'product_1',
+                'name-pim_catalog_text' => 'My product',
             ],
             [
-                'sku_ident' => 'product_2',
-                'name-text' => 'Another product',
+                'sku-pim_catalog_identifier' => 'product_2',
+                'name-pim_catalog_text' => 'Another product',
             ],
             [
-                'sku_ident' => 'product_3',
-                'name-text' => 'Yeah, love this name',
+                'sku-pim_catalog_identifier' => 'product_3',
+                'name-pim_catalog_text' => 'Yeah, love this name',
             ],
             [
-                'sku_ident' => 'product_4',
-                'name-text' => '',
+                'sku-pim_catalog_identifier' => 'product_4'
             ],
             [
-                'sku_ident' => 'product_5',
-                'name-text' => 'And an uppercase NAME',
+                'sku-pim_catalog_identifier' => 'product_5',
+                'name-pim_catalog_text' => 'And an uppercase NAME',
             ],
             [
-                'sku_ident' => 'product_6',
-                'name-text' => 'Love this product',
+                'sku-pim_catalog_identifier' => 'product_6',
+                'name-pim_catalog_text' => 'Love this product',
             ],
             [
-                'sku_ident' => 'product_7',
-                'name-text' => 'I.love.dots',
+                'sku-pim_catalog_identifier' => 'product_7',
+                'name-pim_catalog_text' => 'I.love.dots',
             ],
             [
-                'sku_ident' => 'product_8',
-                'name-text' => 'I-love.dots',
+                'sku-pim_catalog_identifier' => 'product_8',
+                'name-pim_catalog_text' => 'I-love.dots',
             ],
 
         ];
 
-        foreach ($products as $product) {
-            $this->indexProduct($product);
-        }
+        $this->indexProducts($products);
     }
 
     /**
@@ -287,83 +302,68 @@ class QueryStringFieldIntegration extends KernelTestCase
                     'pim_catalog_product' => [
                         'dynamic_templates' => [
                             [
-                                'text_area' => [
+                                'pim_catalog_textarea' => [
                                     'match_mapping_type' => 'string',
                                     'mapping'            => [
                                         'fields'   => [
-                                            'raw'     => [
+                                            'raw' => [
                                                 'type'     => 'string',
                                                 'analyzer' => 'pim_text_area_raw',
-                                            ],
-                                            'reverse' => [
-                                                'type'     => 'string',
-                                                'analyzer' => 'pim_text_area_reversed',
                                             ],
                                         ],
                                         'type'     => 'string',
                                         'analyzer' => 'pim_text_area_analyzer',
                                     ],
-                                    'match'              => '*-text_area',
+                                    'match'              => '*-pim_catalog_textarea',
                                 ],
                             ],
                             [
-                                'text' => [
+                                'pim_catalog_text' => [
                                     'match_mapping_type' => 'string',
                                     'mapping'            => [
                                         'fields'   => [
-                                            'raw'     => [
+                                            'raw' => [
+                                                'type'     => 'string',
+                                                'analyzer' => 'pim_text_analyzer',
+//                                                That's a cheat ! didn't find other solution to make sort test pass
+//                                                'fielddata' => true
+                                            ],
+                                        ],
+                                        'type'     => 'string',
+                                        'analyzer' => 'pim_text_analyzer',
+                                    ],
+                                    'match'              => '*-pim_catalog_text',
+                                ],
+                            ],
+                            [
+                                'pim_catalog_identifier' => [
+                                    'match_mapping_type' => 'string',
+                                    'mapping'            => [
+                                        'fields'   => [
+                                            'raw' => [
                                                 'type'     => 'string',
                                                 'analyzer' => 'pim_text_analyzer',
                                             ],
-                                            'reverse' => [
-                                                'type'     => 'string',
-                                                'analyzer' => 'pim_text_reversed',
-                                            ],
                                         ],
                                         'type'     => 'string',
                                         'analyzer' => 'pim_text_analyzer',
                                     ],
-                                    'match'              => '*-text',
+                                    'match'              => '*-pim_catalog_identifier',
                                 ],
                             ],
                             [
-                                'ident' => [
+                                'pim_catalog_image' => [
                                     'match_mapping_type' => 'string',
                                     'mapping'            => [
-                                        'fields'   => [
-                                            'raw'     => [
-                                                'type'     => 'string',
-                                                'analyzer' => 'pim_text_analyzer',
-                                            ],
-                                            'reverse' => [
-                                                'type'     => 'string',
-                                                'analyzer' => 'pim_text_reversed',
-                                            ],
-                                        ],
                                         'type'     => 'string',
                                         'analyzer' => 'pim_text_analyzer',
                                     ],
-                                    'match'              => '*-ident',
+                                    'match'              => '*-pim_catalog_image',
                                 ],
                             ],
+                            // Missing pim_catalog_file
                             [
-                                'media' => [
-                                    'match_mapping_type' => 'string',
-                                    'mapping'            => [
-                                        'fields'   => [
-                                            'reverse' => [
-                                                'type'     => 'string',
-                                                'analyzer' => 'pim_text_reversed',
-                                            ],
-                                        ],
-                                        'type'     => 'string',
-                                        'analyzer' => 'pim_text_analyzer',
-                                    ],
-                                    'match'              => '*-media',
-                                ],
-                            ],
-                            [
-                                'date' => [
+                                'pim_catalog_date' => [
                                     'match_mapping_type' => 'date',
                                     'mapping'            => [
                                         'fields' => [
@@ -375,11 +375,11 @@ class QueryStringFieldIntegration extends KernelTestCase
                                         'type'   => 'date',
                                         'format' => 'dateOptionalTime',
                                     ],
-                                    'match'              => '*-date',
+                                    'match'              => '*-pim_catalog_date',
                                 ],
                             ],
                             [
-                                'number' => [
+                                'pim_catalog_number' => [
                                     'match_mapping_type' => 'long',
                                     'mapping'            => [
                                         'fields' => [
@@ -390,11 +390,11 @@ class QueryStringFieldIntegration extends KernelTestCase
                                         ],
                                         'type'   => 'double',
                                     ],
-                                    'match'              => '*-number',
+                                    'match'              => '*-pim_catalog_number',
                                 ],
                             ],
                             [
-                                'metric' => [
+                                'pim_catalog_metric' => [
                                     'match_mapping_type' => 'double',
                                     'mapping'            => [
                                         'fields' => [
@@ -405,11 +405,11 @@ class QueryStringFieldIntegration extends KernelTestCase
                                         ],
                                         'type'   => 'double',
                                     ],
-                                    'match'              => '*-metric',
+                                    'match'              => '*-pim_catalog_metric',
                                 ],
                             ],
                             [
-                                'bool' => [
+                                'pim_catalog_boolean' => [
                                     'match_mapping_type' => 'string',
                                     'mapping'            => [
                                         'fields' => [
@@ -420,7 +420,7 @@ class QueryStringFieldIntegration extends KernelTestCase
                                         ],
                                         'type'   => 'boolean',
                                     ],
-                                    'match'              => '*-bool',
+                                    'match'              => '*-pim_catalog_boolean',
                                 ],
                             ],
                         ],
@@ -439,14 +439,6 @@ class QueryStringFieldIntegration extends KernelTestCase
                             'pim_text_analyzer'      => [
                                 'filter'    => [
                                     'lowercase',
-                                ],
-                                'type'      => 'custom',
-                                'tokenizer' => 'keyword',
-                            ],
-                            'pim_text_reversed'      => [
-                                'filter'    => [
-                                    'lowercase',
-                                    'reverse',
                                 ],
                                 'type'      => 'custom',
                                 'tokenizer' => 'keyword',
@@ -470,18 +462,6 @@ class QueryStringFieldIntegration extends KernelTestCase
                                 'type'        => 'custom',
                                 'tokenizer'   => 'keyword',
                             ],
-                            'pim_text_area_reversed' => [
-                                'filter'      => [
-                                    'lowercase',
-                                    'reverse',
-                                ],
-                                'char_filter' => [
-                                    'html_strip',
-                                    'newline_pattern',
-                                ],
-                                'type'        => 'custom',
-                                'tokenizer'   => 'keyword',
-                            ],
                         ],
                     ],
                 ],
@@ -489,22 +469,28 @@ class QueryStringFieldIntegration extends KernelTestCase
         ];
     }
 
-    private function indexProduct($product)
+    /**
+     * Indexes the given list of products
+     *
+     * @param array $products
+     */
+    private function indexProducts(array $products)
     {
         $params = [];
         $params['index'] = self::INDEX_NAME;
         $params['type'] = self::PRODUCT_TYPE;
 
-        $productBody = [];
+        foreach ($products as $product) {
+            $productBody = [];
 
-        foreach ($product as $field => $value) {
-            $matches = [];
-            if (preg_match('/^(.*)-option$/', $field, $matches)) {
+            foreach ($product as $field => $value) {
+                $matches = [];
+                if (preg_match('/^(.*)-option$/', $field, $matches)) {
 //                $attributeCode = $matches[1];
 //                $optionParams = $this->currentOptions[$attributeCode][$value];
 //                unset($optionParams['code']);
 //                $productBody[$field] = $optionParams;
-            } elseif (preg_match('/^(.*)-options$/', $field, $matches)) {
+                } elseif (preg_match('/^(.*)-options$/', $field, $matches)) {
 //                $attributeCode = $matches[1];
 //                $options = explode(',', $value);
 //                $optionsParams = [];
@@ -514,18 +500,20 @@ class QueryStringFieldIntegration extends KernelTestCase
 //                    $optionsParams[] = $optionParams;
 //                }
 //                $productBody[$field] = $optionsParams;
-            } elseif (preg_match('/^(.*)-metric$/', $field, $matches)) {
-                $productBody[$field] = floatval($value);
-            } elseif (preg_match('/^(.*)-number$/', $field, $matches)) {
-                $productBody[$field] = floatval($value);
-            } else {
-                $productBody[$field] = $value;
+                } elseif (preg_match('/^(.*)-metric$/', $field, $matches)) {
+                    $productBody[$field] = floatval($value);
+                } elseif (preg_match('/^(.*)-number$/', $field, $matches)) {
+                    $productBody[$field] = floatval($value);
+                } else {
+                    $productBody[$field] = $value;
+                }
             }
+
+            $params['body'] = $productBody;
+
+            $this->ESClient->index($params);
         }
 
-        $params['body'] = $productBody;
-
-        $this->ESClient->index($params);
         $this->ESClient->indices()->refresh();
     }
 
@@ -549,7 +537,6 @@ class QueryStringFieldIntegration extends KernelTestCase
             $searchQuery['body'] = $searchClause;
         }
 
-
         if (!empty($sortClause)) {
             $searchQuery['body']['sort'] = $sortClauses;
         }
@@ -570,7 +557,7 @@ class QueryStringFieldIntegration extends KernelTestCase
         $response = $this->ESClient->search($query);
 
         foreach ($response['hits']['hits'] as $hit) {
-            $skus[] = $hit['_source']['sku_ident'];
+            $skus[] = $hit['_source']['sku-pim_catalog_identifier'];
         }
 
         return $skus;
