@@ -78,11 +78,12 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                     'mapping'            => [
                                         'fields'   => [
                                             'raw' => [
-                                                'type'            => 'string',
+                                                'type' => 'keyword',
+                                                'normalizer' => 'lowercase_normalizer'
                                             ],
                                         ],
-                                        'type'     => 'string',
-                                        'analyzer' => 'pim_text_area_analyzer',
+                                        'type'     => 'text',
+                                        'analyzer' => 'pim_text_analyzer',
                                     ],
                                     'match'              => '*-text',
                                 ],
@@ -98,24 +99,9 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                             ],
                                         ],
                                         'type'     => 'text',
-                                        'analyzer' => 'pim_text_analyzer',
+                                        'analyzer' => 'pim_varchar_analyzer',
                                     ],
                                     'match'              => '*-varchar',
-                                ],
-                            ],
-                            [
-                                'pim_catalog_identifier' => [
-                                    'match_mapping_type' => 'string',
-                                    'mapping'            => [
-                                        'fields'   => [
-                                            'raw' => [
-                                                'type' => 'keyword',
-                                            ],
-                                        ],
-                                        'type'     => 'string',
-                                        'analyzer' => 'pim_text_analyzer',
-                                    ],
-                                    'match'              => '*-pim_catalog_identifier',
                                 ],
                             ],
                             [
@@ -195,7 +181,7 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                 ],
                 'settings' => [
                     'analysis' => [
-                        'normalizer' => [
+                        'normalizer'  => [
                             'lowercase_normalizer' => [
                                 "filter" => ["lowercase"],
                             ],
@@ -208,31 +194,21 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                             ],
                         ],
                         'analyzer'    => [
-                            'pim_text_analyzer'      => [
+                            'pim_varchar_analyzer' => [
                                 'filter'    => [
                                     'lowercase',
                                 ],
                                 'type'      => 'custom',
                                 'tokenizer' => 'keyword',
                             ],
-                            'pim_text_area_analyzer' => [
+                            'pim_text_analyzer'    => [
                                 'filter'      => [
                                     'standard',
+                                    'lowercase'
                                 ],
-                                'char_filter' => 'html_strip',
+                                'char_filter' => ['html_strip', 'newline_pattern'],
                                 'type'        => 'custom',
                                 'tokenizer'   => 'standard',
-                            ],
-                            'pim_text_area_raw'      => [
-                                'filter'      => [
-                                    'lowercase',
-                                ],
-                                'char_filter' => [
-                                    'html_strip',
-                                    'newline_pattern',
-                                ],
-                                'type'        => 'custom',
-                                'tokenizer'   => 'keyword',
                             ],
                         ],
                     ],
@@ -329,7 +305,7 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
         $response = $this->ESClient->search($query);
 
         foreach ($response['hits']['hits'] as $hit) {
-            $skus[] = $hit['_source']['sku-pim_catalog_identifier'];
+            $skus[] = $hit['_source']['sku-varchar'];
         }
 
         return $skus;
