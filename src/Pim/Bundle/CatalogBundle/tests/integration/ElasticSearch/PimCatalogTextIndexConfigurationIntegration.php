@@ -3,7 +3,7 @@
 namespace Pim\Bundle\CatalogBundle\tests\integration\ElasticSearch;
 
 use Elasticsearch\ClientBuilder;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * This integration tests checks that given an index configuration and some products indexed
@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
+class PimCatalogTextIndexConfigurationIntegration extends TestCase
 {
     /** TODO: Also could be generated from configuration */
     const INDEX_NAME = 'product_index_test';

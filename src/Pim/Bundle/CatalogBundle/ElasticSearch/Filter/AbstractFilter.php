@@ -80,7 +80,7 @@ abstract class AbstractFilter implements FilterInterface
     {
         if (!$searchQueryBuilder instanceof SearchQueryBuilder) {
             throw new \InvalidArgumentException(
-                'Query builder should be an instance of "\Pim\Bundle\CatalogBundle\ElasticSearch\SearchQueryBuilder"'
+                sprintf('Query builder should be an instance of "%s"', SearchQueryBuilder::class)
             );
         }
 
