@@ -199,7 +199,7 @@ services:
         tags:
             - { name: 'pim_catalog.doctrine.query.filter', priority: 30 }
 
-    pim_catalog.doctrine.query.filter.string:
+    pim_catalog.elastic_search.query.filter.string:
         class: '%pim_catalog.elastic_search.query.filter.string.class%'
         arguments:
             - '@pim_catalog.validator.helper.attribute'

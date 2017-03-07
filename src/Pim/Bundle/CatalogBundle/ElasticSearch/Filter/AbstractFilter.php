@@ -22,7 +22,7 @@ abstract class AbstractFilter implements FilterInterface
     /** @var string[] */
     protected $supportedAttributeTypes;
 
-    /** @var array */
+    /** @var string[] */
     protected $supportedFields;
 
     /**
@@ -124,6 +124,6 @@ abstract class AbstractFilter implements FilterInterface
         $locale = (null === $locale) ? '<all_locales>' : $locale;
         $scope = (null === $scope) ? '<all_channels>' : $scope;
 
-        return 'values.' . $attribute->getCode() . '-' . $attribute->getAttributeType() . '.' . $locale . '.' . $scope;
+        return 'values.' . $attribute->getCode() . '-' . $attribute->getBackendType() . '.' . $locale . '.' . $scope;
     }
 }

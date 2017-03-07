@@ -55,14 +55,14 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
 
         $sqb->addFilter([
                 'term' => [
-                    'values.name-pim_catalog_text.en_US.ecommerce' => 'Sony',
+                    'values.name-varchar.en_US.ecommerce' => 'Sony',
                 ],
             ]
         )->shouldBeCalled();
@@ -77,14 +77,14 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
 
         $sqb->addMustNot([
                 'term' => [
-                    'values.name-pim_catalog_text.en_US.ecommerce' => 'Sony',
+                    'values.name-varchar.en_US.ecommerce' => 'Sony',
                 ],
             ]
         )->shouldBeCalled();
@@ -99,14 +99,14 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
 
         $sqb->addMustNot([
                 'exists' => [
-                    'field' => 'values.name-pim_catalog_text.en_US.ecommerce',
+                    'field' => 'values.name-varchar.en_US.ecommerce',
                 ],
             ]
         )->shouldBeCalled();
@@ -121,14 +121,14 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
 
         $sqb->addFilter([
                 'exists' => [
-                    'field' => 'values.name-pim_catalog_text.en_US.ecommerce',
+                    'field' => 'values.name-varchar.en_US.ecommerce',
                 ],
             ]
         )->shouldBeCalled();
@@ -143,14 +143,14 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
 
         $sqb->addFilter([
                 'query_string' => [
-                    'default_field' => 'values.name-pim_catalog_text.en_US.ecommerce',
+                    'default_field' => 'values.name-varchar.en_US.ecommerce',
                     'query'         => '*sony*',
                 ],
             ]
@@ -166,14 +166,14 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
 
         $sqb->addMustNot([
                 'query_string' => [
-                    'default_field' => 'values.name-pim_catalog_text.en_US.ecommerce',
+                    'default_field' => 'values.name-varchar.en_US.ecommerce',
                     'query'         => '*sony*',
                 ],
             ]
@@ -189,14 +189,14 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
 
         $sqb->addFilter([
                 'query_string' => [
-                    'default_field' => 'values.name-pim_catalog_text.en_US.ecommerce',
+                    'default_field' => 'values.name-varchar.en_US.ecommerce',
                     'query'         => 'sony*',
                 ],
             ]
@@ -212,14 +212,14 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
 
         $sqb->addFilter([
                 'query_string' => [
-                    'default_field' => 'values.name-pim_catalog_text.en_US.ecommerce',
+                    'default_field' => 'values.name-varchar.en_US.ecommerce',
                     'query'         => '*sony',
                 ],
             ]
@@ -243,7 +243,7 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
@@ -265,7 +265,7 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
@@ -283,7 +283,7 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
         $name->isLocaleSpecific()->willReturn(true);
         $name->getAvailableLocaleCodes('fr_FR');
 
@@ -307,7 +307,7 @@ class StringFilterSpec extends ObjectBehavior
         SearchQueryBuilder $sqb
     ) {
         $name->getCode()->willReturn('name');
-        $name->getAttributeType()->willReturn('pim_catalog_text');
+        $name->getBackendType()->willReturn('varchar');
         $name->isScopable()->willReturn(false);
 
         $e = new \LogicException('Attribute "name" does not expect a scope, "ecommerce" given.');
