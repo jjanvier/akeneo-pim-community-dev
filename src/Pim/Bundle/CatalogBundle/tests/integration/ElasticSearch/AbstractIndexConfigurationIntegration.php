@@ -32,7 +32,7 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
         $this->ESClient = ClientBuilder::create()->build();
     }
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
