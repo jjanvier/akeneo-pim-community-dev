@@ -120,15 +120,6 @@ class StringFilter extends AbstractFilter implements AttributeFilterInterface
                 $this->searchQueryBuilder->addFilter($clause);
                 break;
 
-            case Operators::ENDS_WITH:
-                $clause = [
-                    'query_string' => [
-                        'default_field' => $attributePath,
-                        'query'         => '*' . $value,
-                    ],
-                ];
-                $this->searchQueryBuilder->addFilter($clause);
-                break;
             default:
                 throw new \InvalidArgumentException(sprintf('This filter does not support operator "%s".', $operator));
         }

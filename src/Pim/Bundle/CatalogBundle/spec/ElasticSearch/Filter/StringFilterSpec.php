@@ -17,7 +17,7 @@ class StringFilterSpec extends ObjectBehavior
         $this->beConstructedWith(
             $attributeValidatorHelper,
             ['pim_catalog_text', 'pim_catalog_textarea'],
-            ['STARTS WITH', 'ENDS WITH', 'CONTAINS', 'DOES NOT CONTAIN', '=', 'IN', 'EMPTY', 'NOT EMPTY', '!=']
+            ['STARTS WITH', 'CONTAINS', 'DOES NOT CONTAIN', '=', 'IN', 'EMPTY', 'NOT EMPTY', '!=']
         );
     }
 
@@ -36,7 +36,6 @@ class StringFilterSpec extends ObjectBehavior
     {
         $this->getOperators()->shouldReturn([
             'STARTS WITH',
-            'ENDS WITH',
             'CONTAINS',
             'DOES NOT CONTAIN',
             '=',
@@ -45,7 +44,7 @@ class StringFilterSpec extends ObjectBehavior
             'NOT EMPTY',
             '!=',
         ]);
-        $this->supportsOperator('ENDS WITH')->shouldReturn(true);
+        $this->supportsOperator('STARTS WITH')->shouldReturn(true);
         $this->supportsOperator('FAKE')->shouldReturn(false);
     }
 
@@ -204,29 +203,6 @@ class StringFilterSpec extends ObjectBehavior
 
         $this->setQueryBuilder($sqb);
         $this->addAttributeFilter($name, Operators::STARTS_WITH, 'sony', 'en_US', 'ecommerce', []);
-    }
-
-    function it_adds_a_filter_with_operator_ends_with(
-        $attributeValidatorHelper,
-        AttributeInterface $name,
-        SearchQueryBuilder $sqb
-    ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
-
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
-        $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
-
-        $sqb->addFilter([
-                'query_string' => [
-                    'default_field' => 'values.name-varchar.en_US.ecommerce',
-                    'query'         => '*sony',
-                ],
-            ]
-        )->shouldBeCalled();
-
-        $this->setQueryBuilder($sqb);
-        $this->addAttributeFilter($name, Operators::ENDS_WITH, 'sony', 'en_US', 'ecommerce', []);
     }
 
     function it_throws_an_exception_when_the_search_query_builder_is_not_initialized(AttributeInterface $name)

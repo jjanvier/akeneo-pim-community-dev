@@ -46,7 +46,7 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-pim_catalog_text',
+                            'default_field' => 'name-varchar',
                             'query'         => 'an*',
                         ],
                     ],
@@ -66,7 +66,7 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-pim_catalog_text',
+                            'default_field' => 'name-varchar',
                             'query'         => 'My\\ product*',
                         ],
                     ],
@@ -86,7 +86,7 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-pim_catalog_text',
+                            'default_field' => 'name-varchar',
                             'query'         => '*Love*',
                         ],
                     ],
@@ -106,7 +106,7 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-pim_catalog_text',
+                            'default_field' => 'name-varchar',
                             'query'         => '*Love\\ this*',
                         ],
                     ],
@@ -126,12 +126,12 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                 'bool' => [
                     'must_not' => [
                         'query_string' => [
-                            'default_field' => 'name-pim_catalog_text',
+                            'default_field' => 'name-varchar',
                             'query'         => '*Love*',
                         ],
                     ],
                     'filter'   => [
-                        'exists' => ['field' => 'name-pim_catalog_text'],
+                        'exists' => ['field' => 'name-varchar'],
                     ],
                 ],
             ],
@@ -150,7 +150,7 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                     'bool' => [
                         'filter' => [
                             'query_string' => [
-                                'default_field' => 'name-pim_catalog_text',
+                                'default_field' => 'name-varchar',
                                 'query'         => 'I-love.dots',
                             ],
                         ],
@@ -171,7 +171,7 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                 'query' => [
                     'bool' => [
                         'must_not' => [
-                            'exists' => ['field' => 'name-pim_catalog_text'],
+                            'exists' => ['field' => 'name-varchar'],
                         ],
                     ],
                 ],
@@ -191,7 +191,7 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
             ],
             'sort'  => [
                 [
-                    'name-pim_catalog_text.raw' => [
+                    'name-varchar.raw' => [
                         'order'   => 'asc',
                         'missing' => '_first',
                     ],
@@ -215,7 +215,7 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
             ],
             'sort'  => [
                 [
-                    'name-pim_catalog_text.raw' => [
+                    'name-varchar.raw' => [
                         'order'   => 'desc',
                         'missing' => '_last',
                     ],
@@ -251,34 +251,34 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
         $products = [
             [
                 'sku-pim_catalog_identifier' => 'product_1',
-                'name-pim_catalog_text'      => 'My product',
+                'name-varchar'      => 'My product',
             ],
             [
                 'sku-pim_catalog_identifier' => 'product_2',
-                'name-pim_catalog_text'      => 'Another product',
+                'name-varchar'      => 'Another product',
             ],
             [
                 'sku-pim_catalog_identifier' => 'product_3',
-                'name-pim_catalog_text'      => 'Yeah, love this name',
+                'name-varchar'      => 'Yeah, love this name',
             ],
             [
                 'sku-pim_catalog_identifier' => 'product_4',
             ],
             [
                 'sku-pim_catalog_identifier' => 'product_5',
-                'name-pim_catalog_text'      => 'And an uppercase NAME',
+                'name-varchar'      => 'And an uppercase NAME',
             ],
             [
                 'sku-pim_catalog_identifier' => 'product_6',
-                'name-pim_catalog_text'      => 'Love this product',
+                'name-varchar'      => 'Love this product',
             ],
             [
                 'sku-pim_catalog_identifier' => 'product_7',
-                'name-pim_catalog_text'      => 'I.love.dots',
+                'name-varchar'      => 'I.love.dots',
             ],
             [
                 'sku-pim_catalog_identifier' => 'product_8',
-                'name-pim_catalog_text'      => 'I-love.dots',
+                'name-varchar'      => 'I-love.dots',
             ],
 
         ];
@@ -302,7 +302,7 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                     'pim_catalog_product' => [
                         'dynamic_templates' => [
                             [
-                                'pim_catalog_textarea' => [
+                                'text' => [
                                     'match_mapping_type' => 'string',
                                     'mapping'            => [
                                         'fields'   => [
@@ -313,11 +313,11 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                                         'type'     => 'string',
                                         'analyzer' => 'pim_text_area_analyzer',
                                     ],
-                                    'match'              => '*-pim_catalog_textarea',
+                                    'match'              => '*-text',
                                 ],
                             ],
                             [
-                                'pim_catalog_text' => [
+                                'varchar' => [
                                     'match_mapping_type' => 'string',
                                     'mapping'            => [
                                         'fields'   => [
@@ -329,7 +329,7 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                                         'type'     => 'text',
                                         'analyzer' => 'pim_text_analyzer',
                                     ],
-                                    'match'              => '*-pim_catalog_text',
+                                    'match'              => '*-varchar',
                                 ],
                             ],
                             [
