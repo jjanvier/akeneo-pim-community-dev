@@ -1,6 +1,6 @@
 <?php
 
-namespace Pim\Bundle\CatalogBundle\tests\integration\ElasticSearch;
+namespace Pim\Bundle\CatalogBundle\tests\integration\Elasticsearch;
 
 use Elasticsearch\ClientBuilder;
 use PHPUnit\Framework\TestCase;
