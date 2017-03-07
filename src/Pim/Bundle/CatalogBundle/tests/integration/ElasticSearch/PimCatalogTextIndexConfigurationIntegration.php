@@ -322,7 +322,8 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                                     'mapping'            => [
                                         'fields'   => [
                                             'raw' => [
-                                                'type' => 'keyword',
+                                                'type'       => 'keyword',
+                                                'normalizer' => 'lowercase_normalizer',
                                             ],
                                         ],
                                         'type'     => 'text',
@@ -423,6 +424,11 @@ class PimCatalogTextIndexConfigurationIntegration extends KernelTestCase
                 ],
                 'settings' => [
                     'analysis' => [
+                        'normalizer' => [
+                            'lowercase_normalizer' => [
+                                "filter" => ["lowercase"],
+                            ],
+                        ],
                         'char_filter' => [
                             'newline_pattern' => [
                                 'pattern'     => '\\n',
