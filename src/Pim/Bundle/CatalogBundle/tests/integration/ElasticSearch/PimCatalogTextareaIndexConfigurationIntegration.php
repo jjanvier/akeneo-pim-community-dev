@@ -58,8 +58,9 @@ class PimCatalogTextareaIndexConfigurationIntegration extends AbstractIndexConfi
             'query' => [
                 'bool' => [
                     'must_not' => [
-                        'match_phrase' => [
-                            'description-text' => 'cool product',
+                        'query_string' => [
+                            'default_field' => 'description-text.raw',
+                            'query' => '*cool\ product*',
                         ],
                     ],
                     'filter'   => [
@@ -81,8 +82,9 @@ class PimCatalogTextareaIndexConfigurationIntegration extends AbstractIndexConfi
                 'query' => [
                     'bool' => [
                         'filter' => [
-                            'term' => [
-                                'description-text.raw' => 'yeah, love description',
+                            'query_string' => [
+                                'default_field' => 'description-text.raw',
+                                'query'         => 'yeah,\ love\ description',
                             ],
                         ],
                     ],

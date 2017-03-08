@@ -212,35 +212,35 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractIndexConfigura
     {
         $products = [
             [
-                'sku-varchar' => 'product_1',
-                'name-varchar'      => 'My product',
+                'sku-varchar'  => 'product_1',
+                'name-varchar' => 'My product',
             ],
             [
-                'sku-varchar' => 'product_2',
-                'name-varchar'      => 'Another product',
+                'sku-varchar'  => 'product_2',
+                'name-varchar' => 'Another product',
             ],
             [
-                'sku-varchar' => 'product_3',
-                'name-varchar'      => 'Yeah, love this name',
+                'sku-varchar'  => 'product_3',
+                'name-varchar' => 'Yeah, love this name',
             ],
             [
                 'sku-varchar' => 'product_4',
             ],
             [
-                'sku-varchar' => 'product_5',
-                'name-varchar'      => 'And an uppercase NAME',
+                'sku-varchar'  => 'product_5',
+                'name-varchar' => 'And an uppercase NAME',
             ],
             [
-                'sku-varchar' => 'product_6',
-                'name-varchar'      => 'Love this product',
+                'sku-varchar'  => 'product_6',
+                'name-varchar' => 'Love this product',
             ],
             [
-                'sku-varchar' => 'product_7',
-                'name-varchar'      => 'I.love.dots',
+                'sku-varchar'  => 'product_7',
+                'name-varchar' => 'I.love.dots',
             ],
             [
-                'sku-varchar' => 'product_8',
-                'name-varchar'      => 'I-love.dots',
+                'sku-varchar'  => 'product_8',
+                'name-varchar' => 'I-love.dots',
             ],
         ];
 

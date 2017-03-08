@@ -79,7 +79,7 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                         'fields'   => [
                                             'raw' => [
                                                 'type'       => 'keyword',
-                                                'normalizer' => 'varchar_normalizer',
+                                                'normalizer' => 'text_normalizer',
                                             ],
                                         ],
                                         'type'     => 'text',
@@ -95,7 +95,7 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                         'fields'   => [
                                             'raw' => [
                                                 'type'       => 'keyword',
-                                                'normalizer' => 'text_normalizer',
+                                                'normalizer' => 'varchar_normalizer',
                                             ],
                                         ],
                                         'type'     => 'text',
@@ -200,9 +200,7 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                         ],
                         'analyzer'    => [
                             'varchar_analyzer' => [
-                                'filter'    => [
-                                    'lowercase',
-                                ],
+                                'filter'    => ['lowercase'],
                                 'type'      => 'custom',
                                 'tokenizer' => 'keyword',
                             ],
