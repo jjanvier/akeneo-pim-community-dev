@@ -49,6 +49,8 @@ class SearchQueryBuilder
     public function addMustNot(array $clause)
     {
         $this->mustNotClauses[] = $clause;
+
+        return $this;
     }
 
     /**
@@ -59,6 +61,8 @@ class SearchQueryBuilder
     public function addFilter(array $clause)
     {
         $this->filterClauses[] = $clause;
+
+        return $this;
     }
 
     /**

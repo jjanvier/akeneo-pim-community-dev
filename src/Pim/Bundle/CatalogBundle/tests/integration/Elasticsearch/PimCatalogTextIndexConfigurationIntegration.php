@@ -59,7 +59,7 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractIndexConfigura
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-varchar',
+                            'default_field' => 'name-varchar.raw',
                             'query'         => '*Love*',
                         ],
                     ],
@@ -79,7 +79,7 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractIndexConfigura
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-varchar',
+                            'default_field' => 'name-varchar.raw',
                             'query'         => '*Love\\ this*',
                         ],
                     ],
@@ -99,7 +99,7 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractIndexConfigura
                 'bool' => [
                     'must_not' => [
                         'query_string' => [
-                            'default_field' => 'name-varchar',
+                            'default_field' => 'name-varchar.raw',
                             'query'         => '*Love*',
                         ],
                     ],
@@ -137,6 +137,34 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractIndexConfigura
         $this->assertProducts($productsFound, ['product_8']);
     }
 
+    public function testNotEqualsOperator()
+    {
+        $query = $this->createSearchQuery(
+            [
+                'query' => [
+                    'bool' => [
+                        'must_not' => [
+                            'query_string' => [
+                                'default_field' => 'name-varchar',
+                                'query'         => 'I-love.dots',
+                            ],
+                        ],
+                        'filter' => [
+                            'exists' => ['field' => 'name-varchar'],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $productsFound = $this->getSearchQueryResults($query);
+
+        $this->assertProducts(
+            $productsFound,
+            ['product_1', 'product_2', 'product_3', 'product_5', 'product_6', 'product_7']
+        );
+    }
+
     public function testEmptyOperator()
     {
         $query = $this->createSearchQuery(
@@ -154,6 +182,28 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractIndexConfigura
         $productsFound = $this->getSearchQueryResults($query);
 
         $this->assertProducts($productsFound, ['product_4']);
+    }
+
+    public function testNotEmptyOperator()
+    {
+        $query = $this->createSearchQuery(
+            [
+                'query' => [
+                    'bool' => [
+                        'filter' => [
+                            'exists' => ['field' => 'name-varchar'],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $productsFound = $this->getSearchQueryResults($query);
+
+        $this->assertProducts(
+            $productsFound,
+            ['product_1', 'product_2', 'product_3', 'product_5', 'product_6', 'product_7', 'product_8']
+        );
     }
 
     public function testSortAscending()

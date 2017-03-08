@@ -10,7 +10,7 @@ namespace Pim\Bundle\CatalogBundle\tests\integration\Elasticsearch;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class PimCatalogTextareaIndexConfigurationIntegration extends AbstractIndexConfigurationIntegration
+class PimCatalogTextAreaIndexConfigurationIntegration extends AbstractIndexConfigurationIntegration
 {
     public function testStartWithOperator()
     {
@@ -19,7 +19,7 @@ class PimCatalogTextareaIndexConfigurationIntegration extends AbstractIndexConfi
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'description-text',
+                            'default_field' => 'description-text.raw',
                             'query'         => 'an*',
                         ],
                     ],
@@ -97,6 +97,28 @@ class PimCatalogTextareaIndexConfigurationIntegration extends AbstractIndexConfi
         $this->assertProducts($productsFound, ['product_3']);
     }
 
+    public function testNotEqualsOperator()
+    {
+        $query = $this->createSearchQuery(
+            [
+                'query' => [
+                    'bool' => [
+                        'must_not' => [
+                            'query_string' => [
+                                'default_field' => 'description-text.raw',
+                                'query'         => 'yeah,\ love\ description',
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $productsFound = $this->getSearchQueryResults($query);
+
+        $this->assertProducts($productsFound, ['product_1', 'product_2', 'product_4', 'product_5', 'product_6']);
+    }
+
     public function testEmptyOperator()
     {
         $query = $this->createSearchQuery(
@@ -114,6 +136,25 @@ class PimCatalogTextareaIndexConfigurationIntegration extends AbstractIndexConfi
         $productsFound = $this->getSearchQueryResults($query);
 
         $this->assertProducts($productsFound, ['product_6']);
+    }
+
+    public function testNotEmptyOperator()
+    {
+        $query = $this->createSearchQuery(
+            [
+                'query' => [
+                    'bool' => [
+                        'filter' => [
+                            'exists' => ['field' => 'description-text'],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $productsFound = $this->getSearchQueryResults($query);
+
+        $this->assertProducts($productsFound, ['product_1', 'product_2', 'product_3', 'product_4', 'product_5']);
     }
 
     public function testSortAscending()
