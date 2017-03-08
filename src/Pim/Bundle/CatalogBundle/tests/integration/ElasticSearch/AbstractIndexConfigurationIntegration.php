@@ -78,12 +78,12 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                     'mapping'            => [
                                         'fields'   => [
                                             'raw' => [
-                                                'type' => 'keyword',
-                                                'normalizer' => 'lowercase_normalizer'
+                                                'type'       => 'keyword',
+                                                'normalizer' => 'varchar_normalizer',
                                             ],
                                         ],
                                         'type'     => 'text',
-                                        'analyzer' => 'pim_text_analyzer',
+                                        'analyzer' => 'text_analyzer',
                                     ],
                                     'match'              => '*-text',
                                 ],
@@ -95,11 +95,11 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                         'fields'   => [
                                             'raw' => [
                                                 'type'       => 'keyword',
-                                                'normalizer' => 'lowercase_normalizer',
+                                                'normalizer' => 'text_normalizer',
                                             ],
                                         ],
                                         'type'     => 'text',
-                                        'analyzer' => 'pim_varchar_analyzer',
+                                        'analyzer' => 'varchar_analyzer',
                                     ],
                                     'match'              => '*-varchar',
                                 ],
@@ -109,7 +109,7 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                     'match_mapping_type' => 'string',
                                     'mapping'            => [
                                         'type'     => 'string',
-                                        'analyzer' => 'pim_text_analyzer',
+                                        'analyzer' => 'text_analyzer',
                                     ],
                                     'match'              => '*-pim_catalog_image',
                                 ],
@@ -122,7 +122,7 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                         'fields' => [
                                             'raw' => [
                                                 'type'     => 'string',
-                                                'analyzer' => 'pim_text_analyzer',
+                                                'analyzer' => 'text_analyzer',
                                             ],
                                         ],
                                         'type'   => 'date',
@@ -138,7 +138,7 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                         'fields' => [
                                             'raw' => [
                                                 'type'     => 'string',
-                                                'analyzer' => 'pim_text_analyzer',
+                                                'analyzer' => 'text_analyzer',
                                             ],
                                         ],
                                         'type'   => 'double',
@@ -153,7 +153,7 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                         'fields' => [
                                             'raw' => [
                                                 'type'     => 'string',
-                                                'analyzer' => 'pim_text_analyzer',
+                                                'analyzer' => 'text_analyzer',
                                             ],
                                         ],
                                         'type'   => 'double',
@@ -168,7 +168,7 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                         'fields' => [
                                             'raw' => [
                                                 'type'     => 'string',
-                                                'analyzer' => 'pim_text_analyzer',
+                                                'analyzer' => 'text_analyzer',
                                             ],
                                         ],
                                         'type'   => 'boolean',
@@ -182,8 +182,13 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                 'settings' => [
                     'analysis' => [
                         'normalizer'  => [
-                            'lowercase_normalizer' => [
-                                "filter" => ["lowercase"],
+                            'text_normalizer'    => [
+                                'type'        => 'custom',
+                                'filter'      => ['lowercase'],
+                                'char_filter' => [],
+                            ],
+                            'varchar_normalizer' => [
+                                'filter' => ['lowercase'],
                             ],
                         ],
                         'char_filter' => [
@@ -194,18 +199,15 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                             ],
                         ],
                         'analyzer'    => [
-                            'pim_varchar_analyzer' => [
+                            'varchar_analyzer' => [
                                 'filter'    => [
                                     'lowercase',
                                 ],
                                 'type'      => 'custom',
                                 'tokenizer' => 'keyword',
                             ],
-                            'pim_text_analyzer'    => [
-                                'filter'      => [
-                                    'standard',
-                                    'lowercase'
-                                ],
+                            'text_analyzer'    => [
+                                'filter'      => ['lowercase'],
                                 'char_filter' => ['html_strip', 'newline_pattern'],
                                 'type'        => 'custom',
                                 'tokenizer'   => 'standard',
