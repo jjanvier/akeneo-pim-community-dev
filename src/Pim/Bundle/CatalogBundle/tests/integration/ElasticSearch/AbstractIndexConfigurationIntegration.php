@@ -185,6 +185,11 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                             'text_normalizer'    => [
                                 'type'        => 'custom',
                                 'filter'      => ['lowercase'],
+                                // TODO: Should be ["html_strip", "newline_pattern"] ?
+                                // But is not supported for now in ES 5.2 even though it is documented.
+                                // Those string transformations can be made at PRE_INDEX time in PHP.
+                                // Normalizer is an experimental feature.
+                                // see https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-normalizers.html
                                 'char_filter' => [],
                             ],
                             'varchar_normalizer' => [
