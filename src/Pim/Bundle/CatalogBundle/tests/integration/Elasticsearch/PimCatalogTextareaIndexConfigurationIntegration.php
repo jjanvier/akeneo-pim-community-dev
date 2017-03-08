@@ -193,7 +193,6 @@ class PimCatalogTextareaIndexConfigurationIntegration extends AbstractIndexConfi
             [
                 'sku-varchar'      => 'product_6',
             ],
-
         ];
 
         $this->indexProducts($products);

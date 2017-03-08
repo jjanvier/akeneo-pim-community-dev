@@ -12,7 +12,6 @@ namespace Pim\Bundle\CatalogBundle\tests\integration\Elasticsearch;
  */
 class PimCatalogTextIndexConfigurationIntegration extends AbstractIndexConfigurationIntegration
 {
-
     public function testStartWithOperator()
     {
         $query = $this->createSearchQuery([
