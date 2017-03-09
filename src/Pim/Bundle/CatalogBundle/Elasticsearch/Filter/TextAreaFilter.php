@@ -110,7 +110,7 @@ class TextAreaFilter extends AbstractFilter implements AttributeFilterInterface
 
             case Operators::NOT_EQUAL:
                 $attributePath .= 'raw';
-                $MustNotClause = [
+                $mustNotClause = [
                     'query_string' => [
                         'default_field' => $attributePath,
                         'query'         => $value,
@@ -123,7 +123,7 @@ class TextAreaFilter extends AbstractFilter implements AttributeFilterInterface
                     ],
                 ];
                 $this->searchQueryBuilder
-                    ->addMustNot($MustNotClause)
+                    ->addMustNot($mustNotClause)
                     ->addFilter($filterClause);
                 break;
 
