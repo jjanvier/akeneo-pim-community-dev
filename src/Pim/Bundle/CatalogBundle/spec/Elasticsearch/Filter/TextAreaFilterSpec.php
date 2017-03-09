@@ -10,20 +10,20 @@ use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Query\Filter\Operators;
 use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
 
-class StringFilterSpec extends ObjectBehavior
+class TextAreaFilterSpec extends ObjectBehavior
 {
     function let(AttributeValidatorHelper $attributeValidatorHelper)
     {
         $this->beConstructedWith(
             $attributeValidatorHelper,
-            ['pim_catalog_text', 'pim_catalog_textarea'],
+            ['pim_catalog_textarea'],
             ['STARTS WITH', 'CONTAINS', 'DOES NOT CONTAIN', '=', 'IN', 'EMPTY', 'NOT EMPTY', '!=']
         );
     }
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('\Pim\Bundle\CatalogBundle\Elasticsearch\Filter\StringFilter');
+        $this->shouldHaveType('\Pim\Bundle\CatalogBundle\Elasticsearch\Filter\TextAreaFilter');
     }
 
     function it_is_a_filter()

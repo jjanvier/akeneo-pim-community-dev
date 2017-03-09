@@ -68,7 +68,7 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::CONTAINS:
-                $attributePath .= 'raw';
+                $attributePath .= '.raw';
 
                 $clause = [
                     'query_string' => [
@@ -80,7 +80,7 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::DOES_NOT_CONTAIN:
-                $attributePath .= 'raw';
+                $attributePath .= '.raw';
                 $mustNotClause = [
                     'query_string' => [
                         'default_field' => $attributePath,
@@ -94,9 +94,8 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                     ],
                 ];
 
-                $this->searchQueryBuilder
-                    ->addMustNot($mustNotClause)
-                    ->addFilter($filterClause);
+                $this->searchQueryBuilder->addMustNot($mustNotClause);
+                $this->searchQueryBuilder->addFilter($filterClause);
                 break;
 
             case Operators::EQUALS:
@@ -122,9 +121,8 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                         'exists' => ['field' => $attributePath],
                     ],
                 ];
-                $this->searchQueryBuilder
-                    ->addMustNot($MustNotClause)
-                    ->addFilter($filterClause);
+                $this->searchQueryBuilder->addMustNot($MustNotClause);
+                $this->searchQueryBuilder->addFilter($filterClause);
                 break;
 
             case Operators::IS_EMPTY:
