@@ -22,9 +22,6 @@ abstract class AbstractFilter implements FilterInterface
     /** @var string[] */
     protected $supportedAttributeTypes;
 
-    /** @var string[] */
-    protected $supportedFields;
-
     /**
      * {@inheritdoc}
      */
@@ -55,22 +52,6 @@ abstract class AbstractFilter implements FilterInterface
     public function supportsAttribute(AttributeInterface $attribute)
     {
         return in_array($attribute->getAttributeType(), $this->supportedAttributeTypes);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsField($field)
-    {
-        return in_array($field, $this->supportedFields);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFields()
-    {
-        return $this->supportedFields;
     }
 
     /**
