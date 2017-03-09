@@ -1,6 +1,6 @@
 <?php
 
-namespace Pim\Bundle\CatalogBundle\tests\integration\Elasticsearch;
+namespace Pim\Bundle\CatalogBundle\tests\integration\Elasticsearch\IndexConfiguration;
 
 use Elasticsearch\ClientBuilder;
 use PHPUnit\Framework\TestCase;
@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-abstract class AbstractIndexConfigurationIntegration extends TestCase
+abstract class AbstractPimCatalogIntegration extends TestCase
 {
     /** TODO: Also could be generated from configuration */
     const INDEX_NAME = 'product_index_test';
@@ -114,7 +114,6 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                                     'match'              => '*-pim_catalog_image',
                                 ],
                             ],
-                            // Missing pim_catalog_file
                             [
                                 'pim_catalog_date' => [
                                     'match_mapping_type' => 'date',
@@ -185,11 +184,6 @@ abstract class AbstractIndexConfigurationIntegration extends TestCase
                             'text_normalizer'    => [
                                 'type'        => 'custom',
                                 'filter'      => ['lowercase'],
-                                // TODO: Should be ["html_strip", "newline_pattern"] ?
-                                // But is not supported for now in ES 5.2 even though it is documented.
-                                // Those string transformations can be made at PRE_INDEX time in PHP.
-                                // Normalizer is an experimental feature.
-                                // see https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-normalizers.html
                                 'char_filter' => [],
                             ],
                             'varchar_normalizer' => [

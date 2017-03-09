@@ -1,7 +1,6 @@
 <?php
 
-namespace Pim\Bundle\CatalogBundle\tests\integration\Elasticsearch;
-
+namespace Pim\Bundle\CatalogBundle\tests\integration\Elasticsearch\IndexConfiguration;
 /**
  * This integration tests checks that given an index configuration and some products indexed
  * the text area research are consistent.
@@ -10,7 +9,7 @@ namespace Pim\Bundle\CatalogBundle\tests\integration\Elasticsearch;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class PimCatalogTextAreaIndexConfigurationIntegration extends AbstractIndexConfigurationIntegration
+class PimCatalogTextAreaIndexConfigurationIntegration extends AbstractPimCatalogIntegration
 {
     public function testStartWithOperator()
     {
@@ -19,7 +18,7 @@ class PimCatalogTextAreaIndexConfigurationIntegration extends AbstractIndexConfi
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'description-text.raw',
+                            'default_field' => 'description-text',
                             'query'         => 'an*',
                         ],
                     ],
@@ -39,7 +38,7 @@ class PimCatalogTextAreaIndexConfigurationIntegration extends AbstractIndexConfi
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'description-text',
+                            'default_field' => 'description-text.raw',
                             'query'         => '*My*',
                         ],
                     ],
