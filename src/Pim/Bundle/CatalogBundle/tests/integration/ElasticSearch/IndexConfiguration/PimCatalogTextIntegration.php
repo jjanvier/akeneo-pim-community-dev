@@ -32,9 +32,6 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
         $this->assertProducts($productsFound, ['product_2', 'product_5']);
     }
 
-    /**
-     * @group todo
-     */
     public function testStartWithOperatorWithWhiteSpace()
     {
         $query = $this->createSearchQuery([
@@ -63,7 +60,7 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-varchar.raw',
+                            'default_field' => 'name-varchar',
                             'query'         => '*Love*',
                         ],
                     ],
@@ -83,7 +80,7 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'name-varchar.raw',
+                            'default_field' => 'name-varchar',
                             'query'         => '*Love\\ this*',
                         ],
                     ],
@@ -103,7 +100,7 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
                 'bool' => [
                     'must_not' => [
                         'query_string' => [
-                            'default_field' => 'name-varchar.raw',
+                            'default_field' => 'name-varchar',
                             'query'         => '*Love*',
                         ],
                     ],
@@ -126,9 +123,8 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
                 'query' => [
                     'bool' => [
                         'filter' => [
-                            'query_string' => [
-                                'default_field' => 'name-varchar',
-                                'query'         => 'I-love.dots',
+                            'term' => [
+                                'name-varchar.raw' => 'I-love.dots',
                             ],
                         ],
                     ],
@@ -148,9 +144,8 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
                 'query' => [
                     'bool' => [
                         'must_not' => [
-                            'query_string' => [
-                                'default_field' => 'name-varchar',
-                                'query'         => 'I-love.dots',
+                            'term' => [
+                                'name-varchar.raw' => 'I-love.dots',
                             ],
                         ],
                         'filter' => [

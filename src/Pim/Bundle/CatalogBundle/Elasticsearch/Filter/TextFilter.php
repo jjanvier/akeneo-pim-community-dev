@@ -68,6 +68,7 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::CONTAINS:
+                // TODO: Do we want to search for real token (words) ?
                 $clause = [
                     'query_string' => [
                         'default_field' => $attributePath,
@@ -96,24 +97,20 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::EQUALS:
-                // TODO: Should we use term here ?
-                // In that case, we should not escape the value here.
+                // TODO: Does it make sense here ?
                 $clause = [
-                    'query_string' => [
-                        'default_field' => $attributePath,
-                        'query'         => $value,
+                    'term' => [
+                        $attributePath => $value,
                     ],
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
                 break;
 
             case Operators::NOT_EQUAL:
-                // TODO: Should we use term here ?
-                // In that case, we should not escape the value here.
-                $MustNotClause = [
-                    'query_string' => [
-                        'default_field' => $attributePath,
-                        'query'         => $value,
+                // TODO: Does it make sense here ?
+                $mustNotClause = [
+                    'term' => [
+                        $attributePath => $value,
                     ],
                 ];
 
@@ -122,7 +119,7 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                         'exists' => ['field' => $attributePath],
                     ],
                 ];
-                $this->searchQueryBuilder->addMustNot($MustNotClause);
+                $this->searchQueryBuilder->addMustNot($mustNotClause);
                 $this->searchQueryBuilder->addFilter($filterClause);
                 break;
 

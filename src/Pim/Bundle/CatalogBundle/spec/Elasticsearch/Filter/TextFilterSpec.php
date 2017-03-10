@@ -60,9 +60,8 @@ class TextFilterSpec extends ObjectBehavior
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
 
         $sqb->addFilter([
-                'query_string' => [
-                    'default_field' => 'values.name-varchar.en_US.ecommerce',
-                    'query'         => 'Sony',
+                'term' => [
+                    'values.name-varchar.en_US.ecommerce' => 'Sony',
                 ],
             ]
         )->shouldBeCalled();
@@ -83,9 +82,8 @@ class TextFilterSpec extends ObjectBehavior
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
 
         $sqb->addMustNot([
-                'query_string' => [
-                    'default_field' => 'values.name-varchar.en_US.ecommerce',
-                    'query'         => 'Sony',
+                'term' => [
+                    'values.name-varchar.en_US.ecommerce' => 'Sony',
                 ],
             ]
         )->shouldBeCalled();
@@ -158,7 +156,7 @@ class TextFilterSpec extends ObjectBehavior
 
         $sqb->addFilter([
                 'query_string' => [
-                    'default_field' => 'values.name-varchar.en_US.ecommerce.raw',
+                    'default_field' => 'values.name-varchar.en_US.ecommerce',
                     'query'         => '*sony*',
                 ],
             ]
@@ -182,7 +180,7 @@ class TextFilterSpec extends ObjectBehavior
         $sqb->addMustNot(
             [
                 'query_string' => [
-                    'default_field' => 'values.name-varchar.en_US.ecommerce.raw',
+                    'default_field' => 'values.name-varchar.en_US.ecommerce',
                     'query'         => '*sony*',
                 ],
             ]
@@ -190,7 +188,7 @@ class TextFilterSpec extends ObjectBehavior
 
         $sqb->addFilter([
             'filter' => [
-                'exists' => ['field' => 'values.name-varchar.en_US.ecommerce.raw'],
+                'exists' => ['field' => 'values.name-varchar.en_US.ecommerce'],
             ],
         ])->shouldBeCalled();
 

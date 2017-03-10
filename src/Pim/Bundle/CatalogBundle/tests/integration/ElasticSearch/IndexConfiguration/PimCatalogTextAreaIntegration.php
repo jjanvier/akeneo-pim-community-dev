@@ -18,7 +18,7 @@ class PimCatalogTextAreaIndexConfigurationIntegration extends AbstractPimCatalog
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'description-text',
+                            'default_field' => 'description-text.raw',
                             'query'         => 'an*',
                         ],
                     ],
@@ -81,9 +81,8 @@ class PimCatalogTextAreaIndexConfigurationIntegration extends AbstractPimCatalog
                 'query' => [
                     'bool' => [
                         'filter' => [
-                            'query_string' => [
-                                'default_field' => 'description-text.raw',
-                                'query'         => 'yeah,\ love\ description',
+                            'term' => [
+                                'description-text.raw' => 'yeah, love description',
                             ],
                         ],
                     ],
@@ -103,11 +102,13 @@ class PimCatalogTextAreaIndexConfigurationIntegration extends AbstractPimCatalog
                 'query' => [
                     'bool' => [
                         'must_not' => [
-                            'query_string' => [
-                                'default_field' => 'description-text.raw',
-                                'query'         => 'yeah,\ love\ description',
+                            'term' => [
+                                'description-text.raw' => 'yeah, love description',
                             ],
                         ],
+                        'filter' => [
+                            'exists' => ['field' => 'description-text.raw']
+                        ]
                     ],
                 ],
             ]
@@ -115,7 +116,7 @@ class PimCatalogTextAreaIndexConfigurationIntegration extends AbstractPimCatalog
 
         $productsFound = $this->getSearchQueryResults($query);
 
-        $this->assertProducts($productsFound, ['product_1', 'product_2', 'product_4', 'product_5', 'product_6']);
+        $this->assertProducts($productsFound, ['product_1', 'product_2', 'product_4', 'product_5']);
     }
 
     public function testEmptyOperator()

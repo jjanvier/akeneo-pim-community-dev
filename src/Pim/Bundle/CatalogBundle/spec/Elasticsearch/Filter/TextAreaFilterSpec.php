@@ -61,7 +61,7 @@ class TextAreaFilterSpec extends ObjectBehavior
 
         $sqb->addFilter([
                 'term' => [
-                    'values.name-varchar.en_US.ecommerce' => 'Sony',
+                    'values.name-varchar.en_US.ecommerce.raw' => 'Sony',
                 ],
             ]
         )->shouldBeCalled();
@@ -83,10 +83,14 @@ class TextAreaFilterSpec extends ObjectBehavior
 
         $sqb->addMustNot([
                 'term' => [
-                    'values.name-varchar.en_US.ecommerce' => 'Sony',
+                    'values.name-varchar.en_US.ecommerce.raw' => 'Sony',
                 ],
             ]
         )->shouldBeCalled();
+
+        $sqb->addFilter([
+            'exists' => ['field' => 'values.name-varchar.en_US.ecommerce.raw'],
+        ])->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
         $this->addAttributeFilter($name, Operators::NOT_EQUAL, 'Sony', 'en_US', 'ecommerce', []);
@@ -149,7 +153,7 @@ class TextAreaFilterSpec extends ObjectBehavior
 
         $sqb->addFilter([
                 'query_string' => [
-                    'default_field' => 'values.name-varchar.en_US.ecommerce',
+                    'default_field' => 'values.name-varchar.en_US.ecommerce.raw',
                     'query'         => '*sony*',
                 ],
             ]
@@ -172,8 +176,15 @@ class TextAreaFilterSpec extends ObjectBehavior
 
         $sqb->addMustNot([
                 'query_string' => [
-                    'default_field' => 'values.name-varchar.en_US.ecommerce',
+                    'default_field' => 'values.name-varchar.en_US.ecommerce.raw',
                     'query'         => '*sony*',
+                ],
+            ]
+        )->shouldBeCalled();
+
+        $sqb->addFilter([
+                'exists' => [
+                    'field' => 'values.name-varchar.en_US.ecommerce.raw',
                 ],
             ]
         )->shouldBeCalled();
@@ -195,7 +206,7 @@ class TextAreaFilterSpec extends ObjectBehavior
 
         $sqb->addFilter([
                 'query_string' => [
-                    'default_field' => 'values.name-varchar.en_US.ecommerce',
+                    'default_field' => 'values.name-varchar.en_US.ecommerce.raw',
                     'query'         => 'sony*',
                 ],
             ]
@@ -229,7 +240,7 @@ class TextAreaFilterSpec extends ObjectBehavior
         $this->shouldThrow(
             InvalidPropertyTypeException::stringExpected(
                 'name',
-                'Pim\Bundle\CatalogBundle\Elasticsearch\Filter\StringFilter',
+                'Pim\Bundle\CatalogBundle\Elasticsearch\Filter\TextAreaFilter',
                 123
             )
         )->during('addAttributeFilter', [$name, Operators::CONTAINS, 123, 'en_US', 'ecommerce', []]);
@@ -271,7 +282,7 @@ class TextAreaFilterSpec extends ObjectBehavior
         $this->shouldThrow(
             InvalidPropertyException::expectedFromPreviousException(
                 'name',
-                'Pim\Bundle\CatalogBundle\Elasticsearch\Filter\StringFilter',
+                'Pim\Bundle\CatalogBundle\Elasticsearch\Filter\TextAreaFilter',
                 $e
             )
         )->during('addAttributeFilter', [$name, Operators::CONTAINS, 'Sony', 'en_US', 'ecommerce', []]);
@@ -294,7 +305,7 @@ class TextAreaFilterSpec extends ObjectBehavior
         $this->shouldThrow(
             InvalidPropertyException::expectedFromPreviousException(
                 'name',
-                'Pim\Bundle\CatalogBundle\Elasticsearch\Filter\StringFilter',
+                'Pim\Bundle\CatalogBundle\Elasticsearch\Filter\TextAreaFilter',
                 $e
             )
         )->during('addAttributeFilter', [$name, Operators::CONTAINS, 'Sony', 'en_US', 'ecommerce', []]);

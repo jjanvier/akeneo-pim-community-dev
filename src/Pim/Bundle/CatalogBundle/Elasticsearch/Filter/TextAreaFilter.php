@@ -69,6 +69,7 @@ class TextAreaFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::CONTAINS:
+                $attributePath .= '.raw';
                 $clause = [
                     'query_string' => [
                         'default_field' => $attributePath,
@@ -79,6 +80,7 @@ class TextAreaFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::DOES_NOT_CONTAIN:
+                $attributePath .= '.raw';
                 $mustNotClause = [
                     'query_string' => [
                         'default_field' => $attributePath,
@@ -87,44 +89,38 @@ class TextAreaFilter extends AbstractFilter implements AttributeFilterInterface
                 ];
 
                 $filterClause = [
-                    'filter' => [
-                        'exists' => ['field' => $attributePath],
-                    ],
+                    'exists' => ['field' => $attributePath],
                 ];
 
-                $this->searchQueryBuilder
-                    ->addMustNot($mustNotClause)
-                    ->addFilter($filterClause);
+                $this->searchQueryBuilder->addMustNot($mustNotClause);
+                $this->searchQueryBuilder->addFilter($filterClause);
                 break;
 
             case Operators::EQUALS:
-                $attributePath .= 'raw';
+                // TODO: Does it make sense ?
+                $attributePath .= '.raw';
                 $clause = [
-                    'query_string' => [
-                        'default_field' => $attributePath,
-                        'query'         => $value,
+                    'term' => [
+                        $attributePath => $value,
                     ],
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
                 break;
 
             case Operators::NOT_EQUAL:
-                $attributePath .= 'raw';
+                // TODO: Does it make sense ?
+                $attributePath .= '.raw';
                 $mustNotClause = [
-                    'query_string' => [
-                        'default_field' => $attributePath,
-                        'query'         => $value,
+                    'term' => [
+                        $attributePath => $value,
                     ],
                 ];
 
                 $filterClause = [
-                    'filter' => [
-                        'exists' => ['field' => $attributePath],
-                    ],
+                    'exists' => ['field' => $attributePath],
                 ];
-                $this->searchQueryBuilder
-                    ->addMustNot($mustNotClause)
-                    ->addFilter($filterClause);
+                $this->searchQueryBuilder->addMustNot($mustNotClause);
+                $this->searchQueryBuilder->addFilter($filterClause);
                 break;
 
             case Operators::IS_EMPTY:
