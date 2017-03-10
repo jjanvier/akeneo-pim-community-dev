@@ -97,7 +97,6 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::EQUALS:
-                // TODO: Does it make sense here ?
                 $clause = [
                     'term' => [
                         $attributePath => $value,
@@ -107,7 +106,6 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::NOT_EQUAL:
-                // TODO: Does it make sense here ?
                 $mustNotClause = [
                     'term' => [
                         $attributePath => $value,

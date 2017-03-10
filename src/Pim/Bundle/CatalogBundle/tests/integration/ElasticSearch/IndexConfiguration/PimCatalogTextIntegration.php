@@ -118,6 +118,7 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
 
     public function testEqualsOperator()
     {
+        // TODO: should not use the .raw version here
         $query = $this->createSearchQuery(
             [
                 'query' => [
@@ -139,6 +140,7 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
 
     public function testNotEqualsOperator()
     {
+        // TODO: should not use the .raw version here
         $query = $this->createSearchQuery(
             [
                 'query' => [
