@@ -68,8 +68,6 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::CONTAINS:
-                $attributePath .= '.raw';
-
                 $clause = [
                     'query_string' => [
                         'default_field' => $attributePath,
@@ -80,7 +78,6 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::DOES_NOT_CONTAIN:
-                $attributePath .= '.raw';
                 $mustNotClause = [
                     'query_string' => [
                         'default_field' => $attributePath,
@@ -99,6 +96,8 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::EQUALS:
+                // TODO: Should we use term here ?
+                // In that case, we should not escape the value here.
                 $clause = [
                     'query_string' => [
                         'default_field' => $attributePath,
@@ -109,6 +108,8 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::NOT_EQUAL:
+                // TODO: Should we use term here ?
+                // In that case, we should not escape the value here.
                 $MustNotClause = [
                     'query_string' => [
                         'default_field' => $attributePath,
@@ -165,6 +166,8 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
 
     /**
      * Escapes value
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_reserved_characters
      *
      * @param string $value
      *

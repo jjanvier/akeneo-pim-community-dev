@@ -32,6 +32,9 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
         $this->assertProducts($productsFound, ['product_2', 'product_5']);
     }
 
+    /**
+     * @group todo
+     */
     public function testStartWithOperatorWithWhiteSpace()
     {
         $query = $this->createSearchQuery([
@@ -40,7 +43,8 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
                     'filter' => [
                         'query_string' => [
                             'default_field' => 'name-varchar',
-                            'query'         => 'My\\ product*',
+                            'query'         => 'My\ product*',
+                            'split_on_whitespace' => true
                         ],
                     ],
                 ],

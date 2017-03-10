@@ -182,7 +182,10 @@ abstract class AbstractPimCatalogIntegration extends TestCase
                     'analysis' => [
                         'normalizer'  => [
                             'text_normalizer'    => [
-                                'type'        => 'custom',
+                                // Value is htmlstripped and newline pattern processed prior to indexing (in the PIM)
+                                // ES Normalizers is an experimental feature and they do not support
+                                // html_strip and newlinepattern filters yet.
+                                // see https://www.elastic.co/guide/en/elasticsearch/reference/5.2/analysis-normalizers.html#analysis-normalizers                                'type'        => 'custom',
                                 'filter'      => ['lowercase'],
                                 'char_filter' => [],
                             ],

@@ -44,6 +44,20 @@ class TextFilterIntegration extends AbstractFilterTestCase
                 ]
             ]);
 
+            // There is no html tags in TEXT attributes usually set in the PIM.
+            // This tests shows that if it's the case they are stored as is and not stripped.
+            $this->createProduct('best_cat', [
+                'values' => [
+                    'a_text' => [
+                        [
+                            'data' => 'my <bold>cat</bold> is the most <i>beautiful</i><br/>',
+                            'locale' => null,
+                            'scope' => null,
+                        ],
+                    ],
+                ]
+            ]);
+
             $this->createProduct('empty_product', []);
         }
     }
@@ -58,18 +72,30 @@ class TextFilterIntegration extends AbstractFilterTestCase
 
         $result = $this->execute([['a_text', Operators::STARTS_WITH, 'cats']]);
         $this->assert($result, []);
+
+        $result = $this->execute([['a_text', Operators::STARTS_WITH, 'my dog']]);
+        $this->assert($result, ['best_dog']);
+
+        $result = $this->execute([['a_text', Operators::STARTS_WITH, 'my cat']]);
+        $this->assert($result, []);
     }
 
     public function testOperatorContains()
     {
         $result = $this->execute([['a_text', Operators::CONTAINS, 'at']]);
-        $this->assert($result, ['cat', 'cattle']);
+        $this->assert($result, ['cat', 'cattle', 'best_cat']);
 
         $result = $this->execute([['a_text', Operators::CONTAINS, 'cat']]);
-        $this->assert($result, ['cat', 'cattle']);
+        $this->assert($result, ['cat', 'cattle', 'best_cat']);
 
         $result = $this->execute([['a_text', Operators::CONTAINS, 'most beautiful']]);
         $this->assert($result, ['best_dog']);
+
+        $result = $this->execute([['a_text', Operators::CONTAINS, 'the']]);
+        $this->assert($result, ['best_dog', 'best_cat']);
+
+        $result = $this->execute([['a_text', Operators::CONTAINS, 'bold>']]);
+        $this->assert($result, ['best_cat']);
     }
 
     public function testOperatorDoesNotContain()
@@ -78,7 +104,13 @@ class TextFilterIntegration extends AbstractFilterTestCase
         $this->assert($result, ['dog', 'best_dog','empty_product']);
 
         $result = $this->execute([['a_text', Operators::DOES_NOT_CONTAIN, 'other']]);
+        $this->assert($result, ['cat', 'cattle', 'dog', 'best_dog', 'best_cat', 'empty_product']);
+
+        $result = $this->execute([['a_text', Operators::DOES_NOT_CONTAIN, '<br/>']]);
         $this->assert($result, ['cat', 'cattle', 'dog', 'best_dog', 'empty_product']);
+
+        $result = $this->execute([['a_text', Operators::DOES_NOT_CONTAIN, 'most beautiful']]);
+        $this->assert($result, ['cat', 'cattle', 'dog', 'empty_product']);
     }
 
     public function testOperatorEquals()
@@ -91,6 +123,15 @@ class TextFilterIntegration extends AbstractFilterTestCase
 
         $result = $this->execute([['a_text', Operators::EQUALS, 'my dog is the most beautiful']]);
         $this->assert($result, ['best_dog']);
+
+        $result = $this->execute([
+            [
+                'a_text',
+                Operators::EQUALS,
+                'my <bold>cat</bold> is the most <i>beautiful</i><br/>',
+            ],
+        ]);
+        $this->assert($result, ['best_cat']);
     }
 
     public function testOperatorEmpty()
@@ -102,16 +143,28 @@ class TextFilterIntegration extends AbstractFilterTestCase
     public function testOperatorNotEmpty()
     {
         $result = $this->execute([['a_text', Operators::IS_NOT_EMPTY, null]]);
-        $this->assert($result, ['cat', 'cattle', 'dog', 'best_dog']);
+        $this->assert($result, ['cat', 'cattle', 'dog', 'best_dog', 'best_cat']);
     }
 
     public function testOperatorDifferent()
     {
         $result = $this->execute([['a_text', Operators::NOT_EQUAL, 'dog']]);
-        $this->assert($result, ['cat', 'cattle']);
+        $this->assert($result, ['cat', 'cattle', 'best_cat']);
 
         $result = $this->execute([['a_text', Operators::NOT_EQUAL, 'cat']]);
-        $this->assert($result, ['cattle', 'dog', 'best_dog']);
+        $this->assert($result, ['cattle', 'dog', 'best_dog', 'best_cat']);
+
+        $result = $this->execute([['a_text', Operators::NOT_EQUAL, 'my dog is the most beautiful']]);
+        $this->assert($result, ['cat', 'cattle', 'dog', 'best_cat']);
+
+        $result = $this->execute([
+            [
+                'a_text',
+                Operators::NOT_EQUAL,
+                'my <bold>cat</bold> is the most <i>beautiful</i><br/>',
+            ],
+        ]);
+        $this->assert($result, ['cat', 'cattle', 'dog', 'best_dog']);
     }
 
     /**
