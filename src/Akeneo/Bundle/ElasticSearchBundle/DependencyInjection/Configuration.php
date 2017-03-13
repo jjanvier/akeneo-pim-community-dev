@@ -22,9 +22,16 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('akeneo_elastic_search');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->arrayNode('configuration_files')
+                    ->isRequired()
+                    ->requiresAtLeastOneElement()
+                    ->prototype('scalar')->isRequired()->cannotBeEmpty()
+                    ->end()
+                ->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }

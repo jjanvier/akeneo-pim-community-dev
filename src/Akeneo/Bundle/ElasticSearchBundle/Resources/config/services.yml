@@ -1,0 +1,5 @@
+services:
+    akeneo_elastic_search.index_configuration.loader:
+        class: 'Akeneo\Bundle\ElasticSearchBundle\IndexConfiguration\Loader'
+        arguments:
+            - '%akeneo_elastic_search.index_configuration.files%'

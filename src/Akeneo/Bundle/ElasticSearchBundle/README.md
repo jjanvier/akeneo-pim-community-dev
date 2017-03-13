@@ -14,3 +14,22 @@ We didn't use those packages for two main reasons:
     
 This bundle is intended to remain simple and stupid. If at some point, we need more advanced features, we should consider replacing this bundle by something more powerful
 that already exists.
+
+## Loading the index configuration
+
+Index configuration can be loaded via separate YAML files.
+
+```yaml
+// app/config.yml
+
+
+akeneo_elastic_search:
+    configuration_files:
+        - 'path/to/a/configuration_file.yml'
+        - 'path/to/another/configuration_file.yml'
+```
+
+All different configuration files are merged during this process. 
+To learn more, please look at the specs examples of {@link src/Akeneo/Bundle/ElasticSearchBundle/spec/IndexConfiguration/LoaderSpec.php} to understand.
+
+That allows, for instance, to add a custom configuration in top of Akeneo's default configuration.

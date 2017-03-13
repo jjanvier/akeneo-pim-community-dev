@@ -23,7 +23,7 @@ class Loader
     /**
      * @param array $configurationFiles
      */
-    public function __construct(array $configurationFiles = [])
+    public function __construct(array $configurationFiles)
     {
         $this->configurationFiles = $configurationFiles;
     }
