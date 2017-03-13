@@ -10,7 +10,7 @@ use Pim\Component\Catalog\Query\Filter\Operators;
 use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
 
 /**
- * Text area Filter for an Elasticsearch query
+ * Text area filter for an Elasticsearch query
  *
  * @author    Samir Boulil <samir.boulil@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
@@ -145,22 +145,6 @@ class TextAreaFilter extends AbstractAttributeFilter implements AttributeFilterI
         }
 
         return $this;
-    }
-
-    /**
-     * Escapes value
-     *
-     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_reserved_characters
-     *
-     * @param string $value
-     *
-     * @return string
-     */
-    protected function escapeValue($value)
-    {
-        $regex = '#[-+=|! &(){}\[\]^"~*<>?:/\\\]#';
-
-        return preg_replace($regex, '\\\$0', $value);
     }
 
     /**

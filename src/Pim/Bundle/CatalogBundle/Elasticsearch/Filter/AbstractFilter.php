@@ -5,6 +5,13 @@ namespace Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
 use Pim\Bundle\CatalogBundle\Elasticsearch\SearchQueryBuilder;
 use Pim\Component\Catalog\Query\Filter\FilterInterface;
 
+/**
+ * Basic implementation of a field filter.
+ *
+ * @author    Samir Boulil <samir.boulil@akeneo.com>
+ * @copyright 2016 Akeneo SAS (http://www.akeneo.com)
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
 abstract class AbstractFilter implements FilterInterface
 {
     /** @var SearchQueryBuilder */

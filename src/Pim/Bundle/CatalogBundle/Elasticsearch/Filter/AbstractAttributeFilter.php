@@ -77,4 +77,20 @@ abstract class AbstractAttributeFilter extends AbstractFilter implements Attribu
 
         return 'values.' . $attribute->getCode() . '-' . $attribute->getBackendType() . '.' . $locale . '.' . $scope;
     }
+
+    /**
+     * Escapes value
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_reserved_characters
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    protected function escapeValue($value)
+    {
+        $regex = '#[-+=|! &(){}\[\]^"~*<>?:/\\\]#';
+
+        return preg_replace($regex, '\\\$0', $value);
+    }
 }

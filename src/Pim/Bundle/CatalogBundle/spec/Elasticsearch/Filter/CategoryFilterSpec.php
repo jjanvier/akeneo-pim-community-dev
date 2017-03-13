@@ -6,6 +6,7 @@ use Akeneo\Component\Classification\Model\CategoryInterface;
 use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
 use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CatalogBundle\Elasticsearch\SearchQueryBuilder;
+use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Query\Filter\Operators;
 
 class CategoryFilterSpec extends ObjectBehavior
@@ -141,7 +142,10 @@ class CategoryFilterSpec extends ObjectBehavior
     {
         $this->setQueryBuilder($sqb);
         $this->shouldThrow(
-            new \InvalidArgumentException('The category filter does not support operator "CONTAINS"')
+            InvalidOperatorException::notSupported(
+                'CONTAINS',
+                'Pim\Bundle\CatalogBundle\Elasticsearch\Filter\CategoryFilter'
+            )
         )->during('addFieldFilter', ['categories', Operators::CONTAINS, ['t-shirt']]);
     }
 }

@@ -16,7 +16,7 @@ use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class TextFilter extends AbstractFilter implements AttributeFilterInterface
+class TextFilter extends AbstractAttributeFilter implements AttributeFilterInterface
 {
     /**
      * @param AttributeValidatorHelper $attrValidatorHelper
@@ -155,21 +155,5 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
         if (!is_string($value) && null !== $value) {
             throw InvalidPropertyTypeException::stringExpected($attribute->getCode(), static::class, $value);
         }
-    }
-
-    /**
-     * Escapes value
-     *
-     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_reserved_characters
-     *
-     * @param string $value
-     *
-     * @return string
-     */
-    protected function escapeValue($value)
-    {
-        $regex = '#[-+=|! &(){}\[\]^"~*<>?:/\\\]#';
-
-        return preg_replace($regex, '\\\$0', $value);
     }
 }

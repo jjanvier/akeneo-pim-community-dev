@@ -3,12 +3,13 @@
 namespace Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
 
 use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
+use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Query\Filter\FieldFilterHelper;
 use Pim\Component\Catalog\Query\Filter\FieldFilterInterface;
 use Pim\Component\Catalog\Query\Filter\Operators;
 
 /**
- * Product category filter
+ * Product category filter.
  *
  * @author    Samir Boulil <samir.boulil@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
@@ -107,9 +108,7 @@ class CategoryFilter extends AbstractFieldFilter implements FieldFilterInterface
                 $this->searchQueryBuilder->addMustNot($mustNotClause);
                 break;
             default:
-                throw new \InvalidArgumentException(
-                    sprintf('The category filter does not support operator "%s"', $operator)
-                );
+                throw InvalidOperatorException::notSupported($operator, static::class);
         }
 
         return $this;
