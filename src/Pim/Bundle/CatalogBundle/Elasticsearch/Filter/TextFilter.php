@@ -3,6 +3,7 @@
 namespace Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
 
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
+use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Query\Filter\AttributeFilterInterface;
 use Pim\Component\Catalog\Query\Filter\Operators;
@@ -137,7 +138,7 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             default:
-                throw new \InvalidArgumentException(sprintf('This filter does not support operator "%s".', $operator));
+                throw InvalidOperatorException::notSupported($operator, static::class);
         }
 
         return $this;

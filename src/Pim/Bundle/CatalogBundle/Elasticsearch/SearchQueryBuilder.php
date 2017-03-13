@@ -46,7 +46,7 @@ class SearchQueryBuilder
      *
      * @param array $clause
      *
-     * @return $this
+     * @return SearchQueryBuilder
      */
     public function addMustNot(array $clause)
     {
@@ -60,7 +60,7 @@ class SearchQueryBuilder
      *
      * @param array $clause
      *
-     * @return $this
+     * @return SearchQueryBuilder
      */
     public function addFilter(array $clause)
     {

@@ -60,10 +60,10 @@ Naming
 ~~~~~~
  - Elasticsearch fields for attribute follow this naming scheme:
 
-``attribute_code-backend_type-locale-scope-es_suffix``
+``attribute_code-backend_type.channel.locale.es_suffix``
 
 - When the attribute is not localizable: ``locale`` becomes ``<all_locales>``
-- When the attribute is not scopable: ``scope`` becomes ``<all_channels>``
+- When the attribute is not scopable: ``channel`` becomes ``<all_channels>``
 
 Fitering
 ~~~~~~~~

@@ -6,6 +6,7 @@ use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CatalogBundle\Elasticsearch\SearchQueryBuilder;
+use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Query\Filter\Operators;
 use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
@@ -260,7 +261,10 @@ class TextAreaFilterSpec extends ObjectBehavior
         $this->setQueryBuilder($sqb);
 
         $this->shouldThrow(
-            new \InvalidArgumentException('This filter does not support operator "IN CHILDREN".')
+            InvalidOperatorException::notSupported(
+                'IN CHILDREN',
+                'Pim\Bundle\CatalogBundle\Elasticsearch\Filter\TextAreaFilter'
+            )
         )->during('addAttributeFilter', [$name, Operators::IN_CHILDREN_LIST, 'Sony', 'en_US', 'ecommerce', []]);
     }
 
