@@ -768,25 +768,29 @@ IN
 ~~
 :Type: filter
 
-.. code-block:: yaml
+.. code-block:: php
 
-    terms:
-        categories: [5, 9]
+    'terms' => [
+        'categories' => [5, 9]
+    ]
 
 NOT IN
 ~~~~~~
 :Type: filter
 
-Same as ``IN``, but with ``must_not`` occured type instead of ``must``
+Same as ``IN``, but with ``must_not`` occured type instead of ``filter``
 
 UNCLASSIFIED
 ~~~~~~~~~~~~
 :Type: filter
 
-.. code-block:: yaml
+.. code-block:: php
 
-    missing:
-        field: "categories"
+    'filter' => [
+        'exists' => [
+            'field' => 'categories'
+        ]
+    ]
 
 IN OR UNCLASSIFIED
 ~~~~~~~~~~~~~~~~~~
@@ -794,6 +798,25 @@ IN OR UNCLASSIFIED
 
 We use the ``should`` occured type to join both conditions on a ``bool`` filter
 
+.. code-block:: php
+
+    [
+        'query' => [
+            'bool' => [
+                'filter' => [
+                    'terms' => [
+                        'field' => [1, 4]
+                ],
+                'must_not' => [
+                    'exists' => [
+                        'field' => 'categories'
+                    ]
+                ]
+            ]
+        ]
+    ]
+
+// TODO: Check this one out
 .. code-block:: yaml
 
     bool:

@@ -77,6 +77,7 @@ class CategoryFilter extends AbstractFieldFilter implements FieldFilterInterface
                 break;
 
             case Operators::NOT_IN_CHILDREN_LIST:
+                // TODO: Check for the minimum_should_match clause
                 $childrenCategoryCodes = $this->getAllChildrenCodes($value);
                 $clause = [
                     'terms' => [
