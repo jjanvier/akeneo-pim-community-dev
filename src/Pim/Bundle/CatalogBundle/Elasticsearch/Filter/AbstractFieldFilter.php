@@ -5,6 +5,7 @@ namespace Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
 use Pim\Component\Catalog\Query\Filter\FieldFilterInterface;
 
 /**
+ * Basic implementation of a field Filter
  *
  * @author    Samir Boulil <samir.boulil@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
