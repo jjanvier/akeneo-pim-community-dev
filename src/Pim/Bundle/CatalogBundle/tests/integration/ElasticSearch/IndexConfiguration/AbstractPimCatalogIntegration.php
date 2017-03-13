@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\CatalogBundle\tests\integration\Elasticsearch\IndexConfiguration;
 
+use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use PHPUnit\Framework\TestCase;
 
@@ -22,7 +23,7 @@ abstract class AbstractPimCatalogIntegration extends TestCase
     /** TODO: Maybe get this from configuration ? */
     const PRODUCT_TYPE = 'pim_catalog_product';
 
-    /** Client */
+    /** @var Client */
     private $ESClient;
 
     public function __construct($name = null, array $data = [], $dataName = '')
@@ -32,6 +33,9 @@ abstract class AbstractPimCatalogIntegration extends TestCase
         $this->ESClient = ClientBuilder::create()->build();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp()
     {
         parent::setUp();

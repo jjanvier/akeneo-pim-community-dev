@@ -4,7 +4,7 @@ namespace Pim\Bundle\CatalogBundle\tests\integration\Elasticsearch\IndexConfigur
 
 /**
  * This integration tests checks that given an index configuration and some products indexed
- * the text research are consistent.
+ * the text research is consistent.
  *
  * @author    Samir Boulil <samir.boulil@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
