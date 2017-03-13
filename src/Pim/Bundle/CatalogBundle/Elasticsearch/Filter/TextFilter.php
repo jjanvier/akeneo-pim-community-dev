@@ -86,9 +86,7 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 ];
 
                 $filterClause = [
-                    'filter' => [
-                        'exists' => ['field' => $attributePath],
-                    ],
+                    'exists' => ['field' => $attributePath],
                 ];
 
                 $this->searchQueryBuilder->addMustNot($mustNotClause);
@@ -112,8 +110,8 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 ];
 
                 $filterClause = [
-                    'filter' => [
-                        'exists' => ['field' => $attributePath],
+                    'exists' => [
+                        'field' => $attributePath,
                     ],
                 ];
                 $this->searchQueryBuilder->addMustNot($mustNotClause);

@@ -89,9 +89,7 @@ class TextFilterSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $sqb->addFilter([
-                'filter' => [
-                    'exists' => ['field' => 'values.name-varchar.en_US.ecommerce'],
-                ],
+                'exists' => ['field' => 'values.name-varchar.en_US.ecommerce'],
             ]
         )->shouldBeCalled();
 
@@ -187,8 +185,8 @@ class TextFilterSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $sqb->addFilter([
-            'filter' => [
-                'exists' => ['field' => 'values.name-varchar.en_US.ecommerce'],
+            'exists' => [
+                'field' => 'values.name-varchar.en_US.ecommerce'
             ],
         ])->shouldBeCalled();
 

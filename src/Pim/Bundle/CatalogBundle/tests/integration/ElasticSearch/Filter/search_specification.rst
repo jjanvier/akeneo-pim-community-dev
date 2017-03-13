@@ -60,7 +60,10 @@ Naming
 ~~~~~~
  - Elasticsearch fields for attribute follow this naming scheme:
 
-``attribute_code-locale-scope-es_suffix``
+``attribute_code-backend_type-locale-scope-es_suffix``
+
+- When the attribute is not localizable: ``locale`` becomes ``<all_locales>``
+- When the attribute is not scopable: ``scope`` becomes ``<all_channels>``
 
 Fitering
 ~~~~~~~~
@@ -99,7 +102,7 @@ and filter with a ``bool`` query with ``must`` typed occurence of the following 
             'bool' => [
                 'filter' => [
                     'match_phrase' => [
-                        'description-en_US-mobile-text' => '30 pages'
+                        'description-text-en_US-mobile' => '30 pages'
 
                     ],
                     'match_phrase' => [
@@ -151,9 +154,9 @@ Text area
 
 Data model
 ~~~~~~~~~~
-.. code-block:: php
+.. code-block:: yaml
 
-  my_description-fr_FR-mobile-text: 'My description'
+  my_description-text-fr_FR-mobile: 'My description'
 
 
 Filtering
@@ -171,7 +174,7 @@ STARTS WITH
 
     'filter' => [
         'query_string' => [
-            'default_field' => 'description-text_area.raw',
+            'default_field' => 'description-text.raw',
             'query' => "My*"
         ]
     ]
@@ -185,7 +188,7 @@ Example:
 
     'filter' => [
         'query_string' => [
-            'default_field' => 'description-text_area.raw',
+            'default_field' => 'description-text.raw',
             'query' => 'My\\ description*'
         ]
     ]
@@ -199,7 +202,7 @@ CONTAINS
 
     'filter' => [
         'query_string' => [
-            'default_field' => 'description-text_area.raw',
+            'default_field' => 'description-text.raw',
             'query' => 'cool\\ product'
         ]
     ]
@@ -215,12 +218,12 @@ Same syntax than the ``contains`` but must be included in a ``must_not`` boolean
     'bool' => [
         'must_not' => [
             'query_string' => [
-                'default_field' => 'description-text_area.raw',
+                'default_field' => 'description-text.raw',
                 'query' => 'cool\\ product'
             ]
         ],
         'filter' => [
-            'exists' => ['field' => 'description-text_area.raw'
+            'exists' => ['field' => 'description-text.raw'
         ]
     ]
 
@@ -235,7 +238,7 @@ Equals (=)
 
     'filter' => [
         'term' => [
-            'description-text_area.raw' => 'My full lookup text'
+            'description-text.raw' => 'My full lookup text'
         ]
     ]
 
@@ -246,7 +249,9 @@ EMPTY
 .. code-block:: php
 
     'must_not' => [
-        'exists => ['field' => 'description-text']
+        'exists => [
+            'field' => 'description-text'
+        ]
     ]
 
 Text
