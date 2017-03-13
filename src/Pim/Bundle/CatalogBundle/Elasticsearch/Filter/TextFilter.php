@@ -68,7 +68,6 @@ class TextFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::CONTAINS:
-                // TODO: Do we want to search for real token (words) ?
                 $clause = [
                     'query_string' => [
                         'default_field' => $attributePath,

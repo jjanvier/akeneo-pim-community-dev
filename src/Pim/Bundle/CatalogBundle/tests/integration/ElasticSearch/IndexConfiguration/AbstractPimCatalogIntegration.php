@@ -92,14 +92,8 @@ abstract class AbstractPimCatalogIntegration extends TestCase
                                 'varchar' => [
                                     'match_mapping_type' => 'string',
                                     'mapping'            => [
-                                        'fields'   => [
-                                            'raw' => [
-                                                'type'       => 'keyword',
-                                                'normalizer' => 'varchar_normalizer',
-                                            ],
-                                        ],
-                                        'type'     => 'text',
-                                        'analyzer' => 'varchar_analyzer',
+                                        'type'     => 'keyword',
+                                        'normalizer' => 'varchar_normalizer',
                                     ],
                                     'match'              => '*-varchar',
                                 ],
@@ -201,11 +195,6 @@ abstract class AbstractPimCatalogIntegration extends TestCase
                             ],
                         ],
                         'analyzer'    => [
-                            'varchar_analyzer' => [
-                                'filter'    => ['lowercase'],
-                                'type'      => 'custom',
-                                'tokenizer' => 'keyword',
-                            ],
                             'text_analyzer'    => [
                                 'filter'      => ['lowercase'],
                                 'char_filter' => ['html_strip', 'newline_pattern'],

@@ -97,7 +97,6 @@ class TextAreaFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::EQUALS:
-                // TODO: Does it make sense ?
                 $attributePath .= '.raw';
                 $clause = [
                     'term' => [
@@ -108,7 +107,6 @@ class TextAreaFilter extends AbstractFilter implements AttributeFilterInterface
                 break;
 
             case Operators::NOT_EQUAL:
-                // TODO: Does it make sense ?
                 $attributePath .= '.raw';
                 $mustNotClause = [
                     'term' => [
@@ -150,6 +148,8 @@ class TextAreaFilter extends AbstractFilter implements AttributeFilterInterface
 
     /**
      * Escapes value
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_reserved_characters
      *
      * @param string $value
      *

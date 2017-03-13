@@ -118,14 +118,13 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
 
     public function testEqualsOperator()
     {
-        // TODO: should not use the .raw version here
         $query = $this->createSearchQuery(
             [
                 'query' => [
                     'bool' => [
                         'filter' => [
                             'term' => [
-                                'name-varchar.raw' => 'I-love.dots',
+                                'name-varchar' => 'I-love.dots',
                             ],
                         ],
                     ],
@@ -140,14 +139,13 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
 
     public function testNotEqualsOperator()
     {
-        // TODO: should not use the .raw version here
         $query = $this->createSearchQuery(
             [
                 'query' => [
                     'bool' => [
                         'must_not' => [
                             'term' => [
-                                'name-varchar.raw' => 'I-love.dots',
+                                'name-varchar' => 'I-love.dots',
                             ],
                         ],
                         'filter' => [
@@ -215,7 +213,7 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
             ],
             'sort'  => [
                 [
-                    'name-varchar.raw' => [
+                    'name-varchar' => [
                         'order'   => 'asc',
                         'missing' => '_first',
                     ],
@@ -239,7 +237,7 @@ class PimCatalogTextIndexConfigurationIntegration extends AbstractPimCatalogInte
             ],
             'sort'  => [
                 [
-                    'name-varchar.raw' => [
+                    'name-varchar' => [
                         'order'   => 'desc',
                         'missing' => '_last',
                     ],

@@ -45,6 +45,8 @@ class SearchQueryBuilder
      * Adds a filter clause to the query
      *
      * @param array $clause
+     *
+     * @return $this
      */
     public function addMustNot(array $clause)
     {
@@ -57,6 +59,8 @@ class SearchQueryBuilder
      * Adds a must_not clause to the query
      *
      * @param array $clause
+     *
+     * @return $this
      */
     public function addFilter(array $clause)
     {
