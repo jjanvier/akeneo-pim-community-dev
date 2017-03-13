@@ -174,4 +174,14 @@ interface ProductValueCollectionInterface extends \Countable, \IteratorAggregate
      * @return ProductValueInterface
      */
     public function next();
+
+    /**
+     * Returns all the values of this collection that satisfy the predicate $callback.
+     * The order of the elements is preserved.
+     *
+     * @param \Closure $callback The predicate used for filtering.
+     *
+     * @return ProductValueCollectionInterface A collection with the results of the filter operation.
+     */
+    public function filter(\Closure $callback);
 }

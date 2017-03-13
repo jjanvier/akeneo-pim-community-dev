@@ -106,4 +106,25 @@ interface CompletenessInterface
      * @return CompletenessInterface
      */
     public function setRatio($ratio);
+
+    /**
+     * Get the missing attributes
+     *
+     * @return AttributeInterface[]
+     */
+    public function getMissingAttributes();
+
+    /**
+     * @param $missingAttributes AttributeInterface[]
+     *
+     * @return CompletenessInterface
+     */
+    public function setMissingAttributes(array $missingAttributes);
+
+    /**
+     * @param AttributeInterface $attribute
+     *
+     * @return CompletenessInterface
+     */
+    public function addMissingAttribute(AttributeInterface $attribute);
 }

@@ -125,7 +125,7 @@ interface FamilyInterface extends TranslatableInterface, ReferableInterface, Ver
     /**
      * Get attribute requirements
      *
-     * @return array
+     * @return AttributeRequirementInterface[]
      */
     public function getAttributeRequirements();
 

@@ -260,6 +260,16 @@ class ProductValueCollection implements ProductValueCollectionInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function filter(\Closure $callback)
+    {
+        $filtered = array_filter($this->values, $callback);
+
+        return new static($filtered);
+    }
+
+    /**
      * Index an attribute
      *
      * @param AttributeInterface $attribute

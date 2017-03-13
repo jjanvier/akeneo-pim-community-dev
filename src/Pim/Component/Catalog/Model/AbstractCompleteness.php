@@ -2,6 +2,9 @@
 
 namespace Pim\Component\Catalog\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Abstract product completeness entity
  *
@@ -31,6 +34,14 @@ abstract class AbstractCompleteness implements CompletenessInterface
 
     /** @var ProductInterface */
     protected $product;
+
+    /** @var Collection */
+    protected $missingAttributes;
+
+    public function __construct()
+    {
+        $this->missingAttributes = new ArrayCollection();
+    }
 
     /**
      * {@inheritdoc}
@@ -73,7 +84,7 @@ abstract class AbstractCompleteness implements CompletenessInterface
      */
     public function getRatio()
     {
-        return $this->ratio;
+        return 100 * $this->missingCount / $this->requiredCount;
     }
 
     /**
@@ -136,6 +147,39 @@ abstract class AbstractCompleteness implements CompletenessInterface
     public function setProduct(ProductInterface $product)
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMissingAttributes()
+    {
+        return $this->missingAttributes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setMissingAttributes(array $missingAttributes)
+    {
+        $this->missingAttributes = $missingAttributes;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addMissingAttribute(AttributeInterface $attribute)
+    {
+        if ($this->missingAttributes->contains($attribute)) {
+            return $this;
+        }
+
+        $this->missingCount++;
+        $this->missingAttributes->add($attribute);
 
         return $this;
     }
