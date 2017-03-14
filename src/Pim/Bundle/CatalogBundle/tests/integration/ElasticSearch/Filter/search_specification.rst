@@ -808,6 +808,7 @@ We use the ``should`` occured type to join both conditions on a ``bool`` filter
                         'field' => [
                             'categories' => [1, 4]
                         ]
+                    ],
                     'bool' => [
                         'must_not' => [
                             'exists' => [

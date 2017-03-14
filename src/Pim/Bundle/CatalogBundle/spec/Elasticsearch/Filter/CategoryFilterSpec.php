@@ -120,7 +120,7 @@ class CategoryFilterSpec extends ObjectBehavior
     }
 
     function it_adds_a_filter_with_operator_IN_LIST_OR_UNCLASSIFIED(SearchQueryBuilder $sqb) {
-        $sqb->addFilter(
+        $sqb->addShould(
             [
                 'terms' => [
                     'categories' => ['t-shirt'],
@@ -128,9 +128,13 @@ class CategoryFilterSpec extends ObjectBehavior
             ]
         )->shouldBeCalled();
 
-        $sqb->addMustNot(
+        $sqb->addShould(
             [
-                'exists' => ['field' => 'categories']
+                'bool' => [
+                    'must_not' => [
+                        'exists' => ['field' => 'categories']
+                    ]
+                ]
             ]
         )->shouldBeCalled();
 
