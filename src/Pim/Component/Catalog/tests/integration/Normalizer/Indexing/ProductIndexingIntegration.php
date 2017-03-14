@@ -154,22 +154,22 @@ class ProductIndexingIntegration extends TestCase
                     '<all_locales>' => ['optionA', 'optionB'],
                 ],
             ],
-            'a_number_float-pim_catalog_number' => [
+            'a_number_float-decimal' => [
                 '<all_channels>' => [
                     '<all_locales>' => '12.5678',
                 ],
             ],
-            'a_number_float_negative-pim_catalog_number' => [
+            'a_number_float_negative-decimal' => [
                 '<all_channels>' => [
                     '<all_locales>' => '-99.8732',
                 ],
             ],
-            'a_number_integer-pim_catalog_number' => [
+            'a_number_integer-decimal' => [
                 '<all_channels>' => [
                     '<all_locales>' => 42,
                 ],
             ],
-            'a_number_integer_negative-pim_catalog_number' => [
+            'a_number_integer_negative-decimal' => [
                 '<all_channels>' => [
                     '<all_locales>' => -42,
                 ],
@@ -250,8 +250,16 @@ class ProductIndexingIntegration extends TestCase
 
                 ],
             ],
-        ]
-                ];
+        ],
+
+            'created'       => '2016-06-14T13:12:50+02:00',
+            'updated'       => '2016-06-14T13:12:50+02:00',
+            'associations'  => [
+                'PACK'   => ['groups' => [], 'products' => ['bar', 'baz']],
+                'UPSELL' => ['groups' => ['groupA'], 'products' => []],
+                'X_SELL' => ['groups' => ['groupB'], 'products' => ['bar']],
+            ],
+        ];
 
         $this->assertIndexingFormat('foo', $expected);
     }
