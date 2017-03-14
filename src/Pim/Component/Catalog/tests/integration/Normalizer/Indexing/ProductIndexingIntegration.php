@@ -276,10 +276,28 @@ class ProductIndexingIntegration extends TestCase
         $serializer = $this->get('pim_serializer');
         $result = $serializer->normalize($product, 'indexing');
         $result = $this->sanitizeDateFields($result);
+        $this->sortValues($result['values']);
 
         $expected = $this->sanitizeDateFields($expected);
+        $this->sortValues($expected['values']);
 
         $this->assertSame($expected, $result);
+    }
+
+    /**
+     * Sort values by attribute code, then by channel, then by locale.
+     *
+     * @param array $values
+     */
+    private function sortValues(array &$values)
+    {
+        ksort($values);
+        foreach ($values as $valueByChannel) {
+            ksort($valueByChannel);
+            foreach ($valueByChannel as $valueByLocale) {
+                ksort($valueByLocale);
+            }
+        }
     }
 
     /**
