@@ -13,7 +13,7 @@ use Symfony\Component\Yaml\Parser;
  *
  * @author    Julien Janvier <j.janvier@gmail.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
- * @license   http://opensource.org/licenses/MIT MIT
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class Loader
 {
@@ -28,6 +28,12 @@ class Loader
         $this->configurationFiles = $configurationFiles;
     }
 
+    /**
+     * Load the Elasticsearch index configuration from multiple YAML files.
+     *
+     * @return IndexConfiguration
+     * @throws \Exception
+     */
     public function load()
     {
         $settings = [];
