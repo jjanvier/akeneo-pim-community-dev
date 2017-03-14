@@ -41,6 +41,9 @@ class SearchQueryBuilder
     /** @var array */
     private $filterClauses = [];
 
+    /** @var array */
+    private $shouldClauses = [];
+
     /**
      * Adds a filter clause to the query
      *
@@ -70,6 +73,36 @@ class SearchQueryBuilder
     }
 
     /**
+     * Adds a should clause to the query
+     *
+     * @param array $clause
+     *
+     * @return SearchQueryBuilder
+     */
+    public function addShould(array $clause)
+    {
+        $this->shouldClauses[] = $clause;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getShouldClauses()
+    {
+        return $this->shouldClauses;
+    }
+
+    /**
+     * @param array $shouldClauses
+     */
+    public function setShouldClauses(array $shouldClauses)
+    {
+        $this->shouldClauses = $shouldClauses;
+    }
+
+    /**
      * Returns an Elastic search Query
      *
      * @param array $source
@@ -93,6 +126,10 @@ class SearchQueryBuilder
 
         if (!empty($this->mustNotClauses)) {
             $searchQuery['query']['bool']['must_not'] = $this->mustNotClauses;
+        }
+
+        if (!empty($this->shouldClauses)) {
+            $searchQuery['query']['bool']['should'] = $this->shouldClauses;
         }
 
         return $searchQuery;

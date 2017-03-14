@@ -803,31 +803,22 @@ We use the ``should`` occured type to join both conditions on a ``bool`` filter
     [
         'query' => [
             'bool' => [
-                'filter' => [
+                'should' => [
                     'terms' => [
-                        'field' => [1, 4]
-                ],
-                'must_not' => [
-                    'exists' => [
-                        'field' => 'categories'
+                        'field' => [
+                            'categories' => [1, 4]
+                        ]
+                    'bool' => [
+                        'must_not' => [
+                            'exists' => [
+                                'field' => 'categories'
+                            ]
+                        ]
                     ]
                 ]
             ]
         ]
     ]
-
-// TODO: Check this one out
-.. code-block:: yaml
-
-    bool:
-        should:
-            -
-                terms:
-                    categories: [1, 4]
-            -
-                missing:
-                    field: "categories"
-        minimum_should_match: 1
 
 IN CHILDREN
 ~~~~~~~~~~~
