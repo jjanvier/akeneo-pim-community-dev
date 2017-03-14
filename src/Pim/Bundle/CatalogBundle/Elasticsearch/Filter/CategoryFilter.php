@@ -38,7 +38,7 @@ class CategoryFilter extends AbstractFieldFilter implements FieldFilterInterface
     /**
      * {@inheritdoc}
      */
-    public function addFieldFilter($field, $operator, $value, $locale = null, $scope = null, $options = [])
+    public function addFieldFilter($field, $operator, $value, $locale = null, $channel = null, $options = [])
     {
         if ($operator !== Operators::UNCLASSIFIED) {
             $this->checkValue($field, $value);

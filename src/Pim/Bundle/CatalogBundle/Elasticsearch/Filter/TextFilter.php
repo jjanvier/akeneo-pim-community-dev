@@ -41,21 +41,21 @@ class TextFilter extends AbstractAttributeFilter implements AttributeFilterInter
         $operator,
         $value,
         $locale = null,
-        $scope = null,
+        $channel = null,
         $options = []
     ) {
         if (null === $this->searchQueryBuilder) {
             throw new \LogicException('The search query builder is not initialized in the filter.');
         }
 
-        $this->checkLocaleAndScope($attribute, $locale, $scope);
+        $this->checkLocaleAndChannel($attribute, $locale, $channel);
 
         if (Operators::IS_EMPTY !== $operator && Operators::IS_NOT_EMPTY !== $operator) {
             $this->checkValue($attribute, $value);
             $value = $this->escapeValue($value);
         }
 
-        $attributePath = $this->getAttributePath($attribute, $locale, $scope);
+        $attributePath = $this->getAttributePath($attribute, $locale, $channel);
 
         switch ($operator) {
             case Operators::STARTS_WITH:

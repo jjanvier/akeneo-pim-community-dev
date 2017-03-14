@@ -758,7 +758,7 @@ Data model
 ~~~~~~~~~~
 .. code-block:: yaml
 
-  categories: [1, 5, 8, 9]
+  categories: ['master', 'categoryA1', 'categoryB']
 
 Filtering
 ~~~~~~~~~
@@ -771,7 +771,7 @@ IN
 .. code-block:: php
 
     'terms' => [
-        'categories' => [5, 9]
+        'categories' => ['categoryA1']
     ]
 
 NOT IN
@@ -806,9 +806,9 @@ We use the ``should`` occured type to join both conditions on a ``bool`` filter
                 'should' => [
                     'terms' => [
                         'field' => [
-                            'categories' => [1, 4]
+                            'categories' => ['categoryA1']
                         ]
-                    ],
+                    ]
                     'bool' => [
                         'must_not' => [
                             'exists' => [

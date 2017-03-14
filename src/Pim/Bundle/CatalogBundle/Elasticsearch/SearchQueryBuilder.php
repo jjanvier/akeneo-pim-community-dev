@@ -87,22 +87,6 @@ class SearchQueryBuilder
     }
 
     /**
-     * @return array
-     */
-    public function getShouldClauses()
-    {
-        return $this->shouldClauses;
-    }
-
-    /**
-     * @param array $shouldClauses
-     */
-    public function setShouldClauses(array $shouldClauses)
-    {
-        $this->shouldClauses = $shouldClauses;
-    }
-
-    /**
      * Returns an Elastic search Query
      *
      * @param array $source
