@@ -33,3 +33,20 @@ All different configuration files are merged during this process.
 To learn more, please look at the specs examples of {@link src/Akeneo/Bundle/ElasticSearchBundle/spec/IndexConfiguration/LoaderSpec.php} to understand.
 
 That allows, for instance, to add a custom configuration in top of Akeneo's default configuration.
+
+## Configuration reference
+
+```
+# Default configuration for extension with alias: "akeneo_elastic_search"
+akeneo_elastic_search:
+
+    # The index name.
+    index_name:           ~ # Required
+
+    # Inline hosts of the ElasticSearch nodes. See https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/_configuration.html#_inline_host_configuration. If you have a single host, you can use a string here. Otherwise, use an array.
+    hosts:                [] # Required
+
+    # Paths of the YAML files to configure the index. See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html and src/Akeneo/Bundle/ElasticSearchBundle/IndexConfiguration/IndexConfiguration.php.
+    configuration_files:  [] # Required
+
+```

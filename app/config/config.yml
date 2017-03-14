@@ -121,4 +121,6 @@ akeneo_storage_utils:
     mapping_overrides: ~
 
 akeneo_elastic_search:
+    index_name: "%index_name%"
+    hosts: "%index_hosts%"
     configuration_files: "%elasticsearch_index_configuration_files%"
