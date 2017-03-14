@@ -1,0 +1,15 @@
+services:
+    akeneo_elasticsearch.index_configuration.loader:
+        class: 'Akeneo\Bundle\ElasticsearchBundle\IndexConfiguration\Loader'
+        arguments:
+            - '%akeneo_elasticsearch.index_configuration.files%'
+
+    akeneo_elasticsearch.client_builder:
+        class: 'Elasticsearch\ClientBuilder'
+
+    akeneo_elasticsearch.client:
+        class: 'Akeneo\Bundle\ElasticsearchBundle\Client'
+        arguments:
+            - '@akeneo_elasticsearch.client_builder'
+            - '%akeneo_elasticsearch.hosts%'
+            - '%akeneo_elasticsearch.index_name%'

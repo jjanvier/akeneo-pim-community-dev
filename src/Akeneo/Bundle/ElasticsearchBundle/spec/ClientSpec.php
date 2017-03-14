@@ -1,8 +1,8 @@
 <?php
 
-namespace spec\Akeneo\Bundle\ElasticSearchBundle;
+namespace spec\Akeneo\Bundle\ElasticsearchBundle;
 
-use Akeneo\Bundle\ElasticSearchBundle\Client;
+use Akeneo\Bundle\ElasticsearchBundle\Client;
 use Elasticsearch\Client as NativeClient;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Namespaces\IndicesNamespace;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Akeneo\Bundle\ElasticSearchBundle\IndexConfiguration;
+namespace Akeneo\Bundle\ElasticsearchBundle\IndexConfiguration;
 
 use Symfony\Component\Yaml\Parser;
 
 /**
- * ElasticSearch configuration loader. Allows to load "index settings", "mappings" and "aliases".
+ * Elasticsearch configuration loader. Allows to load "index settings", "mappings" and "aliases".
  * To learn more, see {@link https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html}
  *
  * This loader is able to load the configuration from several different files. For instance, from the default

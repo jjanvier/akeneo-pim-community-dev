@@ -1,6 +1,6 @@
 <?php
 
-namespace Akeneo\Bundle\ElasticSearchBundle\IndexConfiguration;
+namespace Akeneo\Bundle\ElasticsearchBundle\IndexConfiguration;
 
 /**
  * Simple data holder for the index configuration

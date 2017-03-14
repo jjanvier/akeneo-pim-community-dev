@@ -1,12 +1,12 @@
 <?php
 
-namespace Akeneo\Bundle\ElasticSearchBundle;
+namespace Akeneo\Bundle\ElasticsearchBundle;
 
 use Elasticsearch\Client as NativeClient;
 use Elasticsearch\ClientBuilder;
 
 /**
- * Wrapper for the PHP ElasticSearch client.
+ * Wrapper for the PHP Elasticsearch client.
  * To learn more, please see {@link https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html}.
  *
  * @author    Julien Janvier <j.janvier@gmail.com>
@@ -28,7 +28,7 @@ class Client
     private $client;
 
     /**
-     * Configure the PHP ElasticSearch client.
+     * Configure the PHP Elasticsearch client.
      * To learn more, please see {@link https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/_configuration.html}
      *
      * @param ClientBuilder $builder

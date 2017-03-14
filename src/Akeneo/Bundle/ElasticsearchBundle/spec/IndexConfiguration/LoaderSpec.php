@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Akeneo\Bundle\ElasticSearchBundle\IndexConfiguration;
+namespace spec\Akeneo\Bundle\ElasticsearchBundle\IndexConfiguration;
 
 use PhpSpec\ObjectBehavior;
 
