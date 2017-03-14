@@ -3,6 +3,7 @@
 namespace tests\integration\Pim\Component\Catalog\Normalizer\Indexing;
 
 use Akeneo\Test\Integration\Configuration;
+use Akeneo\Test\Integration\DateSanitizer;
 use Akeneo\Test\Integration\TestCase;
 
 /**
@@ -18,25 +19,87 @@ class ProductIndexingIntegration extends TestCase
         );
     }
 
-    public function testProductWithAllAttributes()
+    public function testEmptyDisabledProduct()
     {
         $expected = [
-            'a_file-pim_catalog_file' => [
+            'identifier'    => 'bar',
+            'family'        => null,
+            'groups'        => [],
+            'variant_group' => null,
+            'categories'    => [],
+            'enabled'       => false,
+            'values'        => [
+                'sku-varchar' => [
+                    '<all_channels>' => [
+                        '<all_locales>' => 'bar'
+                    ]
+                ],
+            ],
+            'created'       => '2016-06-14T13:12:50+02:00',
+            'updated'       => '2016-06-14T13:12:50+02:00',
+            'associations'  => [],
+        ];
+
+        $this->assertIndexingFormat('bar', $expected);
+    }
+
+    public function testEmptyEnabledProduct()
+    {
+        $expected = [
+            'identifier'    => 'baz',
+            'family'        => null,
+            'groups'        => [],
+            'variant_group' => null,
+            'categories'    => [],
+            'enabled'       => true,
+            'values'        => [
+                'sku-varchar' => [
+                    '<all_channels>' => [
+                        '<all_locales>' => 'baz'
+                    ]
+                ],
+            ],
+            'created'       => '2016-06-14T13:12:50+02:00',
+            'updated'       => '2016-06-14T13:12:50+02:00',
+            'associations'  => [],
+        ];
+
+        $this->assertIndexingFormat('baz', $expected);
+    }
+
+    public function testProductWithAllAttributes()
+    {
+        $expected =
+            [
+                'identifier'    => 'foo',
+                'family'        => 'familyA',
+                'groups'        => ['groupA', 'groupB'],
+                'variant_group' => 'variantA',
+                'categories'    => ['categoryA1', 'categoryB'],
+                'enabled'       => true,
+                'values'        => [
+
+            'sku-varchar' => [
+                '<all_channels>' => [
+                    '<all_locales>' => 'foo'
+                ]
+            ],
+            'a_file-media' => [
                 '<all_channels>' => [
                     '<all_locales>' => '8/b/5/c/8b5cf9bfd2e7e4725fd581e03251133ada1b2c99_fileA.txt'
                 ],
             ],
-            'an_image-pim_catalog_image' => [
+            'an_image-media' => [
                 '<all_channels>' => [
                     '<all_locales>' => '3/b/5/5/3b5548f9764c0535db2ac92f047fa448cb7cea76_imageA.jpg'
                 ],
             ],
-            'a_date-pim_catalog_date' => [
+            'a_date-date' => [
                 '<all_channels>' => [
                     '<all_locales>' => '2016-06-13T00:00:00+02:00'
                 ],
             ],
-            'a_metric-pim_catalog_metric' => [
+            'a_metric-metric' => [
                 '<all_channels>' => [
                     '<all_locales>' => [
                         'amount' => '987654321987.1234',
@@ -50,7 +113,7 @@ class ProductIndexingIntegration extends TestCase
                     ]
                 ],
             ],
-            'a_metric_without_decimal-pim_catalog_metric' => [
+            'a_metric_without_decimal-metric' => [
                 '<all_channels>' => [
                     '<all_locales>' => [
                         'amount'    => 98,
@@ -61,7 +124,7 @@ class ProductIndexingIntegration extends TestCase
                     ],
                 ],
             ],
-            'a_metric_without_decimal_negative-pim_catalog_metric' => [
+            'a_metric_without_decimal_negative-metric' => [
                 '<all_channels>' => [
                     '<all_locales>' => [
                         'amount'    => -20,
@@ -72,7 +135,7 @@ class ProductIndexingIntegration extends TestCase
                     ],
                 ],
             ],
-            'a_metric_negative-pim_catalog_metric' => [
+            'a_metric_negative-metric' => [
                 '<all_channels>' => [
                     '<all_locales>' => [
                         'amount' => '-20.5000',
@@ -86,7 +149,7 @@ class ProductIndexingIntegration extends TestCase
                     ],
                 ],
             ],
-            'a_multi_select-pim_catalog_multiselect' => [
+            'a_multi_select-options' => [
                 '<all_channels>' => [
                     '<all_locales>' => ['optionA', 'optionB'],
                 ],
@@ -111,7 +174,7 @@ class ProductIndexingIntegration extends TestCase
                     '<all_locales>' => -42,
                 ],
             ],
-            'a_price-pim_catalog_price_collection' => [
+            'a_price-prices' => [
                 '<all_channels>' => [
                     '<all_locales>' => [
                         'USD' => ['amount' => '45.00', 'currency' => 'USD'],
@@ -119,7 +182,7 @@ class ProductIndexingIntegration extends TestCase
                     ],
                 ],
             ],
-            'a_price_without_decimal-pim_catalog_price_collection' => [
+            'a_price_without_decimal-prices' => [
                 '<all_channels>' => [
                     '<all_locales>' => [
                         'USD' => ['amount' => -45, 'currency' => 'USD'],
@@ -127,43 +190,43 @@ class ProductIndexingIntegration extends TestCase
                     ],
                 ],
             ],
-            'a_ref_data_multi_select-pim_reference_data_multiselect' => [
+            'a_ref_data_multi_select-reference_data_options' => [
                 '<all_channels>' => [
                     '<all_locales>' => ['fabricA', 'fabricB'],
                 ],
             ],
-            'a_ref_data_simple_select-pim_reference_data_simpleselect' => [
+            'a_ref_data_simple_select-reference_data_option' => [
                 '<all_channels>' => [
                     '<all_locales>' => 'colorB',
                 ],
             ],
-            'a_simple_select-pim_catalog_simpleselect' => [
+            'a_simple_select-option' => [
                 '<all_channels>' => [
                     '<all_locales>' => 'optionB',
                 ],
             ],
-            'a_text-pim_catalog_text' => [
+            'a_text-varchar' => [
                 '<all_channels>' => [
                     '<all_locales>' => 'this is a text',
                 ],
             ],
-            'a_text_area-pim_catalog_textarea' => [
+            'a_text_area-text' => [
                 '<all_channels>' => [
                     '<all_locales>' => 'this is a very very very very very long  text',
                 ],
             ],
-            'a_yes_no-pim_catalog_boolean' => [
+            'a_yes_no-boolean' => [
                 '<all_channels>' => [
                     '<all_locales>' => true,
                 ],
             ],
-            'a_localizable_image-pim_catalog_image' => [
+            'a_localizable_image-media' => [
                 '<all_channels>' => [
                     'en_US' => '7/1/3/3/713380965740f8838834cd58505aa329fcf448a5_imageB_en_US.jpg',
                     'fr_FR' => '0/5/1/9/05198fcf21b2b0d4596459f172e2e62b1a70bfd0_imageB_fr_FR.jpg',
                 ],
             ],
-            'a_scopable_price-pim_catalog_price_collection' => [
+            'a_scopable_price-prices' => [
                 'ecommerce' => [
                     '<all_locales>' => [
                         'EUR' => ['amount' => '15.00', 'currency' => 'EUR'],
@@ -177,7 +240,7 @@ class ProductIndexingIntegration extends TestCase
                     ],
                 ],
             ],
-            'a_localized_and_scopable_text_area-pim_catalog_textarea' => [
+            'a_localized_and_scopable_text_area-text' => [
                 'ecommerce' => [
                     'en_US' => 'a text area for ecommerce in English',
                 ],
@@ -187,23 +250,42 @@ class ProductIndexingIntegration extends TestCase
 
                 ],
             ],
-        ];
+        ]
+                ];
 
-        $this->assertIndexingFormatForProductValues('foo', $expected);
+        $this->assertIndexingFormat('foo', $expected);
     }
 
     /**
      * @param string $identifier
      * @param array  $expected
      */
-    private function assertIndexingFormatForProductValues($identifier, array $expected)
+    private function assertIndexingFormat($identifier, array $expected)
     {
         $repository = $this->get('pim_catalog.repository.product');
-        $serializer = $this->get('pim_serializer');
-
         $product = $repository->findOneByIdentifier($identifier);
-        $result = $serializer->normalize($product->getValues(), 'indexing');
+
+        $serializer = $this->get('pim_serializer');
+        $result = $serializer->normalize($product, 'indexing');
+        $result = $this->sanitizeDateFields($result);
+
+        $expected = $this->sanitizeDateFields($expected);
 
         $this->assertSame($expected, $result);
+    }
+
+    /**
+     * Replaces dates fields (created/updated) in the $data array by self::DATE_FIELD_COMPARISON.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function sanitizeDateFields(array $data)
+    {
+        $data['created'] = DateSanitizer::sanitize($data['created']);
+        $data['updated'] = DateSanitizer::sanitize($data['updated']);
+
+        return $data;
     }
 }
