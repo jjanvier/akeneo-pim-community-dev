@@ -2,9 +2,7 @@
 
 namespace Pim\Component\Catalog\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Pim\Bundle\CatalogBundle\Entity\Locale;
 
 /**
  * Abstract product completeness entity
@@ -21,30 +19,38 @@ abstract class AbstractCompleteness implements CompletenessInterface
     /** @var ProductInterface */
     protected $product;
 
-    /** @var LocaleInterface */
-    protected $locale;
-
     /** @var ChannelInterface */
     protected $channel;
 
-    /** @var int */
-    protected $ratio;
+    /** @var LocaleInterface */
+    protected $locale;
+
+    /** @var Collection */
+    protected $missingAttributes;
+
+    /** @var Collection */
+    protected $filledInAttributes;
 
     /** @var int */
     protected $missingCount;
 
     /** @var int */
+    protected $filledInCount;
+
+    /** @var int */
     protected $requiredCount;
 
-    /** @var Collection */
-    protected $missingAttributes;
+    /** @var int */
+    protected $ratio;
 
     /**
      * @param ProductInterface $product
      * @param ChannelInterface $channel
      * @param LocaleInterface  $locale
      * @param Collection       $missingAttributes
+     * @param Collection       $filledInAttributes
      * @param int              $missingCount
+     * @param int              $filledInCount
      * @param int              $requiredCount
      */
     public function __construct(
@@ -52,14 +58,18 @@ abstract class AbstractCompleteness implements CompletenessInterface
         ChannelInterface $channel,
         LocaleInterface $locale,
         Collection $missingAttributes,
+        Collection $filledInAttributes,
         $missingCount,
+        $filledInCount,
         $requiredCount
     ) {
         $this->product = $product;
         $this->channel = $channel;
         $this->locale = $locale;
         $this->missingAttributes = $missingAttributes;
+        $this->filledInAttributes = $filledInAttributes;
         $this->missingCount = $missingCount;
+        $this->filledInCount = $filledInCount;
         $this->requiredCount = $requiredCount;
 
         $this->ratio = (int) round(100 * ($this->requiredCount - $this->missingCount) / $this->requiredCount);
@@ -76,9 +86,9 @@ abstract class AbstractCompleteness implements CompletenessInterface
     /**
      * {@inheritdoc}
      */
-    public function getLocale()
+    public function getProduct()
     {
-        return $this->locale;
+        return $this->product;
     }
 
     /**
@@ -92,9 +102,25 @@ abstract class AbstractCompleteness implements CompletenessInterface
     /**
      * {@inheritdoc}
      */
-    public function getRatio()
+    public function getLocale()
     {
-        return $this->ratio;
+        return $this->locale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMissingAttributes()
+    {
+        return $this->missingAttributes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilledInAttributes()
+    {
+        return $this->filledInAttributes;
     }
 
     /**
@@ -108,6 +134,14 @@ abstract class AbstractCompleteness implements CompletenessInterface
     /**
      * {@inheritdoc}
      */
+    public function getFilledInCount()
+    {
+        return $this->filledInCount;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRequiredCount()
     {
         return $this->requiredCount;
@@ -116,16 +150,8 @@ abstract class AbstractCompleteness implements CompletenessInterface
     /**
      * {@inheritdoc}
      */
-    public function getProduct()
+    public function getRatio()
     {
-        return $this->product;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMissingAttributes()
-    {
-        return $this->missingAttributes;
+        return $this->ratio;
     }
 }

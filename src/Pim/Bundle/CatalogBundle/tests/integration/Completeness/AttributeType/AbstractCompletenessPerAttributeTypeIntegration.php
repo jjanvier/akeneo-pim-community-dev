@@ -73,4 +73,15 @@ abstract class AbstractCompletenessPerAttributeTypeIntegration extends AbstractC
 
         $this->assertMissingAttributeCodes($completeness, $expectedAttributeCodes);
     }
+
+    /**
+     * @param ProductInterface $product
+     * @param string[]         $expectedAttributeCodes
+     */
+    protected function assertFilledInAttributeForProduct(ProductInterface $product, array $expectedAttributeCodes)
+    {
+        $completeness = $this->getCurrentCompleteness($product);
+
+        $this->assertFilledInAttributeCodes($completeness, $expectedAttributeCodes);
+    }
 }

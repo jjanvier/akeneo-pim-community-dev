@@ -39,6 +39,7 @@ class BooleanAttributeTypeCompletenessIntegration extends AbstractCompletenessPe
             ]
         );
         $this->assertComplete($productComplete);
+        $this->assertFilledInAttributeForProduct($productComplete, ['sku', 'a_boolean']);
 
         $productCompleteFalse = $this->createProductWithStandardValues(
             $family,
@@ -56,6 +57,7 @@ class BooleanAttributeTypeCompletenessIntegration extends AbstractCompletenessPe
             ]
         );
         $this->assertComplete($productCompleteFalse);
+        $this->assertFilledInAttributeForProduct($productCompleteFalse, ['sku', 'a_boolean']);
     }
 
     public function testNotCompleteBoolean()
@@ -84,12 +86,14 @@ class BooleanAttributeTypeCompletenessIntegration extends AbstractCompletenessPe
         );
         $this->assertNotComplete($productDataNull);
         $this->assertMissingAttributeForProduct($productDataNull, ['a_boolean']);
+        $this->assertFilledInAttributeForProduct($productDataNull, ['sku']);
 
         $productWithoutValues = $this->createProductWithStandardValues($family, 'product_without_values');
         // TODO: This is not as it should be, but inevitable because of PIM-6056
         // TODO: When PIM-6056 is fixed, we should be able to use "assertNotComplete"
         $this->assertComplete($productWithoutValues);
         $this->assertBooleanValueIsFalse($productWithoutValues, 'a_boolean');
+        $this->assertFilledInAttributeForProduct($productWithoutValues, ['sku', 'a_boolean']);
     }
 
     /**

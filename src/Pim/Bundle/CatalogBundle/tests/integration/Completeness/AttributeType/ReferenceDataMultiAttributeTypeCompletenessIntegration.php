@@ -41,6 +41,7 @@ class ReferenceDataMultiAttributeTypeCompletenessIntegration extends AbstractCom
 
 
         $this->assertComplete($productComplete);
+        $this->assertFilledInAttributeForProduct($productComplete, ['sku', 'a_multi_select_reference_data']);
     }
 
     public function testNotCompleteMultiSelectReferenceData()
@@ -69,6 +70,7 @@ class ReferenceDataMultiAttributeTypeCompletenessIntegration extends AbstractCom
         );
         $this->assertNotComplete($productDataNull);
         $this->assertMissingAttributeForProduct($productDataNull, ['a_multi_select_reference_data']);
+        $this->assertFilledInAttributeForProduct($productDataNull, ['sku']);
 
         $productDataEmptyArray = $this->createProductWithStandardValues(
             $family,
@@ -87,10 +89,12 @@ class ReferenceDataMultiAttributeTypeCompletenessIntegration extends AbstractCom
         );
         $this->assertNotComplete($productDataEmptyArray);
         $this->assertMissingAttributeForProduct($productDataEmptyArray, ['a_multi_select_reference_data']);
+        $this->assertFilledInAttributeForProduct($productDataEmptyArray, ['sku']);
 
         $productWithoutValues = $this->createProductWithStandardValues($family, 'product_without_values');
         $this->assertNotComplete($productWithoutValues);
         $this->assertMissingAttributeForProduct($productWithoutValues, ['a_multi_select_reference_data']);
+        $this->assertFilledInAttributeForProduct($productWithoutValues, ['sku']);
     }
 
     /**

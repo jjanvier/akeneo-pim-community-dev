@@ -56,6 +56,21 @@ abstract class AbstractCompletenessIntegration extends TestCase
     }
 
     /**
+     * @param CompletenessInterface $completeness
+     * @param string[]              $expectedAttributeCodes
+     */
+    protected function assertFilledInAttributeCodes(CompletenessInterface $completeness, array $expectedAttributeCodes)
+    {
+        $filledInAttributes = $completeness->getFilledInAttributes();
+
+        $filledInAttributeCodes = array_map(function (AttributeInterface $filledInAttribute) {
+            return $filledInAttribute->getCode();
+        }, $filledInAttributes->toArray());
+
+        $this->assertEquals(sort($expectedAttributeCodes), sort($filledInAttributeCodes));
+    }
+
+    /**
      * @param ProductInterface $product
      * @param int              $expectedNumberOfCompletenesses
      */

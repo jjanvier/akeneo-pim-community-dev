@@ -194,7 +194,9 @@ class CompletenessCalculator implements CompletenessCalculatorInterface
 
         $actualValues = $product->getValues();
         $missingAttributes = new ArrayCollection();
+        $filledInAttributes = new ArrayCollection();
         $missingCount = 0;
+        $filledInCount = 0;
         $requiredCount = 0;
 
         foreach ($requiredValues as $requiredValue) {
@@ -209,10 +211,11 @@ class CompletenessCalculator implements CompletenessCalculatorInterface
             if (null === $productValue ||
                 !$this->productValueCompleteChecker->isComplete($productValue, $channel, $locale)
             ) {
-                if (!$missingAttributes->contains($attribute)) {
-                    $missingAttributes->add($attribute);
-                    $missingCount++;
-                }
+                $missingAttributes->add($attribute);
+                $missingCount++;
+            } else {
+                $filledInAttributes->add($attribute);
+                $filledInCount++;
             }
 
             $requiredCount++;
@@ -223,7 +226,9 @@ class CompletenessCalculator implements CompletenessCalculatorInterface
             $channel,
             $locale,
             $missingAttributes,
+            $filledInAttributes,
             $missingCount,
+            $filledInCount,
             $requiredCount
         );
 

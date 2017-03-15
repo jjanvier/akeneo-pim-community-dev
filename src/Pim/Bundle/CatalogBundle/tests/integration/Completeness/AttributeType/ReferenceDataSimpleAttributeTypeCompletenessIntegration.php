@@ -40,6 +40,7 @@ class ReferenceDataSimpleAttributeTypeCompletenessIntegration extends AbstractCo
         );
 
         $this->assertComplete($productComplete);
+        $this->assertFilledInAttributeForProduct($productComplete, ['sku', 'a_simple_select_reference_data']);
     }
 
     public function testNotCompleteSimpleSelectReferenceData()
@@ -68,10 +69,12 @@ class ReferenceDataSimpleAttributeTypeCompletenessIntegration extends AbstractCo
         );
         $this->assertNotComplete($productDataNull);
         $this->assertMissingAttributeForProduct($productDataNull, ['a_simple_select_reference_data']);
+        $this->assertFilledInAttributeForProduct($productDataNull, ['sku']);
 
         $productWithoutValues = $this->createProductWithStandardValues($family, 'product_without_values');
         $this->assertNotComplete($productWithoutValues);
         $this->assertMissingAttributeForProduct($productWithoutValues, ['a_simple_select_reference_data']);
+        $this->assertFilledInAttributeForProduct($productWithoutValues, ['sku']);
     }
 
     /**

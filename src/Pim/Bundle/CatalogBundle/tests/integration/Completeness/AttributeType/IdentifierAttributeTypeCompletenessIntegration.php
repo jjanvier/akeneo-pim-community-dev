@@ -41,7 +41,10 @@ class IdentifierAttributeTypeCompletenessIntegration extends AbstractCompletenes
         );
 
         $this->assertComplete($productCompleteWithIdentifier);
+        $this->assertFilledInAttributeForProduct($productCompleteWithIdentifier, ['sku']);
+
         $this->assertComplete($productCompleteWithIdentifierUpdated);
+        $this->assertFilledInAttributeForProduct($productCompleteWithIdentifierUpdated, ['sku']);
     }
 
     /**
@@ -79,5 +82,6 @@ class IdentifierAttributeTypeCompletenessIntegration extends AbstractCompletenes
         $this->assertEquals(100, $completeness->getRatio());
         $this->assertEquals(1, $completeness->getRequiredCount());
         $this->assertEquals(0, $completeness->getMissingCount());
+        $this->assertEquals(0, $completeness->getMissingAttributes()->count());
     }
 }
