@@ -4,6 +4,7 @@ namespace tests\integration\Pim\Component\Catalog\Normalizer\Storage;
 
 use Akeneo\Test\Integration\Configuration;
 use Akeneo\Test\Integration\TestCase;
+use Pim\Component\Catalog\tests\integration\Normalizer\NormalizedProductCleaner;
 
 /**
  * Integration tests to verify data from database are well formatted in the storage format
@@ -203,6 +204,9 @@ class ProductValuesStorageIntegration extends TestCase
 
         $product = $repository->findOneByIdentifier($identifier);
         $result = $serializer->normalize($product->getValues(), 'storage');
+
+        NormalizedProductCleaner::cleanOnlyValues($result);
+        NormalizedProductCleaner::cleanOnlyValues($expected);
 
         $this->assertSame($expected, $result);
     }

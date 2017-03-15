@@ -7,6 +7,7 @@ use Akeneo\Test\Integration\DateSanitizer;
 use Akeneo\Test\Integration\MediaSanitizer;
 use Akeneo\Test\Integration\TestCase;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\tests\integration\Normalizer\NormalizedProductCleaner;
 
 /**
  * Integration tests to verify data from database are well formatted in the standard format
@@ -263,17 +264,14 @@ class ProductStandardIntegration extends TestCase
         $product = $repository->findOneByIdentifier($identifier);
 
         $result = $this->normalizeProductToStandardFormat($product);
-        $result = $this->sanitizeDateFields($result);
 
         //TODO: why do we need that?
         $result = $this->sanitizeMediaAttributeData($result);
-
-        $expected = $this->sanitizeDateFields($expected);
         //TODO: why do we need that?
         $expected = $this->sanitizeMediaAttributeData($expected);
 
-        ksort($expected['values']);
-        ksort($result['values']);
+        NormalizedProductCleaner::clean($result);
+        NormalizedProductCleaner::clean($expected);
 
         $this->assertSame($expected, $result);
     }
@@ -288,21 +286,6 @@ class ProductStandardIntegration extends TestCase
         $serializer = $this->get('pim_serializer');
 
         return $serializer->normalize($product, 'standard');
-    }
-
-    /**
-     * Replaces dates fields (created/updated) in the $data array by self::DATE_FIELD_COMPARISON.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function sanitizeDateFields(array $data)
-    {
-        $data['created'] = DateSanitizer::sanitize($data['created']);
-        $data['updated'] = DateSanitizer::sanitize($data['updated']);
-
-        return $data;
     }
 
     /**
