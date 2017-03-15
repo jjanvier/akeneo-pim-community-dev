@@ -31,34 +31,8 @@ class PriceNormalizerSpec extends ObjectBehavior
 
     function it_normalizes_prices($stdNormalizer, ProductPriceInterface $price)
     {
-        $stdNormalizer->normalize($price, 'indexing', ['context'])->willReturn(
-            [
-                [ 'amount' => '45.00', 'currency' => 'USD'],
-                [ 'amount' => '-56.53', 'currency' => 'EUR']
-            ]
-        );
+        $stdNormalizer->normalize($price, 'indexing', ['context'])->willReturn('std-price');
 
-        $this->normalize($price, 'indexing', ['context'])->shouldReturn(
-            [
-                'USD' => [ 'amount' => '45.00', 'currency' => 'USD'],
-                'EUR' => [ 'amount' => '-56.53', 'currency' => 'EUR']
-            ]
-        );
-    }
-
-    function it_omits_prices_without_currency($stdNormalizer, ProductPriceInterface $price)
-    {
-        $stdNormalizer->normalize($price, 'indexing', ['context'])->willReturn(
-            [
-                [ 'amount' => '45.00', 'currency' => 'USD'],
-                [ 'amount' => '-56.53']
-            ]
-        );
-
-        $this->normalize($price, 'indexing', ['context'])->shouldReturn(
-            [
-                'USD' => [ 'amount' => '45.00', 'currency' => 'USD'],
-            ]
-        );
+        $this->normalize($price, 'indexing', ['context'])->shouldReturn('std-price');
     }
 }
