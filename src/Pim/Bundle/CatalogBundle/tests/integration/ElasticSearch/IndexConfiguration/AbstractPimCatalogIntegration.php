@@ -129,18 +129,12 @@ abstract class AbstractPimCatalogIntegration extends TestCase
                                 ],
                             ],
                             [
-                                'pim_catalog_number' => [
+                                'decimal' => [
                                     'match_mapping_type' => 'long',
-                                    'mapping'            => [
-                                        'fields' => [
-                                            'raw' => [
-                                                'type'     => 'string',
-                                                'analyzer' => 'text_analyzer',
-                                            ],
-                                        ],
-                                        'type'   => 'double',
+                                    'mapping' => [
+                                        'type' => 'double',
                                     ],
-                                    'match'              => '*-pim_catalog_number',
+                                    'match'   => '*-decimal',
                                 ],
                             ],
                             [
@@ -188,6 +182,9 @@ abstract class AbstractPimCatalogIntegration extends TestCase
                                 'char_filter' => [],
                             ],
                             'varchar_normalizer' => [
+                                'filter' => ['lowercase'],
+                            ],
+                            'number_normalizer' => [
                                 'filter' => ['lowercase'],
                             ],
                         ],

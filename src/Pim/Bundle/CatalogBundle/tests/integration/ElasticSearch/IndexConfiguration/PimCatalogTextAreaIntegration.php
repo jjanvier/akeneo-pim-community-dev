@@ -1,6 +1,7 @@
 <?php
 
 namespace Pim\Bundle\CatalogBundle\tests\integration\Elasticsearch\IndexConfiguration;
+
 /**
  * This integration tests checks that given an index configuration and some products indexed
  * the text area research is consistent.
