@@ -899,7 +899,7 @@ Same as ``IN``, but with the ``must_not`` occured type
 
 Family
 ******
-:Apply: apply on 'family' field
+:Apply: apply on the 'family' field
 
 Data model
 ~~~~~~~~~~
@@ -923,7 +923,7 @@ IN
 
 NOT IN
 ~~~~~~
-:Type: mustNot
+:Type: must_not
 
 .. code-block:: php
 
@@ -933,11 +933,11 @@ NOT IN
 
 IS EMPTY
 ~~~~~~~~
-:Type: mustNot
+:Type: must_not
 
 .. code-block:: php
 
-    'exists' => ['field' => 'family']
+    ['exists' => ['field' => 'family']]
 
 IS NOT EMPTY
 ~~~~~~~~~~~~
@@ -945,7 +945,7 @@ IS NOT EMPTY
 
 .. code-block:: php
 
-    'exists' => ['field' => 'family']
+    ['exists' => ['field' => 'family']]
 
 Sorting
 ~~~~~~~

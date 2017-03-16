@@ -45,7 +45,7 @@ class FamilyFilter extends AbstractFieldFilter implements FieldFilterInterface
             throw new \LogicException('The search query builder is not initialized in the filter.');
         }
 
-        if (Operators::IS_EMPTY == $operator || Operators::IS_NOT_EMPTY) {
+        if (Operators::IS_EMPTY !== $operator && Operators::IS_NOT_EMPTY !== $operator) {
             $this->checkValue($field, $value);
         }
 
@@ -95,7 +95,8 @@ class FamilyFilter extends AbstractFieldFilter implements FieldFilterInterface
      * @param string $field
      * @param mixed  $values
      */
-    protected function checkValue($field, $values) {
+    protected function checkValue($field, $values)
+    {
         FieldFilterHelper::checkArray($field, $values, static::class);
 
         foreach ($values as $value) {

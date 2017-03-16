@@ -110,7 +110,7 @@ class FamilyFilterSpec extends ObjectBehavior
 
     }
 
-    function it_throws_an_exception_when_the_given_value_is_not_an_array(SearchQueryBuilder $sqb)
+    function it_throws_an_exception_when_the_given_value_is_not_an_array_with_in_list(SearchQueryBuilder $sqb)
     {
         $this->setQueryBuilder($sqb);
 
@@ -121,6 +121,45 @@ class FamilyFilterSpec extends ObjectBehavior
                 'NOT_AN_ARRAY'
             )
         )->during('addFieldFilter', ['family', Operators::IN_LIST, 'NOT_AN_ARRAY', null, null, []]);
+    }
+
+    function it_throws_an_exception_when_the_given_value_is_not_an_array_with_not_in_list(SearchQueryBuilder $sqb)
+    {
+        $this->setQueryBuilder($sqb);
+
+        $this->shouldThrow(
+            InvalidPropertyTypeException::arrayExpected(
+                'family',
+                FamilyFilter::class,
+                'NOT_AN_ARRAY'
+            )
+        )->during('addFieldFilter', ['family', Operators::NOT_IN_LIST, 'NOT_AN_ARRAY', null, null, []]);
+    }
+
+    function it_does_not_throws_an_exception_when_the_given_value_is_not_an_array_with_is_empty(SearchQueryBuilder $sqb)
+    {
+        $this->setQueryBuilder($sqb);
+
+        $this->shouldNotThrow(
+            InvalidPropertyTypeException::arrayExpected(
+                'family',
+                FamilyFilter::class,
+                'NOT_AN_ARRAY'
+            )
+        )->during('addFieldFilter', ['family', Operators::IS_EMPTY, 'NOT_AN_ARRAY', null, null, []]);
+    }
+
+    function it_does_not_throws_an_exception_when_the_given_value_is_not_an_array_with_is_not_empty(SearchQueryBuilder $sqb)
+    {
+        $this->setQueryBuilder($sqb);
+
+        $this->shouldNotThrow(
+            InvalidPropertyTypeException::arrayExpected(
+                'family',
+                FamilyFilter::class,
+                'NOT_AN_ARRAY'
+            )
+        )->during('addFieldFilter', ['family', Operators::IS_NOT_EMPTY, 'NOT_AN_ARRAY', null, null, []]);
     }
 
     function it_throws_an_exception_when_the_given_value_is_not_an_identifier(SearchQueryBuilder $sqb)
