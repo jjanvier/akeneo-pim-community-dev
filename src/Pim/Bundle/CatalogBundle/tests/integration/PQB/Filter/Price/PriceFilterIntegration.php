@@ -43,6 +43,9 @@ class PriceFilterIntegration extends AbstractProductQueryBuilderTestCase
         }
     }
 
+    /**
+     * TODO: Add some strings to test if it works ?
+     */
     public function testOperatorInferior()
     {
         $result = $this->executeFilter([['a_price', Operators::LOWER_THAN, ['amount' => 10.55, 'currency' => 'EUR']]]);
@@ -115,12 +118,18 @@ class PriceFilterIntegration extends AbstractProductQueryBuilderTestCase
         $this->assert($result, ['product_one']);
     }
 
+    /**
+     * @group todo
+     */
     public function testOperatorEmpty()
     {
         $result = $this->executeFilter([['a_price', Operators::IS_EMPTY, []]]);
         $this->assert($result, ['empty_product']);
 
         $result = $this->executeFilter([['a_price', Operators::IS_EMPTY, ['amount' => '', 'currency' => '']]]);
+        $this->assert($result, ['empty_product']);
+
+        $result = $this->execute([['a_price', Operators::IS_EMPTY, ['currency' => 'USD']]]);
         $this->assert($result, ['empty_product']);
     }
 
