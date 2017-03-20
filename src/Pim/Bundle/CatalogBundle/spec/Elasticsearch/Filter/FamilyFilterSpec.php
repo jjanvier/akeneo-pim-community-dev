@@ -107,7 +107,6 @@ class FamilyFilterSpec extends ObjectBehavior
         $this->shouldThrow(
             new \LogicException('The search query builder is not initialized in the filter.')
         )->during('addFieldFilter', ['family', Operators::IN_LIST, ['familyA'], null,  null, []]);
-
     }
 
     function it_throws_an_exception_when_the_given_value_is_not_an_array_with_in_list(SearchQueryBuilder $sqb)
