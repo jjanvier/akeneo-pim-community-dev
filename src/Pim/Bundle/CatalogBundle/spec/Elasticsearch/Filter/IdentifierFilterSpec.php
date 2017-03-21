@@ -7,10 +7,10 @@ use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\AbstractFieldFilter;
 use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\IdentifierFilter;
 use Pim\Bundle\CatalogBundle\Elasticsearch\SearchQueryBuilder;
-use Pim\Component\Api\Repository\AttributeRepositoryInterface;
 use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Query\Filter\FieldFilterInterface;
 use Pim\Component\Catalog\Query\Filter\Operators;
+use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 
 class IdentifierFilterSpec extends ObjectBehavior
 {
@@ -25,6 +25,8 @@ class IdentifierFilterSpec extends ObjectBehavior
                 'DOES NOT CONTAIN',
                 '=',
                 '!=',
+                'IN LIST',
+                'NOT IN LIST'
             ]
         );
     }
@@ -49,6 +51,8 @@ class IdentifierFilterSpec extends ObjectBehavior
                 'DOES NOT CONTAIN',
                 '=',
                 '!=',
+                'IN LIST',
+                'NOT IN LIST'
             ]
 
         );

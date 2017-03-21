@@ -257,101 +257,6 @@ EMPTY
             'field' => 'description-text'
         ]
     ]
-Filtering
-~~~~~~~~~
-Operators
-.........
-STARTS WITH
-"""""""""""
-:Specific field: raw
-
-    Must be applied on the non-analyzed version of the field or will try to
-    match on all tokens.
-
-.. code-block:: php
-
-    'filter' => [
-        'query_string' => [
-            'default_field' => 'description-text.raw',
-            'query' => "My*"
-        ]
-    ]
-
-Note: All spaces must be escaped (with ``\\``) to prevent interpretation as separator. This applies on all query using a query_string.
-
-
-Example:
-
-.. code-block:: php
-
-    'filter' => [
-        'query_string' => [
-            'default_field' => 'description-text.raw',
-            'query' => 'My\\ description*'
-        ]
-    ]
-
-
-CONTAINS
-""""""""
-:Specific field: raw
-
-.. code-block:: php
-
-    'filter' => [
-        'query_string' => [
-            'default_field' => 'description-text.raw',
-            'query' => 'cool\\ product'
-        ]
-    ]
-
-DOES NOT CONTAIN
-""""""""""""""""
-:Specific field: raw
-
-Same syntax than the ``contains`` but must be included in a ``must_not`` boolean occured type instead of ``filter``.
-
-.. code-block:: php
-
-    'bool' => [
-        'must_not' => [
-            'query_string' => [
-                'default_field' => 'description-text.raw',
-                'query' => 'cool\\ product'
-            ]
-        ],
-        'filter' => [
-            'exists' => ['field' => 'description-text.raw'
-        ]
-    ]
-
-Equals (=)
-""""""""""
-:Type: Filter
-:Specific field: raw
-
-    Equality will not work with tokenized field, so we will use the untokenized sub-field:
-
-.. code-block:: php
-
-    'filter' => [
-        'term' => [
-            'description-text.raw' => 'My full lookup text'
-        ]
-    ]
-
-EMPTY
-"""""
-:Type: filter
-
-.. code-block:: php
-
-    'must_not' => [
-        'exists => [
-            'field' => 'description-text'
-        ]
-    ]
-
 Enabled
 *******
 :Apply: apply datatype 'boolean' on the 'enabled' field
@@ -519,6 +424,44 @@ Equals (=)
     'filter' => [
         'term' => [
             'identifier' => 'sku-0011'
+        ]
+    ]
+
+Not Equal (!=)
+""""""""""""""
+
+.. code-block:: php
+
+    'bool' => [
+        'must_not' => [
+            'term' => [
+                'identifier' => 'sku-0011'
+            ]
+        ],
+        'filter' => [
+            'field' => 'identifier'
+        ]
+    ]
+
+In list
+"""""""
+
+.. code-block:: php
+
+    'filter' => [
+        'terms' => [
+            'identifier' => ['sku-001', 'sku-0011']
+        ]
+    ]
+
+Not In list
+"""""""""""
+
+.. code-block:: php
+
+    'must_not' => [
+        'terms' => [
+            'identifier' => ['sku-001', 'sku-0011']
         ]
     ]
 
