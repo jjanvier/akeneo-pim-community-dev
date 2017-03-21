@@ -360,21 +360,21 @@ Same syntax than the contains but must be include in a ``must_not`` boolean occu
 
 Identifier
 **********
-:Apply: pim_catalog_identifier attribute
-:Analyzer: same as text
+:Apply: apply datatype 'keyword' on the 'identifier' field
+:Normalizer: Lowercase normalizer
 
 Data model
 ~~~~~~~~~~
 .. code-block:: yaml
 
-  sku-ident: "PRCT-1256"
+  identifier: "PRCT-1256"
 
 Filtering
 ~~~~~~~~~
 
 Operators
 .........
-All operators are the same as the Text field type.
+All operators are the same as the Text field type except the 'EMPTY' and the 'NOT EMPTY'.
 
 Media
 *****
