@@ -72,7 +72,7 @@ services:
         arguments:
             - '@pim_catalog.repository.attribute'
             - ['identifier']
-            - ['STARTS WITH', 'CONTAINS', 'DOES NOT CONTAIN', '=', '!=']
+            - ['STARTS WITH', 'CONTAINS', 'DOES NOT CONTAIN', '=', '!=', 'IN', 'NOT IN']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.filter', priority: 30 }
 

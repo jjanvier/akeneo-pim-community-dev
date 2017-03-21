@@ -167,8 +167,9 @@ class IdentifierFilterSpec extends ObjectBehavior
         )->during('addFieldFilter', ['identifier', Operators::EQUALS, 'sku-001', null,  null, []]);
     }
 
-    function it_throws_an_exception_when_the_given_value_is_not_a_string(SearchQueryBuilder $sqb)
-    {
+    function it_throws_an_exception_when_the_given_value_is_not_a_string_with_unsupported_operator(
+        SearchQueryBuilder $sqb
+    ) {
         $this->setQueryBuilder($sqb);
 
         $this->shouldThrow(
@@ -178,6 +179,20 @@ class IdentifierFilterSpec extends ObjectBehavior
                 ['sku-001']
             )
         )->during('addFieldFilter', ['identifier', Operators::EQUALS, ['sku-001'], null, null, []]);
+    }
+
+    function it_throws_an_exception_when_the_given_value_is_not_an_array_with_unsupported_operator(
+        SearchQueryBuilder $sqb
+    ) {
+        $this->setQueryBuilder($sqb);
+
+        $this->shouldThrow(
+            InvalidPropertyTypeException::arrayExpected(
+                'identifier',
+                IdentifierFilter::class,
+                'sku-001'
+            )
+        )->during('addFieldFilter', ['identifier', Operators::IN_LIST, 'sku-001', null, null, []]);
     }
 
     function it_throws_an_exception_when_it_filters_on_an_unsupported_operator(SearchQueryBuilder $sqb)

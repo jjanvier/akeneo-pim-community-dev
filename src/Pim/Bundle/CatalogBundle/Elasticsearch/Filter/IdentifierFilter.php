@@ -2,8 +2,8 @@
 
 namespace Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
 
-use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Pim\Component\Catalog\Exception\InvalidOperatorException;
+use Pim\Component\Catalog\Query\Filter\FieldFilterHelper;
 use Pim\Component\Catalog\Query\Filter\FieldFilterInterface;
 use Pim\Component\Catalog\Query\Filter\Operators;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
@@ -46,7 +46,7 @@ class IdentifierFilter extends AbstractFieldFilter implements FieldFilterInterfa
             throw new \LogicException('The search query builder is not initialized in the filter.');
         }
 
-        $this->checkValue($field, $value);
+        $this->checkValue($field, $operator, $value);
 
         switch ($operator) {
             case Operators::STARTS_WITH:
@@ -110,6 +110,26 @@ class IdentifierFilter extends AbstractFieldFilter implements FieldFilterInterfa
                 $this->searchQueryBuilder->addFilter($filterClause);
                 break;
 
+            case Operators::IN_LIST:
+                $clause = [
+                    'terms' => [
+                        self::IDENTIFIER_KEY => $value
+                    ]
+                ];
+
+                $this->searchQueryBuilder->addFilter($clause);
+                break;
+
+            case Operators::NOT_IN_LIST:
+                $clause = [
+                    'terms' => [
+                        self::IDENTIFIER_KEY => $value
+                    ]
+                ];
+
+                $this->searchQueryBuilder->addMustNot($clause);
+                break;
+
             default:
                 throw InvalidOperatorException::notSupported($operator, static::class);
         }
@@ -126,17 +146,19 @@ class IdentifierFilter extends AbstractFieldFilter implements FieldFilterInterfa
     }
 
     /**
-     * Checks the identifier is a string
+     * Checks the identifier is a string or an array depending on the operator
      *
      * @param string $field
+     * @param string $operator
      * @param mixed  $value
      *
-     * @throws InvalidPropertyTypeException
      */
-    protected function checkValue($field, $value)
+    protected function checkValue($field, $operator, $value)
     {
-        if (!is_string($value) && null !== $value) {
-            throw InvalidPropertyTypeException::stringExpected($field, static::class, $value);
+        if (Operators::IN_LIST === $operator || Operators::NOT_IN_LIST === $operator) {
+            FieldFilterHelper::checkArray($field, $value, self::class);
+        } elseif (in_array($operator, $this->supportedOperators)) {
+            FieldFilterHelper::checkString($field, $value, self::class);
         }
     }
 }

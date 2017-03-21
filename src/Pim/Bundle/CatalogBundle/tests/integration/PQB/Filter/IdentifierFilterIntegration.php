@@ -113,6 +113,36 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
         $this->assert($result, ['foo', 'bar', 'BARISTA', 'BAZAR']);
     }
 
+    public function testOperatorInList()
+    {
+        $result = $this->execute([['identifier', Operators::IN_LIST, ['baz', 'FOO']]]);
+        $this->assert($result, ['foo', 'baz']);
+
+        $result = $this->execute([['identifier', Operators::IN_LIST, ['bazz', 'FOOO']]]);
+        $this->assert($result, []);
+
+        $result = $this->execute([['sku', Operators::IN_LIST, ['baz', 'FOO']]]);
+        $this->assert($result, ['foo', 'baz']);
+
+        $result = $this->execute([['sku', Operators::IN_LIST, ['BAZZ', 'FOOO']]]);
+        $this->assert($result, []);
+    }
+
+    public function testOperatorNotInList()
+    {
+        $result = $this->execute([['identifier', Operators::NOT_IN_LIST, ['baz', 'FOO']]]);
+        $this->assert($result, ['bar', 'BARISTA', 'BAZAR']);
+
+        $result = $this->execute([['identifier', Operators::NOT_IN_LIST, ['bazz', 'FOOO']]]);
+        $this->assert($result, ['foo', 'bar', 'baz', 'BARISTA', 'BAZAR']);
+
+        $result = $this->execute([['sku', Operators::NOT_IN_LIST, ['baz', 'FOO']]]);
+        $this->assert($result, ['bar', 'BARISTA', 'BAZAR']);
+
+        $result = $this->execute([['sku', Operators::NOT_IN_LIST, ['BAZZ', 'FOOO']]]);
+        $this->assert($result, ['foo', 'bar', 'baz', 'BARISTA', 'BAZAR']);
+    }
+
     /**
      * @expectedException \Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException
      * @expectedExceptionMessage Property "identifier" expects a string as data, "array" given.
@@ -123,20 +153,38 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
     }
 
     /**
-     * @expectedException \Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException
-     * @expectedExceptionMessage Property "sku" expects a string as data, "array" given.
-     */
-    public function testErrorDataIsMalformedWithAttributeIdentifierCode()
-    {
-        $this->execute([['sku', Operators::STARTS_WITH, ['string']]]);
-    }
-
-    /**
      * @expectedException \Pim\Component\Catalog\Exception\UnsupportedFilterException
      * @expectedExceptionMessage Filter on property "identifier" is not supported or does not support operator "BETWEEN"
      */
     public function testErrorOperatorNotSupported()
     {
         $this->execute([['identifier', Operators::BETWEEN, 'foo']]);
+    }
+
+    /**
+     * @expectedException \Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException
+     * @expectedExceptionMessage Property "identifier" expects an array as data, "string" given.
+     */
+    public function testDataIsMalformedForOperatorInList()
+    {
+        $this->execute([['identifier', Operators::IN_LIST, 'foo']]);
+    }
+
+    /**
+     * @expectedException \Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException
+     * @expectedExceptionMessage Property "identifier" expects an array as data, "string" given.
+     */
+    public function testDataIsMalformedForOperatorNotInList()
+    {
+        $this->execute([['identifier', Operators::NOT_IN_LIST, 'foo']]);
+    }
+
+    /**
+     * @expectedException \Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException
+     * @expectedExceptionMessage Property "identifier" expects a string as data, "array" given.
+     */
+    public function testErrorDataIsMalformedWithAttributeIdentifierCode()
+    {
+        $this->execute([['identifier', Operators::STARTS_WITH, ['string']]]);
     }
 }
