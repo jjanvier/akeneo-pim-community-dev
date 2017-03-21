@@ -54,6 +54,8 @@ class PropertiesNormalizerSpec extends ObjectBehavior
     }
 
     /*
+     * // TODO: TIP-706- To re-enable once productValueCollectionNormalizer is working with a
+     * // TODO: TIP-706- product value normalizer
     function it_normalizes_product_fields_and_values(
         $serializer,
         ProductInterface $product,
