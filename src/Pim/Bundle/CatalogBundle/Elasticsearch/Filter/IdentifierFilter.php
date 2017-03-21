@@ -3,10 +3,10 @@
 namespace Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
 
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
-use Pim\Component\Api\Repository\AttributeRepositoryInterface;
 use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Query\Filter\FieldFilterInterface;
 use Pim\Component\Catalog\Query\Filter\Operators;
+use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 
 /**
  * Identifier filter for an Elasticsearch query

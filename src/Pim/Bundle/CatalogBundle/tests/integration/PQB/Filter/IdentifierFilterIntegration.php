@@ -24,25 +24,39 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
             $this->createProduct('foo', []);
             $this->createProduct('bar', []);
             $this->createProduct('baz', []);
+            $this->createProduct('BARISTA', []);
+            $this->createProduct('BAZAR', []);
         }
     }
 
     public function testOperatorStartsWith()
     {
         $result = $this->execute([['identifier', Operators::STARTS_WITH, 'ba']]);
-        $this->assert($result, ['bar', 'baz']);
+        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
+
+        $result = $this->execute([['identifier', Operators::STARTS_WITH, 'bA']]);
+        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
 
         $result = $this->execute([['sku', Operators::STARTS_WITH, 'ba']]);
-        $this->assert($result, ['bar', 'baz']);
+        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
+
+        $result = $this->execute([['sku', Operators::STARTS_WITH, 'bA']]);
+        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
     }
 
     public function testOperatorContains()
     {
         $result = $this->execute([['identifier', Operators::CONTAINS, 'a']]);
-        $this->assert($result, ['bar', 'baz']);
+        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
 
-        $result = $this->execute([['sku', Operators::STARTS_WITH, 'a']]);
-        $this->assert($result, ['bar', 'baz']);
+        $result = $this->execute([['identifier', Operators::CONTAINS, 'A']]);
+        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
+
+        $result = $this->execute([['sku', Operators::CONTAINS, 'a']]);
+        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
+
+        $result = $this->execute([['sku', Operators::CONTAINS, 'A']]);
+        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
     }
 
     public function testOperatorNotContains()
@@ -50,7 +64,13 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
         $result = $this->execute([['identifier', Operators::DOES_NOT_CONTAIN, 'a']]);
         $this->assert($result, ['foo']);
 
+        $result = $this->execute([['identifier', Operators::DOES_NOT_CONTAIN, 'A']]);
+        $this->assert($result, ['foo']);
+
         $result = $this->execute([['sku', Operators::DOES_NOT_CONTAIN, 'a']]);
+        $this->assert($result, ['foo']);
+
+        $result = $this->execute([['sku', Operators::DOES_NOT_CONTAIN, 'A']]);
         $this->assert($result, ['foo']);
     }
 
@@ -59,26 +79,56 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
         $result = $this->execute([['identifier', Operators::EQUALS, 'baz']]);
         $this->assert($result, ['baz']);
 
+        $result = $this->execute([['identifier', Operators::EQUALS, 'bAz']]);
+        $this->assert($result, ['baz']);
+
+        $result = $this->execute([['identifier', Operators::EQUALS, 'bazz']]);
+        $this->assert($result, []);
+
         $result = $this->execute([['sku', Operators::EQUALS, 'bazz']]);
         $this->assert($result, []);
+
+        $result = $this->execute([['sku', Operators::EQUALS, 'bAz']]);
+        $this->assert($result, ['baz']);
     }
 
     public function testOperatorNotEquals()
     {
-        $result = $this->execute([['identifier', Operators::EQUALS, 'bazz']]);
-        $this->assert($result, ['foo', 'bar', 'baz']);
+        $result = $this->execute([['identifier', Operators::NOT_EQUAL, 'bazz']]);
+        $this->assert($result, ['foo', 'bar', 'baz', 'BARISTA', 'BAZAR']);
 
-        $result = $this->execute([['sku', Operators::EQUALS, 'bazz']]);
-        $this->assert($result, ['foo', 'bar', 'baz']);
+        $result = $this->execute([['identifier', Operators::NOT_EQUAL, 'baz']]);
+        $this->assert($result, ['foo', 'bar', 'BARISTA', 'BAZAR']);
+
+        $result = $this->execute([['identifier', Operators::NOT_EQUAL, 'bAz']]);
+        $this->assert($result, ['foo', 'bar', 'BARISTA', 'BAZAR']);
+
+        $result = $this->execute([['sku', Operators::NOT_EQUAL, 'bazz']]);
+        $this->assert($result, ['foo', 'bar', 'baz', 'BARISTA', 'BAZAR']);
+
+        $result = $this->execute([['sku', Operators::NOT_EQUAL, 'baz']]);
+        $this->assert($result, ['foo', 'bar', 'BARISTA', 'BAZAR']);
+
+        $result = $this->execute([['sku', Operators::NOT_EQUAL, 'bAz']]);
+        $this->assert($result, ['foo', 'bar', 'BARISTA', 'BAZAR']);
     }
 
     /**
      * @expectedException \Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException
-     * @expectedExceptionMessage Property "identifier" expects an array as data, "string" given.
+     * @expectedExceptionMessage Property "identifier" expects a string as data, "array" given.
      */
     public function testErrorDataIsMalformed()
     {
         $this->execute([['identifier', Operators::STARTS_WITH, ['string']]]);
+    }
+
+    /**
+     * @expectedException \Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException
+     * @expectedExceptionMessage Property "sku" expects a string as data, "array" given.
+     */
+    public function testErrorDataIsMalformedWithAttributeIdentifierCode()
+    {
+        $this->execute([['sku', Operators::STARTS_WITH, ['string']]]);
     }
 
     /**

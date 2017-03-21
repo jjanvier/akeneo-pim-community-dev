@@ -70,6 +70,7 @@ services:
     pim_catalog.query.elasticsearch.filter.identifier:
         class: '%pim_catalog.query.elasticsearch.filter.identifier.class%'
         arguments:
+            - '@pim_catalog.repository.attribute'
             - ['identifier']
             - ['STARTS WITH', 'CONTAINS', 'DOES NOT CONTAIN', '=', '!=']
         tags:
