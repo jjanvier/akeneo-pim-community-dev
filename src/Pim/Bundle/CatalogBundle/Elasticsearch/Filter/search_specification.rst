@@ -257,6 +257,100 @@ EMPTY
             'field' => 'description-text'
         ]
     ]
+Filtering
+~~~~~~~~~
+Operators
+.........
+STARTS WITH
+"""""""""""
+:Specific field: raw
+
+    Must be applied on the non-analyzed version of the field or will try to
+    match on all tokens.
+
+.. code-block:: php
+
+    'filter' => [
+        'query_string' => [
+            'default_field' => 'description-text.raw',
+            'query' => "My*"
+        ]
+    ]
+
+Note: All spaces must be escaped (with ``\\``) to prevent interpretation as separator. This applies on all query using a query_string.
+
+
+Example:
+
+.. code-block:: php
+
+    'filter' => [
+        'query_string' => [
+            'default_field' => 'description-text.raw',
+            'query' => 'My\\ description*'
+        ]
+    ]
+
+
+CONTAINS
+""""""""
+:Specific field: raw
+
+.. code-block:: php
+
+    'filter' => [
+        'query_string' => [
+            'default_field' => 'description-text.raw',
+            'query' => 'cool\\ product'
+        ]
+    ]
+
+DOES NOT CONTAIN
+""""""""""""""""
+:Specific field: raw
+
+Same syntax than the ``contains`` but must be included in a ``must_not`` boolean occured type instead of ``filter``.
+
+.. code-block:: php
+
+    'bool' => [
+        'must_not' => [
+            'query_string' => [
+                'default_field' => 'description-text.raw',
+                'query' => 'cool\\ product'
+            ]
+        ],
+        'filter' => [
+            'exists' => ['field' => 'description-text.raw'
+        ]
+    ]
+
+Equals (=)
+""""""""""
+:Type: Filter
+:Specific field: raw
+
+    Equality will not work with tokenized field, so we will use the untokenized sub-field:
+
+.. code-block:: php
+
+    'filter' => [
+        'term' => [
+            'description-text.raw' => 'My full lookup text'
+        ]
+    ]
+
+EMPTY
+"""""
+:Type: filter
+
+.. code-block:: php
+
+    'must_not' => [
+        'exists => [
+            'field' => 'description-text'
+        ]
+    ]
 
 Enabled
 *******
@@ -371,10 +465,62 @@ Data model
 
 Filtering
 ~~~~~~~~~
-
 Operators
 .........
-All operators are the same as the Text field type except the 'EMPTY' and the 'NOT EMPTY'.
+All operators are the same as the Text field type except for the 'EMPTY' and 'NOT EMPTY' operators.
+
+STARTS WITH
+"""""""""""
+
+.. code-block:: php
+
+    'filter' => [
+        'query_string' => [
+            'default_field' => 'identifier',
+            'query' => "sku-*"
+        ]
+    ]
+
+CONTAINS
+""""""""
+
+.. code-block:: php
+
+    'filter' => [
+        'query_string' => [
+            'default_field' => 'identifier',
+            'query' => '*00*'
+        ]
+    ]
+
+DOES NOT CONTAIN
+""""""""""""""""
+Same syntax than the ``contains`` but must be included in a ``must_not`` boolean occured type instead of ``filter``.
+
+.. code-block:: php
+
+    'bool' => [
+        'must_not' => [
+            'query_string' => [
+                'default_field' => 'identifier',
+                'query' => '*00*'
+            ]
+        ],
+        'filter' => [
+            'exists' => ['field' => 'identifier']
+        ]
+    ]
+
+Equals (=)
+""""""""""
+
+.. code-block:: php
+
+    'filter' => [
+        'term' => [
+            'identifier' => 'sku-0011'
+        ]
+    ]
 
 Media
 *****
