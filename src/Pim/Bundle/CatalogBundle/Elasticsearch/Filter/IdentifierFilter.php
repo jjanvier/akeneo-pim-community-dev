@@ -49,7 +49,6 @@ class IdentifierFilter extends AbstractFieldFilter implements FieldFilterInterfa
         }
 
         $this->checkValue($field, $operator, $value);
-
         $this->applyFilter($operator, $value);
 
         return $this;
