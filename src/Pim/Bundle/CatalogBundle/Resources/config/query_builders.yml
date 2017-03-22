@@ -71,6 +71,7 @@ services:
         class: '%pim_catalog.query.elasticsearch.filter.identifier.class%'
         arguments:
             - ['identifier']
+            - ['pim_catalog_identifier']
             - ['STARTS WITH', 'CONTAINS', 'DOES NOT CONTAIN', '=', '!=', 'IN', 'NOT IN']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.filter', priority: 30 }
