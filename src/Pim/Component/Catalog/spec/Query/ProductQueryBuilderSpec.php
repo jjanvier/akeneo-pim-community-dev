@@ -50,7 +50,6 @@ class ProductQueryBuilderSpec extends ObjectBehavior
 
     function it_adds_a_field_filter($repository, $filterRegistry, FieldFilterInterface $filter)
     {
-        $repository->getIdentifierCode()->willReturn('sku');
         $repository->findOneByIdentifier('id')->willReturn(null);
         $filterRegistry->getFieldFilter('id', '=')->willReturn($filter);
         $filter->setQueryBuilder(Argument::any())->shouldBeCalled();
@@ -66,34 +65,12 @@ class ProductQueryBuilderSpec extends ObjectBehavior
         $this->addFilter('id', '=', '42', []);
     }
 
-    function it_adds_a_the_field_identifier_filter(
-        $repository,
-        $filterRegistry,
-        FieldFilterInterface $filter
-    ) {
-        $repository->getIdentifierCode()->willReturn('sku');
-        $repository->findOneByIdentifier('sku')->shouldNotBeCalled();
-        $filterRegistry->getFieldFilter('sku', '=')->willReturn($filter);
-        $filter->setQueryBuilder(Argument::any())->shouldBeCalled();
-        $filter->addFieldFilter(
-            'sku',
-            '=',
-            '42',
-            'en_US',
-            'print',
-            ['locale' => 'en_US', 'scope' => 'print']
-        )->shouldBeCalled();
-
-        $this->addFilter('sku', '=', '42', []);
-    }
-
     function it_adds_a_field_filter_even_if_an_attribute_is_similar(
         $repository,
         $filterRegistry,
         AttributeInterface $attribute,
         FieldFilterInterface $filter
     ) {
-        $repository->getIdentifierCode()->willReturn('sku');
         $repository->findOneByIdentifier('id')->willReturn($attribute);
         $attribute->getCode()->willReturn('ID');
         $filterRegistry->getFieldFilter('id', '=')->willReturn($filter);
@@ -116,23 +93,21 @@ class ProductQueryBuilderSpec extends ObjectBehavior
         AttributeFilterInterface $filter,
         AttributeInterface $attribute
     ) {
-        $repository->getIdentifierCode()->willReturn('sku');
-        $repository->findOneByIdentifier('a_price')->willReturn($attribute);
-        $attribute->getCode()->willReturn('a_price');
+        $repository->findOneByIdentifier('sku')->willReturn($attribute);
+        $attribute->getCode()->willReturn('sku');
         $filterRegistry->getAttributeFilter($attribute, '=')->willReturn($filter);
         $attribute->isScopable()->willReturn(true);
         $attribute->isLocalizable()->willReturn(true);
         $filter->setQueryBuilder(Argument::any())->shouldBeCalled();
         $filter->addAttributeFilter(
             $attribute,
-            '=',
-            '42',
+            '=', '42',
             'en_US',
             'print',
-            ['locale' => 'en_US', 'scope' => 'print', 'field' => 'a_price']
+            ['locale' => 'en_US', 'scope' => 'print', 'field' => 'sku']
         )->shouldBeCalled();
 
-        $this->addFilter('a_price', '=', '42', []);
+        $this->addFilter('sku', '=', '42', []);
     }
 
     function it_adds_a_field_sorter($repository, $sorterRegistry, FieldSorterInterface $sorter)
