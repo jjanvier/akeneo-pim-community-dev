@@ -36,12 +36,6 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
 
         $result = $this->execute([['identifier', Operators::STARTS_WITH, 'bA']]);
         $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
-
-        $result = $this->execute([['sku', Operators::STARTS_WITH, 'ba']]);
-        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
-
-        $result = $this->execute([['sku', Operators::STARTS_WITH, 'bA']]);
-        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
     }
 
     public function testOperatorContains()
@@ -51,12 +45,6 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
 
         $result = $this->execute([['identifier', Operators::CONTAINS, 'A']]);
         $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
-
-        $result = $this->execute([['sku', Operators::CONTAINS, 'a']]);
-        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
-
-        $result = $this->execute([['sku', Operators::CONTAINS, 'A']]);
-        $this->assert($result, ['bar', 'baz', 'BARISTA', 'BAZAR']);
     }
 
     public function testOperatorNotContains()
@@ -65,12 +53,6 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
         $this->assert($result, ['foo']);
 
         $result = $this->execute([['identifier', Operators::DOES_NOT_CONTAIN, 'A']]);
-        $this->assert($result, ['foo']);
-
-        $result = $this->execute([['sku', Operators::DOES_NOT_CONTAIN, 'a']]);
-        $this->assert($result, ['foo']);
-
-        $result = $this->execute([['sku', Operators::DOES_NOT_CONTAIN, 'A']]);
         $this->assert($result, ['foo']);
     }
 
@@ -84,12 +66,6 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
 
         $result = $this->execute([['identifier', Operators::EQUALS, 'bazz']]);
         $this->assert($result, []);
-
-        $result = $this->execute([['sku', Operators::EQUALS, 'bazz']]);
-        $this->assert($result, []);
-
-        $result = $this->execute([['sku', Operators::EQUALS, 'bAz']]);
-        $this->assert($result, ['baz']);
     }
 
     public function testOperatorNotEquals()
@@ -102,15 +78,6 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
 
         $result = $this->execute([['identifier', Operators::NOT_EQUAL, 'bAz']]);
         $this->assert($result, ['foo', 'bar', 'BARISTA', 'BAZAR']);
-
-        $result = $this->execute([['sku', Operators::NOT_EQUAL, 'bazz']]);
-        $this->assert($result, ['foo', 'bar', 'baz', 'BARISTA', 'BAZAR']);
-
-        $result = $this->execute([['sku', Operators::NOT_EQUAL, 'baz']]);
-        $this->assert($result, ['foo', 'bar', 'BARISTA', 'BAZAR']);
-
-        $result = $this->execute([['sku', Operators::NOT_EQUAL, 'bAz']]);
-        $this->assert($result, ['foo', 'bar', 'BARISTA', 'BAZAR']);
     }
 
     public function testOperatorInList()
@@ -120,12 +87,6 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
 
         $result = $this->execute([['identifier', Operators::IN_LIST, ['bazz', 'FOOO']]]);
         $this->assert($result, []);
-
-        $result = $this->execute([['sku', Operators::IN_LIST, ['baz', 'FOO']]]);
-        $this->assert($result, ['foo', 'baz']);
-
-        $result = $this->execute([['sku', Operators::IN_LIST, ['BAZZ', 'FOOO']]]);
-        $this->assert($result, []);
     }
 
     public function testOperatorNotInList()
@@ -134,12 +95,6 @@ class IdentifierFilterIntegration extends AbstractFilterTestCase
         $this->assert($result, ['bar', 'BARISTA', 'BAZAR']);
 
         $result = $this->execute([['identifier', Operators::NOT_IN_LIST, ['bazz', 'FOOO']]]);
-        $this->assert($result, ['foo', 'bar', 'baz', 'BARISTA', 'BAZAR']);
-
-        $result = $this->execute([['sku', Operators::NOT_IN_LIST, ['baz', 'FOO']]]);
-        $this->assert($result, ['bar', 'BARISTA', 'BAZAR']);
-
-        $result = $this->execute([['sku', Operators::NOT_IN_LIST, ['BAZZ', 'FOOO']]]);
         $this->assert($result, ['foo', 'bar', 'baz', 'BARISTA', 'BAZAR']);
     }
 
