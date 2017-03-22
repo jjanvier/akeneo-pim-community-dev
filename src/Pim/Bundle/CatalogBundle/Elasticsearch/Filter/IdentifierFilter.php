@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
 
+use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Query\Filter\FieldFilterHelper;
 use Pim\Component\Catalog\Query\Filter\FieldFilterInterface;
@@ -113,8 +114,8 @@ class IdentifierFilter extends AbstractFieldFilter implements FieldFilterInterfa
             case Operators::IN_LIST:
                 $clause = [
                     'terms' => [
-                        self::IDENTIFIER_KEY => $value
-                    ]
+                        self::IDENTIFIER_KEY => $value,
+                    ],
                 ];
 
                 $this->searchQueryBuilder->addFilter($clause);
@@ -123,8 +124,8 @@ class IdentifierFilter extends AbstractFieldFilter implements FieldFilterInterfa
             case Operators::NOT_IN_LIST:
                 $clause = [
                     'terms' => [
-                        self::IDENTIFIER_KEY => $value
-                    ]
+                        self::IDENTIFIER_KEY => $value,
+                    ],
                 ];
 
                 $this->searchQueryBuilder->addMustNot($clause);
@@ -152,12 +153,13 @@ class IdentifierFilter extends AbstractFieldFilter implements FieldFilterInterfa
      * @param string $operator
      * @param mixed  $value
      *
+     * @throws InvalidPropertyTypeException
      */
     protected function checkValue($field, $operator, $value)
     {
         if (Operators::IN_LIST === $operator || Operators::NOT_IN_LIST === $operator) {
             FieldFilterHelper::checkArray($field, $value, self::class);
-        } elseif (in_array($operator, $this->supportedOperators)) {
+        } else {
             FieldFilterHelper::checkString($field, $value, self::class);
         }
     }
