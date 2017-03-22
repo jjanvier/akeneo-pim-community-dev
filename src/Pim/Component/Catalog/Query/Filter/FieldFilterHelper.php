@@ -2,7 +2,9 @@
 
 namespace Pim\Component\Catalog\Query\Filter;
 
+use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Field filter helper
@@ -70,6 +72,38 @@ class FieldFilterHelper
     {
         if (!is_array($value)) {
             throw InvalidPropertyTypeException::arrayExpected(static::getCode($field), $className, $value);
+        }
+    }
+
+    /**
+     * Check if value is a datetime corresponding to a format
+     *
+     * @param string $field
+     * @param string|DateTime $value
+     * @param string $format
+     * @param string $className
+     *
+     * @throws InvalidPropertyTypeException
+     */
+    public static function checkDateTime($field, $value, $format, $className)
+    {
+        if ($value instanceof \DateTime) {
+            return;
+        }
+
+        if (!is_string($value)) {
+            throw InvalidPropertyException::dateExpected($field, $format, $className, $value);
+        }
+
+        $dateTime = \DateTime::createFromFormat($format, $value);
+
+        if (!$dateTime || 0 < $dateTime->getLastErrors()['warning_count']) {
+            throw InvalidPropertyException::dateExpected(
+                $field,
+                $format,
+                $className,
+                $value
+            );
         }
     }
 
