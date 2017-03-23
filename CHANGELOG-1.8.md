@@ -27,7 +27,7 @@
 - Rename method `getEligibleProductIdsForVariantGroup` to `getEligibleProductsForVariantGroup` of `Pim\Component\Catalog\Repository\ProductRepositoryInterface`. And returns a `Akeneo\Component\StorageUtils\Cursor\CursorInterface`.
 - Remove methods `getFullProduct` and `findOneByWithValues` of `Pim\Component\Catalog\Repository\ProductRepositoryInterface`
 - Remove class `Pim\Bundle\VersioningBundle\UpdateGuesser\ProductValueUpdateGuesser.php`
-- Remove service and parameter: `pim_pim_versioning.update_guesser.product_value` and `pim_versioning.update_guesser.product_value.class`
+- Remove service `pim_pim_versioning.update_guesser.product_value` and parameter `pim_versioning.update_guesser.product_value.class`
 - Add method `setValues` and `setIdentifier` to `Pim\Component\Catalog\Model\ProductInterface`
 - Remove method `setNormalizedData` from `Pim\Component\Catalog\Model\ProductInterface`
 - Change method `fetchAll` of `Pim\Component\Connector\Processor\BulkMediaFetcher` to use a `Pim\Component\Catalog\Model\ProductValueCollectionInterface` instead of an `Doctrine\Common\Collections\ArrayCollection`
@@ -76,7 +76,8 @@
 - Make protected the method `setValues` in `Pim\Component\Catalog\Updater\VariantGroupUpdater`
 - Change the constructor of `Pim\Bundle\CatalogBundle\Doctrine\Common\Saver\ProductSaver` to replace `Pim\Component\Catalog\Manager\CompletenessManager` by `Pim\Component\Catalog\Completeness\CompletenessCalculatorInterface`
 - Add method `getId` and remove `setMissingCount`, `setChannel`, `setLocale`, `setProduct`, `setRequiredCount` from `Pim\Component\Catalog\Model\CompletenessInterface` and `Pim\Component\Catalog\Model\AbstractCompleteness`
-- Change the constructor of `Pim\Bundle\EnrichBundle\Controller\CompletenessController` to remove `Pim\Component\Catalog\Manager\CompletenessManager`
+- Remove useless class `Pim\Bundle\EnrichBundle\Controller\CompletenessController`
+- Remove useless service `pim_enrich.controller.completeness` and parameter `pim_enrich.controller.completeness.class`
 - Change the constructor of `Pim\Bundle\EnrichBundle\Controller\Rest\CompletenessController` to remove
     `Pim\Component\Catalog\Manager\CompletenessManager`,
     `Pim\Component\Catalog\Repository\ChannelRepositoryInterface`,
