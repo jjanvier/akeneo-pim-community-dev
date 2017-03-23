@@ -84,7 +84,7 @@ class DateTimeFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'term' => [
-                    'updated' => '2014-03-15T11:03:00+00:00'
+                    'updated' => '2014-03-15T12:03:00+00:00'
                 ]
             ]
         )->shouldBeCalled();
@@ -98,7 +98,7 @@ class DateTimeFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'range' => [
-                    'updated' => ['lt' => '2014-03-15T11:03:00+00:00']
+                    'updated' => ['lt' => '2014-03-15T12:03:00+00:00']
                 ]
             ]
         )->shouldBeCalled();
@@ -112,7 +112,7 @@ class DateTimeFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'range' => [
-                    'updated' => ['gt' => '2014-03-15T11:03:00+00:00']
+                    'updated' => ['gt' => '2014-03-15T12:03:00+00:00']
                 ]
             ]
         )->shouldBeCalled();
@@ -127,8 +127,8 @@ class DateTimeFilterSpec extends ObjectBehavior
             [
                 'range' => [
                     'updated' => [
-                        'gte' => '2014-03-15T11:03:00+00:00',
-                        'lte' => '2014-03-16T11:03:00+00:00'
+                        'gte' => '2014-03-15T12:03:00+00:00',
+                        'lte' => '2014-03-16T12:03:00+00:00'
                     ]
                 ]
             ]
@@ -147,8 +147,8 @@ class DateTimeFilterSpec extends ObjectBehavior
             [
                 'range' => [
                     'updated' => [
-                        'gte' => '2014-03-15T11:03:00+00:00',
-                        'lte' => '2014-03-16T11:03:00+00:00'
+                        'gte' => '2014-03-15T12:03:00+00:00',
+                        'lte' => '2014-03-16T12:03:00+00:00'
                     ]
                 ]
             ]
@@ -182,7 +182,7 @@ class DateTimeFilterSpec extends ObjectBehavior
         $sqb->addMustNot(
             [
                 'term' => [
-                    'updated' => '2014-03-15T11:03:00+00:00'
+                    'updated' => '2014-03-15T12:03:00+00:00'
                 ]
             ]
         )->shouldBeCalled();
@@ -284,6 +284,33 @@ class DateTimeFilterSpec extends ObjectBehavior
         $this->setQueryBuilder($sqb);
 
         $this->addFieldFilter('updated', Operators::SINCE_LAST_JOB, 'csv_product_export');
+    }
+
+    function it_throws_an_exception_with_operator_since_last_job_with_not_existing_job_instance(
+        $jobInstanceRepository,
+        JobExecution $jobExecution,
+        SearchQueryBuilder $sqb
+    ) {
+        $this->setQueryBuilder($sqb);
+
+        $timeZone = new \DateTimeZone('UTC');
+        $date = new \DateTime('now',$timeZone);
+
+        $jobExecution->getStartTime()->willReturn($date->format('c'));
+        $jobInstanceRepository
+            ->findOneByIdentifier('csv_product_export')
+            ->shouldBeCalled()
+            ->willReturn(null);
+
+        $this->shouldThrow(
+            InvalidPropertyException::validEntityCodeExpected(
+                'job_instance',
+                'code',
+                'The job instance does not exist',
+                DateTimeFilter::class,
+                'csv_product_export'
+            )
+        )->during('addFieldFilter', ['updated', Operators::SINCE_LAST_JOB, 'csv_product_export']);
     }
 
     function it_throws_an_exception_when_the_search_query_builder_is_not_initialized()
@@ -390,7 +417,7 @@ class DateTimeFilterSpec extends ObjectBehavior
         $this->shouldThrow(
             InvalidPropertyException::dateExpected(
                 'created',
-                'Y-m-d H:i:s',
+                'yyyy-mm-dd H:i:s',
                 DateTimeFilter::class,
                 null === $propertyValueException ? $value : $propertyValueException
             )
@@ -411,7 +438,7 @@ class DateTimeFilterSpec extends ObjectBehavior
         $this->shouldThrow(
             InvalidPropertyTypeException::validArrayStructureExpected(
                 'created',
-                sprintf('should contain 2 strings with the format "%s"', 'Y-m-d H:i:s'),
+                sprintf('should contain 2 strings with the format "%s"', 'yyyy-mm-dd H:i:s'),
                 DateTimeFilter::class,
                 $value
             )

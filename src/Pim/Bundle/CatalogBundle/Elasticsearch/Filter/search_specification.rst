@@ -1098,7 +1098,7 @@ IS NOT EMPTY
 
 DateTime (updated and created)
 ******************************
-:Apply: datetime fields
+:Apply: datetime fields (updated and created)
 
 Data model
 ~~~~~~~~~~
@@ -1220,11 +1220,11 @@ NOT EQUAL
 
 SINCE LAST JOB
 """"""""""""""
-:Apply: Apply the GREATER THAN Operator with the Date of the Job
+:Apply: Apply the GREATER THAN Operator with the date of the last execution of the job
 
 SINCE LAST N DAYS
 """""""""""""""""
-:Apply: Apply the GREATER THAN Operator with the N previous day
+:Apply: Apply the GREATER THAN Operator with the date corresponding to the Nth previous day
 
 Data model
 ~~~~~~~~~~
