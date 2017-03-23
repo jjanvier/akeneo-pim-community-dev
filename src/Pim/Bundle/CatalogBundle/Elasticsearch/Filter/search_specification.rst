@@ -439,7 +439,9 @@ Not Equal (!=)
             ]
         ],
         'filter' => [
-            'field' => 'identifier'
+            'exists' => [
+                'field' => 'identifier'
+            ]
         ]
     ]
 
