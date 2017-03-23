@@ -334,13 +334,6 @@ services:
             - '@pim_catalog.factory.channel'
             - '@validator'
 
-    pim_enrich.controller.rest.completeness:
-        class: '%pim_enrich.controller.rest.completeness.class%'
-        arguments:
-            - '@pim_catalog.repository.product'
-            - '@pim_enrich.normalizer.completeness_collection'
-            - '@pim_catalog.completeness.calculator'
-
     pim_enrich.controller.rest.family:
         class: '%pim_enrich.controller.rest.family.class%'
         arguments:
