@@ -19,7 +19,7 @@ class ClientSpec extends ObjectBehavior
 
     function let(NativeClient $client, ClientBuilder $clientBuilder)
     {
-        $this->beConstructedWith($clientBuilder, ['localhost:9200'], 'an_index_name');
+        $this->beConstructedWith($clientBuilder, ['localhost:9200'], 'an_index_name', '10s', 50);
         $clientBuilder->setHosts(Argument::any())->willReturn($clientBuilder);
         $clientBuilder->build()->willReturn($client);
     }
@@ -51,10 +51,12 @@ class ClientSpec extends ObjectBehavior
         $this->get('an_index_type', 'identifier');
     }
 
-    public function it_indexes_documents($client)
+    public function it_searches_documents($client)
     {
         $client->search(
             [
+                'scroll'=> '10s',
+                'size'  => 50,
                 'index' => 'an_index_name',
                 'type'  => 'an_index_type',
                 'body'  => ['a key' => 'a value']
@@ -141,6 +143,26 @@ class ClientSpec extends ObjectBehavior
         ];
 
         $this->bulkIndexes('an_index_type', $documents, 'identifier');
+    }
+
+    function it_scrolls_documents($client)
+    {
+        $client->scroll([
+            'scroll_id' => 'oiF7fai8',
+            'scroll' => '10s'
+        ])->shouldBeCalled();
+
+        $this->scroll('oiF7fai8');
+    }
+
+    function it_clears_the_scroll($client)
+    {
+        $client->clearScroll([
+            'scroll_id' => 'oiF7fai8',
+            'scroll' => "10s"
+        ])->shouldBeCalled();
+
+        $this->clearScroll('oiF7fai8');
     }
 
     function it_throws_an_exception_if_identifier_key_is_missing($client)

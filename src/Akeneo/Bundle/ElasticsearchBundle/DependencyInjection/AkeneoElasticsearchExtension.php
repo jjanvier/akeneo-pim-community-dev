@@ -27,6 +27,8 @@ class AkeneoElasticsearchExtension extends Extension
         $container->setParameter('akeneo_elasticsearch.index_configuration.files', $config['configuration_files']);
         $container->setParameter('akeneo_elasticsearch.index_name', $config['index_name']);
         $container->setParameter('akeneo_elasticsearch.hosts', $config['hosts']);
+        $container->setParameter('akeneo_elasticsearch.scroll_time', $config['scroll_time']);
+        $container->setParameter('akeneo_elasticsearch.scroll_size', $config['scroll_size']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
