@@ -1,6 +1,6 @@
 <?php
 
-namespace Pim\Bundle\CatalogBundle\tests\integration\PQB\Filter;
+namespace Pim\Bundle\CatalogBundle\tests\integration\PQB;
 
 use Akeneo\Bundle\ElasticsearchBundle\Client;
 use Akeneo\Bundle\ElasticsearchBundle\IndexConfiguration\Loader;
@@ -13,7 +13,7 @@ use Akeneo\Test\Integration\TestCase;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-abstract class AbstractFilterTestCase extends TestCase
+abstract class AbstractProductQueryBuilderTestCase extends TestCase
 {
     /** @var Client */
     private $esClient;
@@ -83,13 +83,30 @@ abstract class AbstractFilterTestCase extends TestCase
      *
      * @return mixed
      */
-    protected function execute(array $filters)
+    protected function executeFilter(array $filters)
     {
         $pqb = $this->get('pim_catalog.query.product_query_builder_factory')->create();
 
         foreach ($filters as $filter) {
             $context = isset($filter[3]) ? $filter[3] : [];
             $pqb->addFilter($filter[0], $filter[1], $filter[2], $context);
+        }
+
+        return $pqb->execute();
+    }
+
+    /**
+     * @param array $sorters
+     *
+     * @return mixed
+     */
+    protected function executeSorter(array $sorters)
+    {
+        $pqb = $this->get('pim_catalog.query.product_query_builder_factory')->create();
+
+        foreach ($sorters as $sorter) {
+            $context = isset($sorter[2]) ? $sorter[2] : [];
+            $pqb->addSorter($sorter[0], $sorter[1], $context);
         }
 
         return $pqb->execute();
@@ -108,6 +125,20 @@ abstract class AbstractFilterTestCase extends TestCase
 
         sort($products);
         sort($expected);
+
+        $this->assertSame($products, $expected);
+    }
+
+    /**
+     * @param CursorInterface $result
+     * @param array $expected
+     */
+    protected function assertOrder($result, array $expected)
+    {
+        $products = [];
+        foreach ($result as $product) {
+            $products[] = $product->getIdentifier();
+        }
 
         $this->assertSame($products, $expected);
     }
