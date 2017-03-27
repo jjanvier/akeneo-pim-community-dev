@@ -41,7 +41,7 @@ class PimCatalogTextIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'values.name-varchar.<all_locales>.<all_channels>',
+                            'default_field'       => 'values.name-varchar.<all_locales>.<all_channels>',
                             'query'               => 'My\ product*',
                             'split_on_whitespace' => true,
                         ],
@@ -106,32 +106,28 @@ class PimCatalogTextIntegration extends AbstractPimCatalogIntegration
                             'query'         => '*Love*',
                         ],
                     ],
-                    'filter'   => [
-                        'exists' => ['field' => 'values.name-varchar.<all_locales>.<all_channels>'],
-                    ],
                 ],
             ],
         ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
-        $this->assertProducts($productsFound, ['product_1', 'product_2', 'product_5']);
+        $this->assertProducts($productsFound, ['product_1', 'product_2', 'product_4', 'product_5']);
     }
 
     public function testEqualsOperator()
     {
-        $query =
-            [
-                'query' => [
-                    'bool' => [
-                        'filter' => [
-                            'term' => [
-                                'values.name-varchar.<all_locales>.<all_channels>' => 'I-love.dots',
-                            ],
+        $query = [
+            'query' => [
+                'bool' => [
+                    'filter' => [
+                        'term' => [
+                            'values.name-varchar.<all_locales>.<all_channels>' => 'I-love.dots',
                         ],
                     ],
                 ],
-            ];
+            ],
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
@@ -140,21 +136,20 @@ class PimCatalogTextIntegration extends AbstractPimCatalogIntegration
 
     public function testNotEqualsOperator()
     {
-        $query =
-            [
-                'query' => [
-                    'bool' => [
-                        'must_not' => [
-                            'term' => [
-                                'values.name-varchar.<all_locales>.<all_channels>' => 'I-love.dots',
-                            ],
-                        ],
-                        'filter'   => [
-                            'exists' => ['field' => 'values.name-varchar.<all_locales>.<all_channels>'],
+        $query = [
+            'query' => [
+                'bool' => [
+                    'must_not' => [
+                        'term' => [
+                            'values.name-varchar.<all_locales>.<all_channels>' => 'I-love.dots',
                         ],
                     ],
+                    'filter'   => [
+                        'exists' => ['field' => 'values.name-varchar.<all_locales>.<all_channels>'],
+                    ],
                 ],
-            ];
+            ],
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
@@ -166,8 +161,7 @@ class PimCatalogTextIntegration extends AbstractPimCatalogIntegration
 
     public function testEmptyOperator()
     {
-        $query =
-            [
+        $query = [
                 'query' => [
                     'bool' => [
                         'must_not' => [
@@ -184,8 +178,7 @@ class PimCatalogTextIntegration extends AbstractPimCatalogIntegration
 
     public function testNotEmptyOperator()
     {
-        $query =
-            [
+        $query = [
                 'query' => [
                     'bool' => [
                         'filter' => [
@@ -274,7 +267,7 @@ class PimCatalogTextIntegration extends AbstractPimCatalogIntegration
                         '<all_locales>' => [
                             '<all_channels>' => 'Another product',
                         ],
-                    ]
+                    ],
                 ],
             ],
             [
@@ -284,7 +277,7 @@ class PimCatalogTextIntegration extends AbstractPimCatalogIntegration
                         '<all_locales>' => [
                             '<all_channels>' => 'Yeah, love this name',
                         ],
-                    ]
+                    ],
                 ],
             ],
             [
@@ -297,7 +290,7 @@ class PimCatalogTextIntegration extends AbstractPimCatalogIntegration
                         '<all_locales>' => [
                             '<all_channels>' => 'And an uppercase NAME',
                         ],
-                    ]
+                    ],
                 ],
             ],
             [
@@ -307,7 +300,7 @@ class PimCatalogTextIntegration extends AbstractPimCatalogIntegration
                         '<all_locales>' => [
                             '<all_channels>' => 'Love this product',
                         ],
-                    ]
+                    ],
                 ],
             ],
             [
@@ -317,7 +310,7 @@ class PimCatalogTextIntegration extends AbstractPimCatalogIntegration
                         '<all_locales>' => [
                             '<all_channels>' => 'I.love.dots',
                         ],
-                    ]
+                    ],
                 ],
             ],
             [
@@ -327,7 +320,7 @@ class PimCatalogTextIntegration extends AbstractPimCatalogIntegration
                         '<all_locales>' => [
                             '<all_channels>' => 'I-love.dots',
                         ],
-                    ]
+                    ],
                 ],
             ],
         ];
