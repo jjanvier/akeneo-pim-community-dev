@@ -21,7 +21,7 @@ class PimCatalogTextAreaIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'query_string' => [
-                            'default_field' => 'values.description-text.<all_locales>.<all_channels>.raw',
+                            'default_field' => 'values.description-text.<all_locales>.<all_channels>',
                             'query'         => 'an*',
                         ],
                     ],
