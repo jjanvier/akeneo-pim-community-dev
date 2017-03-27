@@ -20,6 +20,8 @@ class TextFilterIntegration extends AbstractFilterTestCase
         parent::setUp();
 
         if (1 === self::$count || $this->getConfiguration()->isDatabasePurgedForEachTest()) {
+            $this->resetIndex();
+
             $this->createProduct('cat', [
                 'values' => [
                     'a_text' => [['data' => 'cat', 'locale' => null, 'scope' => null]]
