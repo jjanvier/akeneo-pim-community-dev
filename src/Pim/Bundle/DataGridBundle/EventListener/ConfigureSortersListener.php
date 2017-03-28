@@ -37,6 +37,8 @@ class ConfigureSortersListener
      */
     public function onBuildBefore(BuildBefore $event)
     {
+        return;
+
         $config = $event->getConfig();
         $sortersPath = sprintf('%s[%s]', SorterConfiguration::SORTERS_PATH, Configuration::COLUMNS_KEY);
         $sorters = $config->offsetGetByPath($sortersPath);

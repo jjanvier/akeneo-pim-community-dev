@@ -56,6 +56,7 @@ class SorterExtension extends AbstractExtension
      */
     public function visitDatasource(DatagridConfiguration $config, DatasourceInterface $datasource)
     {
+return;
         $sorters = $this->getSortersToApply($config);
         foreach ($sorters as $definition) {
             list($direction, $sorter) = $definition;

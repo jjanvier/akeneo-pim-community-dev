@@ -86,6 +86,7 @@ class OrmSelectorExtension extends AbstractExtension
      */
     public function visitDatasource(DatagridConfiguration $config, OroDatasourceInterface $datasource)
     {
+        return;
         $selectors = $this->getSelectorsToApply($config);
         foreach ($selectors as $selector) {
             $selector->apply($datasource, $config);

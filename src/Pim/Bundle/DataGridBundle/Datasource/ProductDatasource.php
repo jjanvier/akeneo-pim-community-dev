@@ -3,10 +3,12 @@
 namespace Pim\Bundle\DataGridBundle\Datasource;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Oro\Bundle\DataGridBundle\Datasource\ResultRecord;
 use Pim\Bundle\CatalogBundle\Doctrine\ORM\QueryBuilderUtility;
 use Pim\Bundle\DataGridBundle\Datasource\ResultRecord\HydratorInterface;
 use Pim\Component\Catalog\Query\ProductQueryBuilderFactoryInterface;
 use Pim\Component\Catalog\Query\ProductQueryBuilderInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * Product datasource, allows to prepare query builder from repository
@@ -19,6 +21,8 @@ class ProductDatasource extends Datasource
 {
     /** @var ProductQueryBuilderInterface */
     protected $pqb;
+    /** @var NormalizerInterface */
+    private $normalizer;
 
     /**
      * @param ObjectManager                       $om
@@ -28,11 +32,13 @@ class ProductDatasource extends Datasource
     public function __construct(
         ObjectManager $om,
         HydratorInterface $hydrator,
-        ProductQueryBuilderFactoryInterface $factory
+        ProductQueryBuilderFactoryInterface $factory,
+        NormalizerInterface $normalizer
     ) {
         $this->om = $om;
         $this->hydrator = $hydrator;
         $this->factory = $factory;
+        $this->normalizer = $normalizer;
     }
 
     /**
@@ -53,7 +59,20 @@ class ProductDatasource extends Datasource
             QueryBuilderUtility::removeExtraParameters($this->qb);
         }
 
-        $rows = $this->hydrator->hydrate($this->qb, $options);
+        $rows = [];
+        $cursor = $this->getProductQueryBuilder()->execute();
+        $i = 0;
+        foreach ($cursor as $product) {
+            $poo = array_merge(
+                $this->normalizer->normalize($product, 'internal_api'),
+                ['id' => $product->getId(), 'dataLocale' => $this->getConfiguration('locale_code')]
+            );
+
+            $rows[] = new ResultRecord($poo, ['totalRecords' => 30]);
+            if (++$i > 10) {
+                break;
+            }
+        }
 
         return $rows;
     }

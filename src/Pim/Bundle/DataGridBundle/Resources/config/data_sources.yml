@@ -118,6 +118,7 @@ services:
             - '@pim_catalog.object_manager.product'
             - '@pim_datagrid.datasource.result_record.hydrator.product'
             - '@pim_catalog.query.product_query_builder_factory'
+            - '@pim_enrich.normalizer.product'
         calls:
             - [ setMassActionRepository, ['@pim_catalog.repository.product_mass_action'] ]
         tags:
@@ -129,6 +130,7 @@ services:
             - '@pim_catalog.object_manager.product'
             - '@pim_datagrid.datasource.result_record.hydrator.associated_product'
             - '@pim_catalog.query.product_query_builder_factory'
+            - '@pim_enrich.normalizer.product'
         tags:
             - { name: oro_datagrid.datasource, type: pim_datasource_associated_product }
 

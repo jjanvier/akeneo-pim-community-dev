@@ -36,22 +36,6 @@ class ResolverPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $pagerResolver = $container->getDefinition(self::PAGER_RESOLVER_ID);
-        $datasourceResolver = $container->getDefinition(self::DATASOURCE_ADAPTER_RESOLVER_ID);
 
-        if (AkeneoStorageUtilsExtension::DOCTRINE_MONGODB_ODM ===
-            $container->getParameter('pim_catalog_product_storage_driver')
-        ) {
-            $datasourceResolver->addMethodCall(
-                'setMongodbAdapterClass',
-                [ $container->getParameter(self::MONGO_DATASOURCE_ADAPTER_CLASS) ]
-            );
-            $datasourceResolver->addMethodCall(
-                'setProductMongodbAdapterClass',
-                [ $container->getParameter(self::MONGO_PRODUCT_DATASOURCE_ADAPTER_CLASS) ]
-            );
-
-            $pagerResolver->addMethodCall('setMongodbPager', [ new Reference(self::MONGO_PAGER_ID) ]);
-        }
     }
 }

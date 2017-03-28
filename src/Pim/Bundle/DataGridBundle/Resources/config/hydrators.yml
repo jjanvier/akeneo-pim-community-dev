@@ -6,11 +6,13 @@ parameters:
 services:
     pim_datagrid.datasource.result_record.hydrator.product:
         class: '%pim_datagrid.datasource.result_record.hydrator.product.class%'
+        arguments:
+            - '@pim_enrich.normalizer.product'
 
     pim_datagrid.datasource.result_record.hydrator.associated_product:
         class: '%pim_datagrid.datasource.result_record.hydrator.associated_product.class%'
         arguments:
-            - '%pim_catalog.entity.product.class%'
+            - '@pim_enrich.normalizer.product'
 
     pim_datagrid.datasource.result_record.hydrator.object_id:
         class: '%pim_datagrid.datasource.result_record.hydrator.object_id.class%'

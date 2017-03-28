@@ -5,6 +5,7 @@ namespace Pim\Bundle\DataGridBundle\Datasource\ResultRecord\Orm;
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecord;
 use Pim\Bundle\DataGridBundle\Datasource\ResultRecord\HydratorInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * Hydrate results of Doctrine ORM query as ResultRecord array
@@ -15,6 +16,15 @@ use Pim\Component\Catalog\Model\ProductInterface;
  */
 class ProductHydrator implements HydratorInterface
 {
+    /** @var NormalizerInterface */
+    private $normalizer;
+
+    public function __construct(NormalizerInterface $normalizer)
+    {
+        $this->normalizer = $normalizer;
+    }
+
+
     /**
      * {@inheritdoc}
      */
