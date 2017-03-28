@@ -98,9 +98,6 @@ class TextAreaFilterIntegration extends AbstractFilterTestCase
         $this->assert($result, ['best_rabbit']);
     }
 
-    /**
-     * @group todo
-     */
     public function testOperatorContains()
     {
         $result = $this->execute([['a_text_area', Operators::CONTAINS, 'at']]);
@@ -206,7 +203,7 @@ class TextAreaFilterIntegration extends AbstractFilterTestCase
     public function testOperatorDifferent()
     {
         $result = $this->execute([['a_text_area', Operators::NOT_EQUAL, 'dog']]);
-        $this->assert($result, ['cat', 'cattle', 'best_cat', 'best_rabbit']);
+        $this->assert($result, ['cat', 'cattle', 'best_cat', 'best_rabbit', 'best_dog']);
 
         $result = $this->execute([['a_text_area', Operators::NOT_EQUAL, 'cat']]);
         $this->assert($result, ['cattle', 'dog', 'best_dog', 'best_cat', 'best_rabbit']);
@@ -241,7 +238,7 @@ class TextAreaFilterIntegration extends AbstractFilterTestCase
 
     /**
      * @expectedException \Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException
-     * @expectedExceptionMessage Property "a_text" expects a string as data, "array" given.
+     * @expectedExceptionMessage Property "a_text_area" expects a string as data, "array" given.
      */
     public function testErrorDataIsMalformed()
     {
@@ -250,7 +247,7 @@ class TextAreaFilterIntegration extends AbstractFilterTestCase
 
     /**
      * @expectedException \Pim\Component\Catalog\Exception\UnsupportedFilterException
-     * @expectedExceptionMessage Filter on property "a_text" is not supported or does not support operator ">="
+     * @expectedExceptionMessage Filter on property "a_text_area" is not supported or does not support operator ">="
      */
     public function testErrorOperatorNotSupported()
     {

@@ -246,6 +246,26 @@ Equals (=)
         ]
     ]
 
+Not Equals (!=)
+"""""""""""""""
+:Type: Filter
+:Specific field: raw
+
+        Equality will not work with tokenized field, so we will use the untokenized sub-field:
+
+.. code-block:: php
+
+    'must_not' => [
+        'term' => [
+            'description-text.raw' => 'My full lookup text'
+        ]
+    ],
+    'filter' => [
+        'exists' => [
+            'field' => 'description-text.raw'
+        ]
+    ]
+
 EMPTY
 """""
 :Type: filter
@@ -257,6 +277,7 @@ EMPTY
             'field' => 'description-text'
         ]
     ]
+
 Enabled
 *******
 :Apply: apply datatype 'boolean' on the 'enabled' field
