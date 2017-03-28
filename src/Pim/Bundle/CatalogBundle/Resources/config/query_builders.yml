@@ -21,6 +21,7 @@ parameters:
     pim_catalog.query.elasticsearch.filter.option.class:          Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\OptionFilter
     pim_catalog.query.elasticsearch.filter.options.class:         Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\OptionsFilter
     pim_catalog.query.elasticsearch.sorter.base.class:            Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\BaseSorter
+    pim_catalog.query.elasticsearch.filter.price.class: Pim\Bundle\CatalogBundle\Elasticsearch\Filter\PriceFilter
 
 services:
     pim_catalog.query.product_query_builder_factory:
@@ -214,6 +215,16 @@ services:
             - '@pim_catalog.repository.attribute_option'
             - ['pim_catalog_simpleselect']
             - ['IN', 'EMPTY', 'NOT EMPTY', 'NOT IN']
+        tags:
+            - { name: 'pim_catalog.elasticsearch.query.filter', priority: 30 }
+
+    pim_catalog.query.elasticsearch.filter.price:
+        class: '%pim_catalog.query.elasticsearch.filter.price.class%'
+        arguments:
+            - '@pim_catalog.validator.helper.attribute'
+            - '@pim_catalog.repository.currency'
+            - ['pim_catalog_price_collection']
+            - ['<', '<=', '=', '!=', '>=', '>', 'EMPTY', 'NOT EMPTY']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.filter', priority: 30 }
 
