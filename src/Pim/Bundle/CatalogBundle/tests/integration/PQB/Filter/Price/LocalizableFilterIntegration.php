@@ -127,10 +127,10 @@ class LocalizableFilterIntegration extends AbstractProductQueryBuilderTestCase
         $this->assert($result, []);
 
         $result = $this->executeFilter([['a_localizable_price', Operators::IS_NOT_EMPTY, ['amount' => '', 'currency' => ''], ['locale' => 'en_US']]]);
-        $this->assert($result, []);
+        $this->assert($result, ['product_one', 'product_two']);
 
         $result = $this->executeFilter([['a_localizable_price', Operators::IS_NOT_EMPTY, [], ['locale' => 'en_US']]]);
-        $this->assert($result, []);
+        $this->assert($result, ['product_one', 'product_two']);
     }
 
     public function testOperatorDifferent()

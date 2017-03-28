@@ -109,10 +109,10 @@ class ScopableFilterIntegration extends AbstractProductQueryBuilderTestCase
     public function testOperatorNotEmpty()
     {
         $result = $this->executeFilter([['a_scopable_price', Operators::IS_NOT_EMPTY, ['amount' => '', 'currency' => ''], ['scope' => 'tablet']]]);
-        $this->assert($result, []);
+        $this->assert($result, ['product_one', 'product_two']);
 
         $result = $this->executeFilter([['a_scopable_price', Operators::IS_NOT_EMPTY, [], ['scope' => 'tablet']]]);
-        $this->assert($result, []);
+        $this->assert($result, ['product_one', 'product_two']);
 
         $result = $this->executeFilter([['a_scopable_price', Operators::IS_NOT_EMPTY, ['amount' => '', 'currency' => 'EUR'], ['scope' => 'tablet']]]);
         $this->assert($result, ['product_two']);

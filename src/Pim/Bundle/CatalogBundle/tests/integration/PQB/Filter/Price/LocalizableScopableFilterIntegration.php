@@ -186,7 +186,7 @@ class LocalizableScopableFilterIntegration extends AbstractProductQueryBuilderTe
             ['amount' => '', 'currency' => ''],
             ['locale' => 'en_US', 'scope' => 'tablet']
         ]]);
-        $this->assert($result, []);
+        $this->assert($result, ['product_one', 'product_two']);
 
         $result = $this->executeFilter([[
             'a_scopable_localizable_price',
@@ -194,7 +194,7 @@ class LocalizableScopableFilterIntegration extends AbstractProductQueryBuilderTe
             [],
             ['locale' => 'en_US', 'scope' => 'tablet']
         ]]);
-        $this->assert($result, []);
+        $this->assert($result, ['product_one', 'product_two']);
 
         $result = $this->executeFilter([[
             'a_scopable_localizable_price',
