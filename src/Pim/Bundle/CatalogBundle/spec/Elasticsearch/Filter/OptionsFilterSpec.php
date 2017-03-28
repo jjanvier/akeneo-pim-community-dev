@@ -9,7 +9,9 @@ use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\AbstractAttributeFilter;
 use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\OptionsFilter;
 use Pim\Bundle\CatalogBundle\Elasticsearch\SearchQueryBuilder;
 use Pim\Component\Catalog\Exception\InvalidOperatorException;
+use Pim\Component\Catalog\Exception\ObjectNotFoundException;
 use Pim\Component\Catalog\Model\AttributeInterface;
+use Pim\Component\Catalog\Model\AttributeOptionInterface;
 use Pim\Component\Catalog\Query\Filter\AttributeFilterInterface;
 use Pim\Component\Catalog\Query\Filter\Operators;
 use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
@@ -67,10 +69,17 @@ class OptionsFilterSpec extends ObjectBehavior
     function it_adds_a_filter_with_operator_in_list(
         $attributeValidatorHelper,
         AttributeInterface $tags,
-        SearchQueryBuilder $sqb
+        SearchQueryBuilder $sqb,
+        AttributeOptionInterface $option1,
+        AttributeOptionInterface $option2
     ) {
         $tags->getCode()->willReturn('tags');
         $tags->getBackendType()->willReturn('options');
+
+        $option1->getCode()->willReturn('summer');
+        $option2->getCode()->willReturn('winter');
+
+        $tags->getOptions()->willReturn([$option1, $option2]);
 
         $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();
@@ -90,10 +99,17 @@ class OptionsFilterSpec extends ObjectBehavior
     function it_adds_a_filter_with_operator_not_in_list(
         $attributeValidatorHelper,
         AttributeInterface $tags,
-        SearchQueryBuilder $sqb
+        SearchQueryBuilder $sqb,
+        AttributeOptionInterface $option1,
+        AttributeOptionInterface $option2
     ) {
         $tags->getCode()->willReturn('tags');
         $tags->getBackendType()->willReturn('options');
+
+        $option1->getCode()->willReturn('summer');
+        $option2->getCode()->willReturn('winter');
+
+        $tags->getOptions()->willReturn([$option1, $option2]);
 
         $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();
@@ -103,6 +119,12 @@ class OptionsFilterSpec extends ObjectBehavior
                 'terms' => [
                     'values.tags-options.en_US.ecommerce' => ['summer']
                 ]
+            ]
+        )->shouldBeCalled();
+
+        $sqb->addFilter(
+            [
+                'exists' => ['field' => 'values.tags-options.en_US.ecommerce']
             ]
         )->shouldBeCalled();
 
@@ -273,10 +295,17 @@ class OptionsFilterSpec extends ObjectBehavior
     function it_throws_an_exception_when_it_filters_on_an_unsupported_operator(
         $attributeValidatorHelper,
         AttributeInterface $tags,
-        SearchQueryBuilder $sqb
+        SearchQueryBuilder $sqb,
+        AttributeOptionInterface $option1,
+        AttributeOptionInterface $option2
     ) {
         $tags->getCode()->willReturn('tags');
         $tags->getBackendType()->willReturn('options');
+
+        $option1->getCode()->willReturn('summer');
+        $option2->getCode()->willReturn('winter');
+
+        $tags->getOptions()->willReturn([$option1, $option2]);
 
         $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();
@@ -336,5 +365,32 @@ class OptionsFilterSpec extends ObjectBehavior
                 $e
             )
         )->during('addAttributeFilter', [$tags, Operators::IN_LIST, ['summer'], 'en_US', 'ecommerce', []]);
+    }
+
+    function it_throws_an_execption_when_it_is_a_not_existing_option(
+        $attributeValidatorHelper,
+        AttributeInterface $tags,
+        SearchQueryBuilder $sqb,
+        AttributeOptionInterface $option1,
+        AttributeOptionInterface $option2
+    ) {
+        $tags->getCode()->willReturn('tags');
+        $tags->getBackendType()->willReturn('options');
+
+        $option1->getCode()->willReturn('summer');
+        $option2->getCode()->willReturn('winter');
+
+        $tags->getOptions()->willReturn([$option1, $option2]);
+
+        $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();
+
+        $this->setQueryBuilder($sqb);
+
+        $this->shouldThrow(
+            new ObjectNotFoundException(
+                sprintf('Object "%s" with code "%s" does not exist', 'options', 'spring')
+            )
+        )->during('addAttributeFilter', [$tags, Operators::IN_CHILDREN_LIST, ['spring'], 'en_US', 'ecommerce', []]);
     }
 }
