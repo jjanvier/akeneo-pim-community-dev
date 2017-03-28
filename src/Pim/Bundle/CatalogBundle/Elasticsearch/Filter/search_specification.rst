@@ -504,7 +504,13 @@ Data model
 
 .. code-block:: yaml
 
-  values.publishedOn-date.<all_locales>.<all_channels>: 2015-02-24
+  'values' => [
+      'publishedOn-date' => [
+          '<all_locales>' => [
+              '<all_channels>' => '2015-02-24'
+          ]
+      ]
+  ]
 
 Filtering
 ~~~~~~~~~
@@ -531,6 +537,29 @@ Equals (=)
 
     'term' => [
         'values.publishedOn-date.<all_locales>.<all_channels>' => '2015-02-26'
+    ]
+
+NOT EQUAL (!=)
+""""""""""""""
+:Type: filter
+
+.. code-block:: php
+
+    [
+        'query' => [
+            'bool' => [
+                'must_not' => [
+                    'term' => [
+                        'values.publishedOn-date.<all_locales>.<all_channels>' => '2015-02-26'
+                    ]
+                ],
+                'filter' => [
+                    'exists' => [
+                        'field' => 'values.publishedOn-date.<all_locales>.<all_channels>'
+                    ]
+                ]
+            ]
+        ]
     ]
 
 BETWEEN

@@ -46,7 +46,7 @@ class DateFilter extends AbstractAttributeFilter implements AttributeFilterInter
         $operator,
         $value,
         $locale = null,
-        $scope = null,
+        $channel = null,
         $options = []
     ) {
         if (null === $this->searchQueryBuilder) {
@@ -55,10 +55,10 @@ class DateFilter extends AbstractAttributeFilter implements AttributeFilterInter
 
         $attributeCode = $attribute->getCode();
 
-        $this->checkLocaleAndChannel($attribute, $locale, $scope);
+        $this->checkLocaleAndChannel($attribute, $locale, $channel);
         $this->checkValue($operator, $attributeCode, $value);
 
-        $attributePath = $this->getAttributePath($attribute, $locale, $scope);
+        $attributePath = $this->getAttributePath($attribute, $locale, $channel);
 
         switch ($operator) {
             case Operators::EQUALS:
@@ -120,16 +120,28 @@ class DateFilter extends AbstractAttributeFilter implements AttributeFilterInter
                     ]
                 ];
 
+                $existsClause = [
+                    'exists' => ['field' => $attributePath]
+                ];
+
                 $this->searchQueryBuilder->addMustNot($betweenClause);
-                $this->searchQueryBuilder->addFilter($this->getExistsClause($attributePath));
+                $this->searchQueryBuilder->addFilter($existsClause);
 
                 break;
             case Operators::IS_EMPTY:
-                $this->searchQueryBuilder->addMustNot($this->getExistsClause($attributePath));
+                $existsClause = [
+                    'exists' => ['field' => $attributePath]
+                ];
+
+                $this->searchQueryBuilder->addMustNot($existsClause);
 
                 break;
             case Operators::IS_NOT_EMPTY:
-                $this->searchQueryBuilder->addFilter($this->getExistsClause($attributePath));
+                $existsClause = [
+                    'exists' => ['field' => $attributePath]
+                ];
+
+                $this->searchQueryBuilder->addFilter($existsClause);
 
                 break;
             case Operators::NOT_EQUAL:
@@ -139,8 +151,12 @@ class DateFilter extends AbstractAttributeFilter implements AttributeFilterInter
                     ]
                 ];
 
+                $existsClause = [
+                    'exists' => ['field' => $attributePath]
+                ];
+
                 $this->searchQueryBuilder->addMustNot($mustNotClause);
-                $this->searchQueryBuilder->addFilter($this->getExistsClause($attributePath));
+                $this->searchQueryBuilder->addFilter($existsClause);
 
                 break;
             default:
@@ -148,18 +164,6 @@ class DateFilter extends AbstractAttributeFilter implements AttributeFilterInter
         }
 
         return $this;
-    }
-
-    /**
-     * @param string $field
-     *
-     * @return array
-     */
-    protected function getExistsClause($field)
-    {
-        return [
-            'exists' => ['field' => $field]
-        ];
     }
 
     /**
