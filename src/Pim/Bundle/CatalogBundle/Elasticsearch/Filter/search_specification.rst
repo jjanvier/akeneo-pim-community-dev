@@ -158,9 +158,18 @@ Text area
 
 Data model
 ~~~~~~~~~~
-.. code-block:: yaml
+.. code-block:: php
 
-  my_description-text-fr_FR-mobile: 'My description'
+    [
+        'values' => [
+            'my_description-text' => [
+                'fr_FR' => [
+                    'mobile' => 'My description'
+                ]
+            ]
+        ]
+    ]
+
 
 
 Filtering
@@ -207,7 +216,7 @@ CONTAINS
     'filter' => [
         'query_string' => [
             'default_field' => 'description-text.raw',
-            'query' => 'cool\\ product'
+            'query' => '*cool\\ product*'
         ]
     ]
 
@@ -223,7 +232,7 @@ Same syntax than the ``contains`` but must be included in a ``must_not`` boolean
         'must_not' => [
             'query_string' => [
                 'default_field' => 'description-text.raw',
-                'query' => 'cool\\ product'
+                'query' => '*cool\\ product*'
             ]
         ],
         'filter' => [
@@ -268,11 +277,21 @@ Not Equals (!=)
 
 EMPTY
 """""
-:Type: filter
 
 .. code-block:: php
 
     'must_not' => [
+        'exists => [
+            'field' => 'description-text'
+        ]
+    ]
+
+NOT EMPTY
+"""""""""
+
+.. code-block:: php
+
+    'filter' => [
         'exists => [
             'field' => 'description-text'
         ]
@@ -335,7 +354,15 @@ Data model
 ~~~~~~~~~~
 .. code-block:: php
 
-  name-varchar: "My product name"
+    [
+        'values' => [
+            'name-varchar' => [
+                'fr_FR' => [
+                    'mobile' => 'My product name'
+                ]
+            ]
+        ]
+    ]
 
 Filtering
 ~~~~~~~~~
