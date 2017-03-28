@@ -30,8 +30,7 @@ class TextAreaNormalizer extends AbstractProductValueNormalizer implements Norma
      */
     protected function getNormalizedData(ProductValueInterface $productValue)
     {
-        $cleanedData = str_replace('\r', '', $productValue->getData());
-        $cleanedData = str_replace('\n', '', $cleanedData);
+        $cleanedData = str_replace(["\r", "\n"], "", $productValue->getData());
         $cleanedData = strip_tags(html_entity_decode($cleanedData));
 
         return $cleanedData;

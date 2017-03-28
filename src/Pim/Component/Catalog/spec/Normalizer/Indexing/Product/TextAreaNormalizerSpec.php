@@ -69,7 +69,8 @@ class TextAreaNormalizerSpec extends ObjectBehavior
         $textAreaValue->getAttribute()->willReturn($textAreaAttribute);
         $textAreaValue->getLocale()->willReturn(null);
         $textAreaValue->getScope()->willReturn(null);
-        $textAreaValue->getData()->willReturn('a\n product\n\r\n\n name\r\n');
+        $textAreaValue->getData()->willReturn("a\n product \n\r\n\n
+name\r\n");
 
         $textAreaAttribute->getCode()->willReturn('name');
         $textAreaAttribute->getBackendType()->willReturn('text');
@@ -111,7 +112,8 @@ class TextAreaNormalizerSpec extends ObjectBehavior
         $textAreaValue->getAttribute()->willReturn($textAreaAttribute);
         $textAreaValue->getLocale()->willReturn(null);
         $textAreaValue->getScope()->willReturn(null);
-        $textAreaValue->getData()->willReturn('<br/>\n<h1>a</h1> <i>product</i>\n<br/>\n name<hr/><br/>\n');
+        $textAreaValue->getData()->willReturn("<br/>\n<h1>a</h1>\r\n <i>product</i>
+<br/>\n name<hr/><br/>\n");
 
         $textAreaAttribute->getCode()->willReturn('name');
         $textAreaAttribute->getBackendType()->willReturn('text');
@@ -132,7 +134,7 @@ class TextAreaNormalizerSpec extends ObjectBehavior
         $textAreaValue->getAttribute()->willReturn($textAreaAttribute);
         $textAreaValue->getLocale()->willReturn('fr_FR');
         $textAreaValue->getScope()->willReturn(null);
-        $textAreaValue->getData()->willReturn('<h1>a product name</h1>\n');
+        $textAreaValue->getData()->willReturn("<h1>a product name</h1>\n");
 
         $textAreaAttribute->getCode()->willReturn('name');
         $textAreaAttribute->getBackendType()->willReturn('text');
@@ -153,7 +155,7 @@ class TextAreaNormalizerSpec extends ObjectBehavior
         $textAreaValue->getAttribute()->willReturn($textAreaAttribute);
         $textAreaValue->getLocale()->willReturn(null);
         $textAreaValue->getScope()->willReturn('ecommerce');
-        $textAreaValue->getData()->willReturn('<h1>a product name</h1>\n');
+        $textAreaValue->getData()->willReturn("<h1>a product name</h1>\n");
 
         $textAreaAttribute->getCode()->willReturn('name');
         $textAreaAttribute->getBackendType()->willReturn('text');
@@ -174,7 +176,7 @@ class TextAreaNormalizerSpec extends ObjectBehavior
         $textAreaValue->getAttribute()->willReturn($textAreaAttribute);
         $textAreaValue->getLocale()->willReturn('fr_FR');
         $textAreaValue->getScope()->willReturn('ecommerce');
-        $textAreaValue->getData()->willReturn('<h1>a product name</h1>\n');
+        $textAreaValue->getData()->willReturn("<h1>a product name</h1>\n");
 
         $textAreaAttribute->getCode()->willReturn('name');
         $textAreaAttribute->getBackendType()->willReturn('text');

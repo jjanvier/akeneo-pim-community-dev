@@ -187,7 +187,7 @@ STARTS WITH
 
     'filter' => [
         'query_string' => [
-            'default_field' => 'description-text.raw',
+            'default_field' => 'values.description-text.<all_locales>.<all_channels>.raw',
             'query' => "My*"
         ]
     ]
@@ -201,7 +201,7 @@ Example:
 
     'filter' => [
         'query_string' => [
-            'default_field' => 'description-text.raw',
+            'default_field' => 'values.description-text.<all_locales>.<all_channels>.raw',
             'query' => 'My\\ description*'
         ]
     ]
@@ -215,7 +215,7 @@ CONTAINS
 
     'filter' => [
         'query_string' => [
-            'default_field' => 'description-text.raw',
+            'default_field' => 'values.description-text.<all_locales>.<all_channels>.raw',
             'query' => '*cool\\ product*'
         ]
     ]
@@ -231,12 +231,12 @@ Same syntax than the ``contains`` but must be included in a ``must_not`` boolean
     'bool' => [
         'must_not' => [
             'query_string' => [
-                'default_field' => 'description-text.raw',
+                'default_field' => 'values.description-text.<all_locales>.<all_channels>.raw',
                 'query' => '*cool\\ product*'
             ]
         ],
         'filter' => [
-            'exists' => ['field' => 'description-text.raw'
+            'exists' => ['field' => 'values.description-text.<all_locales>.<all_channels>.raw'
         ]
     ]
 
@@ -251,7 +251,7 @@ Equals (=)
 
     'filter' => [
         'term' => [
-            'description-text.raw' => 'My full lookup text'
+            'values.description-text.<all_locales>.<all_channels>.raw' => 'My full lookup text'
         ]
     ]
 
@@ -266,12 +266,12 @@ Not Equals (!=)
 
     'must_not' => [
         'term' => [
-            'description-text.raw' => 'My full lookup text'
+            'values.description-text.<all_locales>.<all_channels>.raw' => 'My full lookup text'
         ]
     ],
     'filter' => [
         'exists' => [
-            'field' => 'description-text.raw'
+            'field' => 'values.description-text.<all_locales>.<all_channels>.raw'
         ]
     ]
 
@@ -282,7 +282,7 @@ EMPTY
 
     'must_not' => [
         'exists => [
-            'field' => 'description-text'
+            'field' => 'values.description-text.<all_locales>.<all_channels>'
         ]
     ]
 
@@ -293,7 +293,7 @@ NOT EMPTY
 
     'filter' => [
         'exists => [
-            'field' => 'description-text'
+            'field' => 'values.description-text.<all_locales>.<all_channels>'
         ]
     ]
 

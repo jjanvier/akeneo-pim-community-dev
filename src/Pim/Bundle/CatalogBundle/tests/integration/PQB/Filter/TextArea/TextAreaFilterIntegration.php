@@ -13,7 +13,8 @@ use Pim\Component\Catalog\Query\Filter\Operators;
 class TextAreaFilterIntegration extends AbstractFilterTestCase
 {
     /** @var string Test newlines in TextArea data */
-    private $rabbitNewLineData = 'Why my rabbit\n is the best?';
+    private $rabbitNewLineData = "Why my rabbit
+ is the best?";
 
     /**
      * @{@inheritdoc}
@@ -94,7 +95,7 @@ class TextAreaFilterIntegration extends AbstractFilterTestCase
         $result = $this->execute([['a_text_area', Operators::STARTS_WITH, 'my cat']]);
         $this->assert($result, ['best_cat']);
 
-        $result = $this->execute([['a_text_area', Operators::STARTS_WITH, 'Why my rabbit is']]);
+        $result = $this->execute([['a_text_area', Operators::STARTS_WITH, 'why my rabbit is']]);
         $this->assert($result, ['best_rabbit']);
     }
 
