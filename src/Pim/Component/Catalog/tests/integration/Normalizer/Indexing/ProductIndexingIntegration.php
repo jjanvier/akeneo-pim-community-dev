@@ -158,12 +158,18 @@ class ProductIndexingIntegration extends TestCase
                 ],
                 'a_price-prices'                                 => [
                     '<all_channels>' => [
-                        '<all_locales>' => null,
+                        '<all_locales>' => [
+                            'USD' => '45.0000',
+                            'EUR' => '56.5300',
+                        ],
                     ],
                 ],
                 'a_price_without_decimal-prices'                 => [
                     '<all_channels>' => [
-                        '<all_locales>' => null,
+                        '<all_locales>' => [
+                            'USD' => '-45.0000',
+                            'EUR' => '56.0000',
+                        ],
                     ],
                 ],
                 'a_ref_data_multi_select-reference_data_options' => [
@@ -178,7 +184,14 @@ class ProductIndexingIntegration extends TestCase
                 ],
                 'a_scopable_price-prices'                        => [
                     'ecommerce' => [
-                        '<all_locales>' => null,
+                        '<all_locales>' => [
+                            'EUR' => '15.0000',
+                            'USD' => '20.0000',
+                        ],
+                        'tablet'    => [
+                            'EUR' => '17.0000',
+                            'USD' => '24.0000',
+                        ],
                     ],
                     'tablet' => [
                         '<all_locales>' => null,

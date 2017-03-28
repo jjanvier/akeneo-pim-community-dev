@@ -77,7 +77,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
             case Operators::LOWER_THAN:
                 $clause = [
                     'range' => [
-                        $attributePath => ['lt' => $value],
+                        $attributePath => ['lt' => $value['amount']],
                     ],
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
@@ -85,7 +85,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
             case Operators::LOWER_OR_EQUAL_THAN:
                 $clause = [
                     'range' => [
-                        $attributePath => ['lte' => $value],
+                        $attributePath => ['lte' => $value['amount']],
                     ],
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
@@ -93,7 +93,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
             case Operators::EQUALS:
                 $clause = [
                     'term' => [
-                        $attributePath => $value,
+                        $attributePath => $value['amount'],
                     ],
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
@@ -101,7 +101,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
             case Operators::NOT_EQUAL:
                 $mustNotClause = [
                     'term' => [
-                        $attributePath => $value,
+                        $attributePath => $value['amount'],
                     ],
                 ];
                 $filterClause = [
@@ -115,7 +115,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
             case Operators::GREATER_OR_EQUAL_THAN:
                 $clause = [
                     'range' => [
-                        $attributePath => ['gte' => $value],
+                        $attributePath => ['gte' => $value['amount']],
                     ],
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
@@ -123,7 +123,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
             case Operators::GREATER_THAN:
                 $clause = [
                     'range' => [
-                        $attributePath => ['gt' => $value],
+                        $attributePath => ['gt' => $value['amount']],
                     ],
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
@@ -241,7 +241,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
     {
         $attributePath = $this->getAttributePath($attribute, $locale, $channel);
 
-        if (null !== $value['currency']) {
+        if (null !== $value['currency'] && '' !== $value['currency']) {
             $attributePath .= '.' . $value['currency'];
         }
 

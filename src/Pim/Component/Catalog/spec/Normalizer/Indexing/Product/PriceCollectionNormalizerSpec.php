@@ -73,6 +73,37 @@ class PriceCollectionNormalizerSpec extends ObjectBehavior
         ]);
     }
 
+    function it_normalize_a_price_collection_product_value_with_negative_amount(
+        PriceCollectionProductValue $priceCollection,
+        ProductPrice $priceEUR,
+        ProductPrice $priceUSD,
+        AttributeInterface $priceCollectionAttribute
+    ) {
+        $priceEUR->getData()->willReturn(-150.150129);
+        $priceEUR->getCurrency()->willReturn('EUR');
+        $priceUSD->getData()->willReturn(-12);
+        $priceUSD->getCurrency()->willReturn('USD');
+
+        $priceCollection->getAttribute()->willReturn($priceCollectionAttribute);
+        $priceCollection->getLocale()->willReturn(null);
+        $priceCollection->getScope()->willReturn(null);
+        $priceCollection->getData()->willReturn([$priceEUR, $priceUSD]);
+
+        $priceCollectionAttribute->getCode()->willReturn('a_price');
+        $priceCollectionAttribute->getBackendType()->willReturn('prices');
+
+        $this->normalize($priceCollection, 'indexing')->shouldReturn([
+            'a_price-prices' => [
+                '<all_locales>' => [
+                    '<all_channels>' => [
+                        'EUR' => '-150.1501',
+                        'USD' => '-12.0000',
+                    ],
+                ],
+            ],
+        ]);
+    }
+
     function it_normalize_a_price_collection_product_value_with_locale(
         PriceCollectionProductValue $priceCollection,
         ProductPrice $priceEUR,

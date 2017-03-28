@@ -21,6 +21,7 @@ class PriceFilterIntegration extends AbstractProductQueryBuilderTestCase
 
         if (1 === self::$count || $this->getConfiguration()->isDatabasePurgedForEachTest()) {
             $this->resetIndex();
+
             $this->createProduct('product_one', [
                 'values' => [
                     'a_price' => [
@@ -44,9 +45,6 @@ class PriceFilterIntegration extends AbstractProductQueryBuilderTestCase
         }
     }
 
-    /**
-     * TODO: Add some strings to test if it works ?
-     */
     public function testOperatorInferior()
     {
         $result = $this->executeFilter([['a_price', Operators::LOWER_THAN, ['amount' => 10.55, 'currency' => 'EUR']]]);
@@ -119,9 +117,6 @@ class PriceFilterIntegration extends AbstractProductQueryBuilderTestCase
         $this->assert($result, ['product_one']);
     }
 
-    /**
-     * @group todo
-     */
     public function testOperatorEmpty()
     {
         $result = $this->executeFilter([['a_price', Operators::IS_EMPTY, []]]);
@@ -131,7 +126,7 @@ class PriceFilterIntegration extends AbstractProductQueryBuilderTestCase
         $this->assert($result, ['empty_product']);
 
         $result = $this->execute([['a_price', Operators::IS_EMPTY, ['currency' => 'USD']]]);
-        $this->assert($result, ['empty_product']);
+        $this->assert($result, ['empty_product', 'product_two']);
     }
 
     public function testOperatorNotEmpty()
@@ -143,10 +138,10 @@ class PriceFilterIntegration extends AbstractProductQueryBuilderTestCase
         $this->assert($result, ['product_one']);
 
         $result = $this->executeFilter([['a_price', Operators::IS_NOT_EMPTY, ['amount' => '', 'currency' => '']]]);
-        $this->assert($result, []);
+        $this->assert($result, ['product_one', 'product_two']);
 
         $result = $this->executeFilter([['a_price', Operators::IS_NOT_EMPTY, []]]);
-        $this->assert($result, []);
+        $this->assert($result, ['product_one', 'product_two']);
     }
 
     public function testOperatorDifferent()
