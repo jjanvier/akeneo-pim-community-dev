@@ -154,7 +154,8 @@ class ProductQueryBuilderSpec extends ObjectBehavior
     ) {
         $searchQb->getQuery()->willReturn(['a native ES query']);
 
-        $searchEngineResults = [
+        $searchEngineResults1 = [
+            '_scroll_id' => 'first_batch',
             'hits' => [
                 'hits' => [
                     ['_source' => ['identifier' => 'result1']],
@@ -163,13 +164,35 @@ class ProductQueryBuilderSpec extends ObjectBehavior
                 ]
             ]
         ];
-        $searchEngine->search('pim_catalog_product', ['a native ES query'])->willReturn($searchEngineResults);
+        $searchEngine->search('pim_catalog_product', ['a native ES query'])->willReturn($searchEngineResults1);
+
+        $searchEngineResults2 = [
+            '_scroll_id' => 'second_batch',
+            'hits' => [
+                'hits' => [
+                    ['_source' => ['identifier' => 'result4']],
+                    ['_source' => ['identifier' => 'result5']],
+                    ['_source' => ['identifier' => 'result6']],
+                ]
+            ]
+        ];
+        $searchEngine->scroll('first_batch')->willReturn($searchEngineResults2);
+
+        $searchEngineResults3 = [
+            '_scroll_id' => 'third_batch',
+            'hits' => [
+                'hits' => []
+            ]
+        ];
+        $searchEngine->scroll('second_batch')->willReturn($searchEngineResults3);
 
         $entityManager->createQueryBuilder()->willReturn($queryBuilder);
         $queryBuilder->select('p')->willReturn($queryBuilder);
         $queryBuilder->from(Product::class, 'p')->willReturn($queryBuilder);
         $queryBuilder->where('p.identifier IN (:identifiers)')->willReturn($queryBuilder);
-        $queryBuilder->setParameter('identifiers', ['result1', 'result2', 'result3'])->willReturn($queryBuilder);
+        $queryBuilder->setParameter('identifiers',
+            ['result1', 'result2', 'result3', 'result4', 'result5', 'result6']
+        )->willReturn($queryBuilder);
 
         $cursorFactory->createCursor(Argument::any())->shouldBeCalled()->willReturn($cursor);
 

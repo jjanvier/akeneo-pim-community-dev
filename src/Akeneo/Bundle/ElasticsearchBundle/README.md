@@ -48,4 +48,10 @@ akeneo_elasticsearch:
     # Paths of the YAML files to configure the index. See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html and src/Akeneo/Bundle/ElasticsearchBundle/IndexConfiguration/IndexConfiguration.php.
     configuration_files:  [] # Required
 
+    # The scroll time. See https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/_search_operations.html#_scan_scroll.
+    scroll_time:          10s
+
+    # The scroll size. See https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/_search_operations.html#_scan_scroll.
+    scroll_size:          50
+
 ```

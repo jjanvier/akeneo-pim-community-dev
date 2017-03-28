@@ -97,15 +97,7 @@ class ProductQueryBuilder implements ProductQueryBuilderInterface
         // TODO TIP-701: it has been done like that just to be able to launch
         // TODO TIP-701: the PQB integration tests one by one, and make them green one by one
 
-        $response = $this->searchEngine->search(
-            'pim_catalog_product',
-            $this->getQueryBuilder()->getQuery()
-        );
-
-        $identifiers = [];
-        foreach ($response['hits']['hits'] as $hit) {
-            $identifiers[] = $hit['_source']['identifier'];
-        }
+        $identifiers = $this->getIdentifiersResultsFromSearchEngine($this->getQueryBuilder()->getQuery());
 
         $qb = $this->getInternalQueryBuilder();
         $qb->where('p.identifier IN (:identifiers)');
@@ -338,5 +330,39 @@ class ProductQueryBuilder implements ProductQueryBuilderInterface
         return $this->entityManager->createQueryBuilder()
             ->select('p')
             ->from(Product::class, 'p');
+    }
+
+    /**
+     * @param array $esQuery
+     *
+     * @return array
+     */
+    private function getIdentifiersResultsFromSearchEngine(array $esQuery)
+    {
+        $identifiers = [];
+        $response = $this->searchEngine->search('pim_catalog_product', $esQuery);
+        $scrollId = $response['_scroll_id'];
+
+        foreach ($response['hits']['hits'] as $hit) {
+            $identifiers[] = $hit['_source']['identifier'];
+        }
+
+        while (true) {
+            $response = $this->searchEngine->scroll($scrollId);
+
+            if (0 === count($response['hits']['hits'])) {
+                // No results, scroll cursor is empty.  We've exported all the data
+                break;
+            }
+
+            // Must always refresh the scroll ID!  It can change sometimes.
+            $scrollId = $response['_scroll_id'];
+
+            foreach ($response['hits']['hits'] as $hit) {
+                $identifiers[] = $hit['_source']['identifier'];
+            }
+        }
+
+        return $identifiers;
     }
 }

@@ -28,19 +28,30 @@ class Client
     /** @var NativeClient */
     private $client;
 
+    /** @var string */
+    private $scroll;
+
+    /** @var int */
+    private $size;
+
     /**
      * Configure the PHP Elasticsearch client.
      * To learn more, please see {@link https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/_configuration.html}
+     * and {@link https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/_search_operations.html#_scan_scroll}
      *
      * @param ClientBuilder $builder
      * @param array         $hosts
      * @param string        $indexName
+     * @param string        $scroll
+     * @param int           $size
      */
-    public function __construct(ClientBuilder $builder, array $hosts, $indexName)
+    public function __construct(ClientBuilder $builder, array $hosts, $indexName, $scroll, $size)
     {
         $this->builder = $builder;
         $this->hosts = $hosts;
         $this->indexName = $indexName;
+        $this->scroll = $scroll;
+        $this->size = $size;
 
         $builder->setHosts($hosts);
         $this->client = $builder->build();
@@ -123,12 +134,44 @@ class Client
     public function search($indexType, array $body)
     {
         $params = [
+            'scroll' => $this->scroll,
+            'size'  => $this->size,
             'index' => $this->indexName,
             'type'  => $indexType,
             'body'  => $body
         ];
 
         return $this->client->search($params);
+    }
+
+    /**
+     * @param string $scrollId
+     *
+     * @return array see {@link https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/ElasticsearchPHP_Endpoints.html#Elasticsearch_Clientscroll_scroll}
+     */
+    public function scroll($scrollId)
+    {
+        $params = [
+            'scroll_id' => $scrollId,
+            'scroll' => $this->scroll
+        ];
+
+        return $this->client->scroll($params);
+    }
+
+    /**
+     * @param string $scrollId
+     *
+     * @return array see {@link https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/ElasticsearchPHP_Endpoints.html#Elasticsearch_Clientscroll_scroll}
+     */
+    public function clearScroll($scrollId)
+    {
+        $params = [
+            'scroll_id' => $scrollId,
+            'scroll' => $this->scroll
+        ];
+
+        return $this->client->clearScroll($params);
     }
 
     /**
