@@ -14,33 +14,35 @@ class PimCatalogPricesIntegration extends AbstractPimCatalogIntegration
 {
     public function testLowerThanOperator()
     {
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'a_price-prices.USD' => ['lt' => 10],
+                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => ['lt' => 10],
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
+
+        var_dump(json_encode($query));
 
         $productsFound = $this->getSearchQueryResults($query);
 
         $this->assertProducts($productsFound, ['product_1', 'product_2']);
 
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'a_price-prices.EUR' => ['lt' => 10],
+                            'values.a_price-prices.<all_locales>.<all_channels>.EUR' => ['lt' => '10'],
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
@@ -49,33 +51,33 @@ class PimCatalogPricesIntegration extends AbstractPimCatalogIntegration
 
     public function testLowerOrEqualThanOperator()
     {
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'a_price-prices.USD' => ['lte' => 10],
+                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => ['lte' => '10'],
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
         $this->assertProducts($productsFound, ['product_1', 'product_2', 'product_4']);
 
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'a_price-prices.EUR' => ['lte' => 10],
+                            'values.a_price-prices.<all_locales>.<all_channels>.EUR' => ['lte' => 10],
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
@@ -84,17 +86,17 @@ class PimCatalogPricesIntegration extends AbstractPimCatalogIntegration
 
     public function testEqualsOperator()
     {
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'term' => [
-                            'a_price-prices.USD' => 10,
+                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => '10',
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
@@ -103,22 +105,22 @@ class PimCatalogPricesIntegration extends AbstractPimCatalogIntegration
 
     public function testNotEqualsOperator()
     {
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'must_not' => [
                         'term' => [
-                            'a_price-prices.USD' => 10,
+                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => 10,
                         ],
                     ],
                     'filter'   => [
                         'exists' => [
-                            'field' => 'a_price-prices.USD',
+                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.USD',
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
@@ -130,33 +132,33 @@ class PimCatalogPricesIntegration extends AbstractPimCatalogIntegration
 
     public function testGreaterOrEqualThanOperator()
     {
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'a_price-prices.USD' => ['gte' => 10],
+                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => ['gte' => 10],
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
         $this->assertProducts($productsFound, ['product_3', 'product_4', 'product_6']);
 
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'a_price-prices.EUR' => ['gte' => 10],
+                            'values.a_price-prices.<all_locales>.<all_channels>.EUR' => ['gte' => '10'],
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
@@ -165,33 +167,33 @@ class PimCatalogPricesIntegration extends AbstractPimCatalogIntegration
 
     public function testGreaterThanOperator()
     {
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'a_price-prices.USD' => ['gt' => 10],
+                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => ['gt' => '10'],
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
         $this->assertProducts($productsFound, ['product_3', 'product_6']);
 
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'a_price-prices.EUR' => ['gt' => 10],
+                            'values.a_price-prices.<all_locales>.<all_channels>.EUR' => ['gt' => 10],
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
@@ -200,33 +202,33 @@ class PimCatalogPricesIntegration extends AbstractPimCatalogIntegration
 
     public function testEmptyOperator()
     {
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'must_not' => [
                         'exists' => [
-                            'field' => 'a_price-prices.USD',
+                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.USD',
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
         $this->assertProducts($productsFound, ['product_5', 'product_7']);
 
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'must_not' => [
                         'exists' => [
-                            'field' => 'a_price-prices.CNY',
+                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.CNY',
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
@@ -238,33 +240,33 @@ class PimCatalogPricesIntegration extends AbstractPimCatalogIntegration
 
     public function testNotEmptyOperator()
     {
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'exists' => [
-                            'field' => 'a_price-prices.EUR',
+                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.EUR',
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
         $this->assertProducts($productsFound, ['product_1', 'product_2', 'product_3', 'product_4']);
 
-        $query = $this->createSearchQuery([
+        $query = [
             'query' => [
                 'bool' => [
                     'filter' => [
                         'exists' => [
-                            'field' => 'a_price-prices.CNY',
+                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.CNY',
                         ],
                     ],
                 ],
             ],
-        ]);
+        ];
 
         $productsFound = $this->getSearchQueryResults($query);
 
@@ -278,44 +280,82 @@ class PimCatalogPricesIntegration extends AbstractPimCatalogIntegration
     {
         $products = [
             [
-                'sku-varchar'        => 'product_1',
-                'a_price-prices.USD' => '5',
-                'a_price-prices.EUR' => '15.55',
-            ],
-            [
-                'sku-varchar'    => 'product_2',
-                'a_price-prices' => [
-                    'USD' => '5',
-                    'EUR' => '15.55',
+                'identifier' => 'product_1',
+                'values'     => [
+                    'a_price-prices' => [
+                        '<all_locales>' => [
+                            '<all_channels>' => [
+                                'USD' => '5',
+                                'EUR' => '15.55',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             [
-                'sku-varchar'    => 'product_3',
-                'a_price-prices' => [
-                    'USD' => '16',
-                    'EUR' => '6.60',
+                'identifier' => 'product_2',
+                'values'     => [
+                    'a_price-prices' => [
+                        '<all_locales>' => [
+                            '<all_channels>' => [
+                                'USD' => '5',
+                                'EUR' => '15.55',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             [
-                'sku-varchar'    => 'product_4',
-                'a_price-prices' => [
-                    'USD' => '10',
-                    'EUR' => '10',
+                'identifier' => 'product_3',
+                'values'     => [
+                    'a_price-prices' => [
+                        '<all_locales>' => [
+                            '<all_channels>' => [
+                                'USD' => '16',
+                                'EUR' => '6.60',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             [
-                'sku-varchar' => 'product_5',
-            ],
-            [
-                'sku-varchar'    => 'product_6',
-                'a_price-prices' => [
-                    'USD' => '150',
+                'identifier' => 'product_4',
+                'values'     => [
+                    'a_price-prices' => [
+                        '<all_locales>' => [
+                            '<all_channels>' => [
+                                'USD' => '10',
+                                'EUR' => '10',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             [
-                'sku-varchar'    => 'product_7',
-                'a_price-prices' => [
-                    'CNY' => '150',
+                'identifier' => 'product_5',
+            ],
+            [
+                'identifier' => 'product_6',
+                'values'     => [
+                    'a_price-prices' => [
+                        '<all_locales>' => [
+                            '<all_channels>' => [
+                                'USD' => '150',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'identifier' => 'product_7',
+                'values'     => [
+                    'a_price-prices' => [
+                        '<all_locales>' => [
+                            '<all_channels>' => [
+                                'CNY' => '150',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ];

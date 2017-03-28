@@ -62,7 +62,7 @@ mappings:
                     match_mapping_type: 'string'
                     mapping:
                         type: 'double'
-                    path_match: '*-prices.*'
+                    path_match: 'values.*-prices.*'
 settings:
     analysis:
         normalizer:
