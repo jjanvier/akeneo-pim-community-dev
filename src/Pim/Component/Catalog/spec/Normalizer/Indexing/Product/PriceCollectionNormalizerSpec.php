@@ -65,8 +65,8 @@ class PriceCollectionNormalizerSpec extends ObjectBehavior
             'a_price-prices' => [
                 '<all_locales>' => [
                     '<all_channels>' => [
-                        'EUR' => '150.1501',
-                        'USD' => '12.0000',
+                        'EUR' => '150.150129',
+                        'USD' => '12',
                     ],
                 ],
             ],
@@ -96,8 +96,8 @@ class PriceCollectionNormalizerSpec extends ObjectBehavior
             'a_price-prices' => [
                 '<all_locales>' => [
                     '<all_channels>' => [
-                        'EUR' => '-150.1501',
-                        'USD' => '-12.0000',
+                        'EUR' => '-150.150129',
+                        'USD' => '-12',
                     ],
                 ],
             ],
@@ -127,8 +127,8 @@ class PriceCollectionNormalizerSpec extends ObjectBehavior
             'a_price-prices' => [
                 'fr_FR' => [
                     '<all_channels>' => [
-                        'EUR' => '150.1501',
-                        'USD' => '12.0000',
+                        'EUR' => '150.150129',
+                        'USD' => '12',
                     ],
                 ],
             ],
@@ -158,8 +158,8 @@ class PriceCollectionNormalizerSpec extends ObjectBehavior
             'a_price-prices' => [
                 '<all_locales>' => [
                     'ecommerce' => [
-                        'EUR' => '150.1501',
-                        'USD' => '12.0000',
+                        'EUR' => '150.150129',
+                        'USD' => '12',
                     ],
                 ],
             ],
@@ -189,8 +189,8 @@ class PriceCollectionNormalizerSpec extends ObjectBehavior
             'a_price-prices' => [
                 'fr_FR' => [
                     'ecommerce' => [
-                        'EUR' => '150.1501',
-                        'USD' => '12.0000',
+                        'EUR' => '150.150129',
+                        'USD' => '12',
                     ],
                 ],
             ],

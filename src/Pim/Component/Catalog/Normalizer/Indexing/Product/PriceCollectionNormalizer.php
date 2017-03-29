@@ -16,8 +16,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  */
 class PriceCollectionNormalizer extends AbstractProductValueNormalizer implements NormalizerInterface
 {
-    const DECIMAL_PRECISION = 4;
-
     /**
      * {@inheritdoc}
      */
@@ -36,12 +34,7 @@ class PriceCollectionNormalizer extends AbstractProductValueNormalizer implement
         $currencyIndexedPrices = [];
 
         foreach ($productValue->getData() as $price) {
-            $currencyIndexedPrices[$price->getCurrency()] = number_format(
-                $price->getData(),
-                static::DECIMAL_PRECISION,
-                '.',
-                ''
-            );
+            $currencyIndexedPrices[$price->getCurrency()] = (string) $price->getData();
         }
 
         return $currencyIndexedPrices;

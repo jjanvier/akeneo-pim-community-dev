@@ -159,16 +159,16 @@ class ProductIndexingIntegration extends TestCase
                 'a_price-prices'                                 => [
                     '<all_channels>' => [
                         '<all_locales>' => [
-                            'USD' => '45.0000',
-                            'EUR' => '56.5300',
+                            'EUR' => '56.53',
+                            'USD' => '45.00',
                         ],
                     ],
                 ],
                 'a_price_without_decimal-prices'                 => [
                     '<all_channels>' => [
                         '<all_locales>' => [
-                            'USD' => '-45.0000',
-                            'EUR' => '56.0000',
+                            'EUR' => '56',
+                            'USD' => '-45',
                         ],
                     ],
                 ],
@@ -185,12 +185,12 @@ class ProductIndexingIntegration extends TestCase
                 'a_scopable_price-prices'                        => [
                     'ecommerce' => [
                         '<all_locales>' => [
-                            'EUR' => '15.0000',
-                            'USD' => '20.0000',
+                            'EUR' => '15.00',
+                            'USD' => '20.00',
                         ],
                         'tablet'    => [
-                            'EUR' => '17.0000',
-                            'USD' => '24.0000',
+                            'EUR' => '17.00',
+                            'USD' => '24.00',
                         ],
                     ],
                     'tablet' => [
