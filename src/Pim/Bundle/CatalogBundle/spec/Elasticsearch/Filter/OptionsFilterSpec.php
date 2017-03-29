@@ -5,13 +5,13 @@ namespace spec\Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use PhpSpec\ObjectBehavior;
+use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeOptionRepository;
 use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\AbstractAttributeFilter;
 use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\OptionsFilter;
 use Pim\Bundle\CatalogBundle\Elasticsearch\SearchQueryBuilder;
 use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Exception\ObjectNotFoundException;
 use Pim\Component\Catalog\Model\AttributeInterface;
-use Pim\Component\Catalog\Model\AttributeOptionInterface;
 use Pim\Component\Catalog\Query\Filter\AttributeFilterInterface;
 use Pim\Component\Catalog\Query\Filter\Operators;
 use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
@@ -25,9 +25,12 @@ use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
  */
 class OptionsFilterSpec extends ObjectBehavior
 {
-    function let(AttributeValidatorHelper $attributeValidatorHelper)
-    {
+    function let(
+        AttributeOptionRepository $attributeOptionRepository,
+        AttributeValidatorHelper $attributeValidatorHelper
+    ) {
         $this->beConstructedWith(
+            $attributeOptionRepository,
             $attributeValidatorHelper,
             ['pim_catalog_multiselect'],
             ['IN', 'NOT IN', 'EMPTY', 'NOT EMPTY']
@@ -70,16 +73,14 @@ class OptionsFilterSpec extends ObjectBehavior
         $attributeValidatorHelper,
         AttributeInterface $tags,
         SearchQueryBuilder $sqb,
-        AttributeOptionInterface $option1,
-        AttributeOptionInterface $option2
+        AttributeOptionRepository $attributeOptionRepository
     ) {
         $tags->getCode()->willReturn('tags');
         $tags->getBackendType()->willReturn('options');
 
-        $option1->getCode()->willReturn('summer');
-        $option2->getCode()->willReturn('winter');
-
-        $tags->getOptions()->willReturn([$option1, $option2]);
+        $attributeOptionRepository
+            ->findCodesByCodes('tags', ['summer'])
+            ->willReturn(['summer', 'winter']);
 
         $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();
@@ -100,16 +101,14 @@ class OptionsFilterSpec extends ObjectBehavior
         $attributeValidatorHelper,
         AttributeInterface $tags,
         SearchQueryBuilder $sqb,
-        AttributeOptionInterface $option1,
-        AttributeOptionInterface $option2
+        AttributeOptionRepository $attributeOptionRepository
     ) {
         $tags->getCode()->willReturn('tags');
         $tags->getBackendType()->willReturn('options');
 
-        $option1->getCode()->willReturn('summer');
-        $option2->getCode()->willReturn('winter');
-
-        $tags->getOptions()->willReturn([$option1, $option2]);
+        $attributeOptionRepository
+            ->findCodesByCodes('tags', ['summer'])
+            ->willReturn(['summer', 'winter']);
 
         $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();
@@ -296,16 +295,14 @@ class OptionsFilterSpec extends ObjectBehavior
         $attributeValidatorHelper,
         AttributeInterface $tags,
         SearchQueryBuilder $sqb,
-        AttributeOptionInterface $option1,
-        AttributeOptionInterface $option2
+        AttributeOptionRepository $attributeOptionRepository
     ) {
         $tags->getCode()->willReturn('tags');
         $tags->getBackendType()->willReturn('options');
 
-        $option1->getCode()->willReturn('summer');
-        $option2->getCode()->willReturn('winter');
-
-        $tags->getOptions()->willReturn([$option1, $option2]);
+        $attributeOptionRepository
+            ->findCodesByCodes('tags', ['summer'])
+            ->willReturn(['summer', 'winter']);
 
         $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();
@@ -371,16 +368,12 @@ class OptionsFilterSpec extends ObjectBehavior
         $attributeValidatorHelper,
         AttributeInterface $tags,
         SearchQueryBuilder $sqb,
-        AttributeOptionInterface $option1,
-        AttributeOptionInterface $option2
+        AttributeOptionRepository $attributeOptionRepository
     ) {
         $tags->getCode()->willReturn('tags');
         $tags->getBackendType()->willReturn('options');
 
-        $option1->getCode()->willReturn('summer');
-        $option2->getCode()->willReturn('winter');
-
-        $tags->getOptions()->willReturn([$option1, $option2]);
+        $attributeOptionRepository->findCodesByCodes('tags', ['spring'])->willReturn([]);
 
         $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();

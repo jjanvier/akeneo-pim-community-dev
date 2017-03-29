@@ -3,6 +3,7 @@
 namespace Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
 
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
+use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeOptionRepository;
 use Pim\Bundle\EnrichBundle\Form\Type\AttributeType;
 use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Exception\InvalidOperatorException;
@@ -25,15 +26,23 @@ use Symfony\Component\VarDumper\VarDumper;
 class OptionsFilter extends AbstractAttributeFilter implements AttributeFilterInterface
 {
     /**
+     * @var AttributeOptionRepository
+     */
+    protected $attributeOptionRepository;
+
+    /**
+     * @param AttributeOptionRepository $attributeOptionRepository
      * @param AttributeValidatorHelper $attributeValidatorHelper
      * @param array $supportedAttributeTypes
      * @param array $supportedOperators
      */
     public function __construct(
+        AttributeOptionRepository $attributeOptionRepository,
         AttributeValidatorHelper $attributeValidatorHelper,
         array $supportedAttributeTypes = [],
         array $supportedOperators = []
     ) {
+        $this->attributeOptionRepository = $attributeOptionRepository;
         $this->attrValidatorHelper = $attributeValidatorHelper;
         $this->supportedAttributeTypes = $supportedAttributeTypes;
         $this->supportedOperators = $supportedOperators;
@@ -122,21 +131,19 @@ class OptionsFilter extends AbstractAttributeFilter implements AttributeFilterIn
             FieldFilterHelper::checkIdentifier($attribute->getCode(), $value, static::class);
         }
 
-        $options = $attribute->getOptions();
+        $existingOptionCodes = $this->attributeOptionRepository->findCodesByCodes(
+            $attribute->getCode(),
+            $values
+        );
 
-        $existingOptionCodes = [];
-        foreach ($options as $option) {
-            $existingOptionCodes[] = $option->getCode();
-        }
+        $unexistingOptionCodes = array_diff($values, $existingOptionCodes);
 
-        $badValues = array_diff($values, $existingOptionCodes);
-
-        if (count($badValues) > 0) {
+        if (count($unexistingOptionCodes) > 0) {
             throw new ObjectNotFoundException(
                 sprintf(
                     'Object "%s" with code "%s" does not exist',
                     AttributeTypes::BACKEND_TYPE_OPTIONS,
-                    reset($badValues)
+                    reset($unexistingOptionCodes)
                 )
             );
         }

@@ -172,6 +172,7 @@ services:
     pim_catalog.query.elasticsearch.filter.options:
         class: '%pim_catalog.query.elasticsearch.filter.options.class%'
         arguments:
+            - '@pim_catalog.repository.attribute_option'
             - '@pim_catalog.validator.helper.attribute'
             - ['pim_catalog_multiselect']
             - ['IN', 'NOT IN', 'EMPTY', 'NOT EMPTY']

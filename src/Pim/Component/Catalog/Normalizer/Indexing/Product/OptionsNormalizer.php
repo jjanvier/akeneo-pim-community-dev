@@ -21,6 +21,16 @@ class OptionsNormalizer extends AbstractProductValueNormalizer implements Normal
     /**
      * {@inheritdoc}
      */
+    public function supportsNormalization($data, $format = null)
+    {
+        return $data instanceof OptionsProductValue &&
+            AttributeTypes::BACKEND_TYPE_OPTIONS === $data->getAttribute()->getBackendType() &&
+            'indexing' === $format;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function getNormalizedData(ProductValueInterface $productValue)
     {
         if ($productValue instanceof OptionsProductValue) {
@@ -31,15 +41,5 @@ class OptionsNormalizer extends AbstractProductValueNormalizer implements Normal
             ClassUtils::getClass($productValue),
             OptionsProductValue::class
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsNormalization($data, $format = null)
-    {
-        return $data instanceof OptionsProductValue &&
-            AttributeTypes::BACKEND_TYPE_OPTIONS === $data->getAttribute()->getBackendType() &&
-            'indexing' === $format;
     }
 }
