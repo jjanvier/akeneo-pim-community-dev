@@ -26,12 +26,12 @@ use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
 class OptionsFilterSpec extends ObjectBehavior
 {
     function let(
-        AttributeOptionRepository $attributeOptionRepository,
-        AttributeValidatorHelper $attributeValidatorHelper
+        AttributeValidatorHelper $attributeValidatorHelper,
+        AttributeOptionRepository $attributeOptionRepository
     ) {
         $this->beConstructedWith(
-            $attributeOptionRepository,
             $attributeValidatorHelper,
+            $attributeOptionRepository,
             ['pim_catalog_multiselect'],
             ['IN', 'NOT IN', 'EMPTY', 'NOT EMPTY']
         );
@@ -50,12 +50,14 @@ class OptionsFilterSpec extends ObjectBehavior
 
     function it_supports_operators()
     {
-        $this->getOperators()->shouldReturn([
-            'IN',
-            'NOT IN',
-            'EMPTY',
-            'NOT EMPTY'
-        ]);
+        $this->getOperators()->shouldReturn(
+            [
+                'IN',
+                'NOT IN',
+                'EMPTY',
+                'NOT EMPTY',
+            ]
+        );
         $this->supportsOperator('EMPTY')->shouldReturn(true);
         $this->supportsOperator('DOES NOT CONTAIN')->shouldReturn(false);
     }
@@ -71,16 +73,16 @@ class OptionsFilterSpec extends ObjectBehavior
 
     function it_adds_a_filter_with_operator_in_list(
         $attributeValidatorHelper,
+        $attributeOptionRepository,
         AttributeInterface $tags,
-        SearchQueryBuilder $sqb,
-        AttributeOptionRepository $attributeOptionRepository
+        SearchQueryBuilder $sqb
     ) {
         $tags->getCode()->willReturn('tags');
         $tags->getBackendType()->willReturn('options');
 
         $attributeOptionRepository
-            ->findCodesByCodes('tags', ['summer'])
-            ->willReturn(['summer', 'winter']);
+            ->findByIdentifiers('tags', ['summer'])
+            ->willReturn([['code' => 'summer'], ['code' => 'winter']]);
 
         $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();
@@ -88,8 +90,8 @@ class OptionsFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'terms' => [
-                    'values.tags-options.en_US.ecommerce' => ['summer']
-                ]
+                    'values.tags-options.en_US.ecommerce' => ['summer'],
+                ],
             ]
         )->shouldBeCalled();
 
@@ -99,16 +101,16 @@ class OptionsFilterSpec extends ObjectBehavior
 
     function it_adds_a_filter_with_operator_not_in_list(
         $attributeValidatorHelper,
+        $attributeOptionRepository,
         AttributeInterface $tags,
-        SearchQueryBuilder $sqb,
-        AttributeOptionRepository $attributeOptionRepository
+        SearchQueryBuilder $sqb
     ) {
         $tags->getCode()->willReturn('tags');
         $tags->getBackendType()->willReturn('options');
 
         $attributeOptionRepository
-            ->findCodesByCodes('tags', ['summer'])
-            ->willReturn(['summer', 'winter']);
+            ->findByIdentifiers('tags', ['summer'])
+            ->willReturn([['code' => 'summer'], ['code' => 'winter']]);
 
         $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();
@@ -116,14 +118,14 @@ class OptionsFilterSpec extends ObjectBehavior
         $sqb->addMustNot(
             [
                 'terms' => [
-                    'values.tags-options.en_US.ecommerce' => ['summer']
-                ]
+                    'values.tags-options.en_US.ecommerce' => ['summer'],
+                ],
             ]
         )->shouldBeCalled();
 
         $sqb->addFilter(
             [
-                'exists' => ['field' => 'values.tags-options.en_US.ecommerce']
+                'exists' => ['field' => 'values.tags-options.en_US.ecommerce'],
             ]
         )->shouldBeCalled();
 
@@ -144,7 +146,7 @@ class OptionsFilterSpec extends ObjectBehavior
 
         $sqb->addMustNot(
             [
-                'exists' => ['field' => 'values.tags-options.en_US.ecommerce']
+                'exists' => ['field' => 'values.tags-options.en_US.ecommerce'],
             ]
         )->shouldBeCalled();
 
@@ -165,7 +167,7 @@ class OptionsFilterSpec extends ObjectBehavior
 
         $sqb->addFilter(
             [
-                'exists' => ['field' => 'values.tags-options.en_US.ecommerce']
+                'exists' => ['field' => 'values.tags-options.en_US.ecommerce'],
             ]
         )->shouldBeCalled();
 
@@ -293,16 +295,16 @@ class OptionsFilterSpec extends ObjectBehavior
 
     function it_throws_an_exception_when_it_filters_on_an_unsupported_operator(
         $attributeValidatorHelper,
+        $attributeOptionRepository,
         AttributeInterface $tags,
-        SearchQueryBuilder $sqb,
-        AttributeOptionRepository $attributeOptionRepository
+        SearchQueryBuilder $sqb
     ) {
         $tags->getCode()->willReturn('tags');
         $tags->getBackendType()->willReturn('options');
 
         $attributeOptionRepository
-            ->findCodesByCodes('tags', ['summer'])
-            ->willReturn(['summer', 'winter']);
+            ->findByIdentifiers('tags', ['summer'])
+            ->willReturn([['code' => 'summer'], ['code' => 'winter']]);
 
         $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();
@@ -366,14 +368,14 @@ class OptionsFilterSpec extends ObjectBehavior
 
     function it_throws_an_execption_when_it_is_a_not_existing_option(
         $attributeValidatorHelper,
+        $attributeOptionRepository,
         AttributeInterface $tags,
-        SearchQueryBuilder $sqb,
-        AttributeOptionRepository $attributeOptionRepository
+        SearchQueryBuilder $sqb
     ) {
         $tags->getCode()->willReturn('tags');
         $tags->getBackendType()->willReturn('options');
 
-        $attributeOptionRepository->findCodesByCodes('tags', ['spring'])->willReturn([]);
+        $attributeOptionRepository->findByIdentifiers('tags', ['spring'])->willReturn([]);
 
         $attributeValidatorHelper->validateLocale($tags, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($tags, 'ecommerce')->shouldBeCalled();

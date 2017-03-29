@@ -2,9 +2,7 @@
 
 namespace Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
 
-use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeOptionRepository;
-use Pim\Bundle\EnrichBundle\Form\Type\AttributeType;
 use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Exception\ObjectNotFoundException;
@@ -13,8 +11,6 @@ use Pim\Component\Catalog\Query\Filter\AttributeFilterInterface;
 use Pim\Component\Catalog\Query\Filter\FieldFilterHelper;
 use Pim\Component\Catalog\Query\Filter\Operators;
 use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Options filter for an Elasticsearch query
@@ -31,19 +27,19 @@ class OptionsFilter extends AbstractAttributeFilter implements AttributeFilterIn
     protected $attributeOptionRepository;
 
     /**
+     * @param AttributeValidatorHelper  $attributeValidatorHelper
      * @param AttributeOptionRepository $attributeOptionRepository
-     * @param AttributeValidatorHelper $attributeValidatorHelper
-     * @param array $supportedAttributeTypes
-     * @param array $supportedOperators
+     * @param array                     $supportedAttributeTypes
+     * @param array                     $supportedOperators
      */
     public function __construct(
-        AttributeOptionRepository $attributeOptionRepository,
         AttributeValidatorHelper $attributeValidatorHelper,
+        AttributeOptionRepository $attributeOptionRepository,
         array $supportedAttributeTypes = [],
         array $supportedOperators = []
     ) {
-        $this->attributeOptionRepository = $attributeOptionRepository;
         $this->attrValidatorHelper = $attributeValidatorHelper;
+        $this->attributeOptionRepository = $attributeOptionRepository;
         $this->supportedAttributeTypes = $supportedAttributeTypes;
         $this->supportedOperators = $supportedOperators;
     }
@@ -75,8 +71,8 @@ class OptionsFilter extends AbstractAttributeFilter implements AttributeFilterIn
             case Operators::IN_LIST:
                 $clause = [
                     'terms' => [
-                        $attributePath => $values
-                    ]
+                        $attributePath => $values,
+                    ],
                 ];
 
                 $this->searchQueryBuilder->addFilter($clause);
@@ -84,28 +80,27 @@ class OptionsFilter extends AbstractAttributeFilter implements AttributeFilterIn
             case Operators::NOT_IN_LIST:
                 $notInListClause = [
                     'terms' => [
-                        $attributePath => $values
-                    ]
+                        $attributePath => $values,
+                    ],
                 ];
 
                 $existsClause = [
-                    'exists' => ['field' => $attributePath]
+                    'exists' => ['field' => $attributePath],
                 ];
 
                 $this->searchQueryBuilder->addMustNot($notInListClause);
                 $this->searchQueryBuilder->addFilter($existsClause);
-
                 break;
             case Operators::IS_EMPTY:
                 $clause = [
-                    'exists' => ['field' => $attributePath]
+                    'exists' => ['field' => $attributePath],
                 ];
 
                 $this->searchQueryBuilder->addMustNot($clause);
                 break;
             case Operators::IS_NOT_EMPTY:
                 $clause = [
-                    'exists' => ['field' => $attributePath]
+                    'exists' => ['field' => $attributePath],
                 ];
 
                 $this->searchQueryBuilder->addFilter($clause);
@@ -131,13 +126,15 @@ class OptionsFilter extends AbstractAttributeFilter implements AttributeFilterIn
             FieldFilterHelper::checkIdentifier($attribute->getCode(), $value, static::class);
         }
 
-        $existingOptionCodes = $this->attributeOptionRepository->findCodesByCodes(
-            $attribute->getCode(),
-            $values
+        $attributeOptions = $this->attributeOptionRepository->findByIdentifiers($attribute->getCode(), $values);
+        $optionCodes = array_map(
+            function ($attributeOptions) {
+                return $attributeOptions['code'];
+            },
+            $attributeOptions
         );
 
-        $unexistingOptionCodes = array_diff($values, $existingOptionCodes);
-
+        $unexistingOptionCodes = array_diff($values, $optionCodes);
         if (count($unexistingOptionCodes) > 0) {
             throw new ObjectNotFoundException(
                 sprintf(
