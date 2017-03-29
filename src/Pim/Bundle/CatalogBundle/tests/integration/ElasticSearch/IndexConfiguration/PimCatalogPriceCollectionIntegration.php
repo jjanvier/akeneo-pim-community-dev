@@ -219,29 +219,10 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
 
         $productsFound = $this->getSearchQueryResults($query);
 
-        $this->assertProducts($productsFound, ['product_5', 'product_7']);
-
-        $query = [
-            'query' => [
-                'bool' => [
-                    'must_not' => [
-                        'exists' => [
-                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>',
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $productsFound = $this->getSearchQueryResults($query);
-
-        $this->assertProducts(
-            $productsFound,
-            ['product_1', 'product_2', 'product_3', 'product_4', 'product_5', 'product_6']
-        );
+        $this->assertProducts($productsFound, ['product_5']);
     }
 
-    public function testEmptyOnOneCurrencyOperator()
+    public function testEmptyForCurrencyOperator()
     {
         $query = [
             'query' => [
@@ -289,7 +270,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'exists' => [
-                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.EUR',
+                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>',
                         ],
                     ],
                 ],
@@ -298,26 +279,13 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
 
         $productsFound = $this->getSearchQueryResults($query);
 
-        $this->assertProducts($productsFound, ['product_1', 'product_2', 'product_3', 'product_4']);
-
-        $query = [
-            'query' => [
-                'bool' => [
-                    'filter' => [
-                        'exists' => [
-                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.CNY',
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $productsFound = $this->getSearchQueryResults($query);
-
-        $this->assertProducts($productsFound, ['product_7']);
+        $this->assertProducts(
+            $productsFound,
+            ['product_1', 'product_2', 'product_3', 'product_4', 'product_6', 'product_7']
+        );
     }
 
-    public function testNotEmptyOnOneCurrencyOperator()
+    public function testNotEmptyForCurrencyOperator()
     {
         $query = [
             'query' => [
