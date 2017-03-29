@@ -21,9 +21,7 @@ use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
  */
 class OptionsFilter extends AbstractAttributeFilter implements AttributeFilterInterface
 {
-    /**
-     * @var AttributeOptionRepository
-     */
+    /** @var AttributeOptionRepository */
     protected $attributeOptionRepository;
 
     /**
