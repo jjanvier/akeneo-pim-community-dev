@@ -182,7 +182,7 @@ class PriceFilterIntegration extends AbstractProductQueryBuilderTestCase
      */
     public function testErrorCurrencyIsMissing()
     {
-        $this->executeFilter([['a_price', Operators::NOT_EQUAL, ['amount' => '']]]);
+        $this->executeFilter([['a_price', Operators::NOT_EQUAL, ['amount' => 2]]]);
     }
 
     /**

@@ -224,7 +224,7 @@ services:
             - '@pim_catalog.validator.helper.attribute'
             - '@pim_catalog.repository.currency'
             - ['pim_catalog_price_collection']
-            - ['<', '<=', '=', '!=', '>=', '>', 'EMPTY', 'NOT EMPTY']
+            - ['<', '<=', '=', '!=', '>=', '>', 'EMPTY', 'EMPTY FOR CURRENCY', 'EMPTY ON ALL CURRENCIES', 'NOT EMPTY', 'NOT EMPTY ON AT LEAST ONE CURRENCY', 'NOT EMPTY FOR CURRENCY']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.filter', priority: 30 }
 
