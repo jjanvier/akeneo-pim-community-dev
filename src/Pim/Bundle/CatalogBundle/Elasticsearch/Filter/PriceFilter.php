@@ -71,7 +71,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
             $this->checkValue($attribute, $value);
         }
 
-        $attributePath = $this->getAttributePathWithCurrency($attribute, $locale, $channel, $value);
+        $attributePath = $this->getAttributePathForCurrency($attribute, $locale, $channel, $value);
 
         switch ($operator) {
             case Operators::LOWER_THAN:
@@ -228,7 +228,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
     }
 
     /**
-     * Returns the attribute path for currency
+     * Returns the attribute path with the currency if it exists
      *
      * @param AttributeInterface $attribute
      * @param string             $locale
@@ -237,7 +237,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
      *
      * @return string
      */
-    protected function getAttributePathWithCurrency($attribute, $locale, $channel, array $value)
+    protected function getAttributePathForCurrency($attribute, $locale, $channel, array $value)
     {
         $attributePath = $this->getAttributePath($attribute, $locale, $channel);
 
