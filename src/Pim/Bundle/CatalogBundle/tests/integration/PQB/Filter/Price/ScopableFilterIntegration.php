@@ -21,6 +21,7 @@ class ScopableFilterIntegration extends AbstractProductQueryBuilderTestCase
 
         if (1 === self::$count || $this->getConfiguration()->isDatabasePurgedForEachTest()) {
             $this->resetIndex();
+
             $this->createProduct('product_one', [
                 'values' => [
                     'a_scopable_price' => [

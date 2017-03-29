@@ -26,8 +26,6 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
             ],
         ];
 
-        var_dump(json_encode($query));
-
         $productsFound = $this->getSearchQueryResults($query);
 
         $this->assertProducts($productsFound, ['product_1', 'product_2']);
