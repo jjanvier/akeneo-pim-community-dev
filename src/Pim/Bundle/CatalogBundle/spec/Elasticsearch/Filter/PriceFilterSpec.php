@@ -1,12 +1,13 @@
 <?php
 
-namespace spec\Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute;
+namespace spec\Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
 
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\PriceFilter;
 use Pim\Bundle\CatalogBundle\Elasticsearch\SearchQueryBuilder;
+use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Query\Filter\AttributeFilterInterface;
 use Pim\Component\Catalog\Query\Filter\Operators;
@@ -268,7 +269,7 @@ class PriceFilterSpec extends ObjectBehavior
         );
     }
 
-    function it_adds_a_filter_with_operator_is_empty_without_currency(
+    function it_adds_a_filter_with_operator_is_empty_on_all_currencies(
         $attributeValidatorHelper,
         AttributeInterface $price,
         SearchQueryBuilder $sqb
@@ -288,17 +289,11 @@ class PriceFilterSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
-        $this->addAttributeFilter(
-            $price,
-            Operators::IS_EMPTY,
-            [],
-            'en_US',
-            'ecommerce',
-            []
-        );
+        $this->addAttributeFilter($price, Operators::IS_EMPTY, [], 'en_US', 'ecommerce', []);
+        $this->addAttributeFilter($price, Operators::IS_EMPTY_ON_ALL_CURRENCIES, [], 'en_US', 'ecommerce', []);
     }
 
-    function it_adds_a_filter_with_operator_is_empty_with_currency(
+    function it_adds_a_filter_with_operator_is_empty_for_currency(
         $attributeValidatorHelper,
         $currencyRepository,
         AttributeInterface $price,
@@ -322,7 +317,7 @@ class PriceFilterSpec extends ObjectBehavior
         $this->setQueryBuilder($sqb);
         $this->addAttributeFilter(
             $price,
-            Operators::IS_EMPTY,
+            Operators::IS_EMPTY_FOR_CURRENCY,
             ['currency' => 'USD'],
             'en_US',
             'ecommerce',
@@ -330,7 +325,7 @@ class PriceFilterSpec extends ObjectBehavior
         );
     }
 
-    function it_adds_a_filter_with_operator_is_not_empty_without_currency(
+    function it_adds_a_filter_with_operator_is_not_empty_on_at_least_one_currency(
         $attributeValidatorHelper,
         AttributeInterface $price,
         SearchQueryBuilder $sqb
@@ -350,17 +345,12 @@ class PriceFilterSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
-        $this->addAttributeFilter(
-            $price,
-            Operators::IS_NOT_EMPTY,
-            [],
-            'en_US',
-            'ecommerce',
-            []
-        );
+        $this->addAttributeFilter($price, Operators::IS_NOT_EMPTY, [], 'en_US', 'ecommerce', []);
+        $this->addAttributeFilter($price, Operators::IS_NOT_EMPTY_ON_AT_LEAST_ONE_CURRENCY, [], 'en_US', 'ecommerce',
+            []);
     }
 
-    function it_adds_a_filter_with_operator_is_not_empty_with_currency(
+    function it_adds_a_filter_with_operator_is_not_empty_for_currency(
         $attributeValidatorHelper,
         $currencyRepository,
         AttributeInterface $price,
@@ -385,7 +375,7 @@ class PriceFilterSpec extends ObjectBehavior
         $this->setQueryBuilder($sqb);
         $this->addAttributeFilter(
             $price,
-            Operators::IS_NOT_EMPTY,
+            Operators::IS_NOT_EMPTY_FOR_CURRENCY,
             ['currency' => 'USD'],
             'en_US',
             'ecommerce',
@@ -393,13 +383,11 @@ class PriceFilterSpec extends ObjectBehavior
         );
     }
 
-    function it_throws_if_the_currency_is_not_supported(
+    function it_throws_an_exception_if_the_value_is_not_an_array(
         $attributeValidatorHelper,
-        $currencyRepository,
         AttributeInterface $price,
         SearchQueryBuilder $sqb
     ) {
-        $currencyRepository->getActivatedCurrencyCodes()->willReturn(['YEN']);
         $price->getCode()->willReturn('a_price');
 
         $attributeValidatorHelper->validateLocale($price, 'en_US')->shouldBeCalled();
@@ -409,22 +397,28 @@ class PriceFilterSpec extends ObjectBehavior
 
         $this->setQueryBuilder($sqb);
         $this->shouldThrow(
-            InvalidPropertyException::validEntityCodeExpected(
+            InvalidPropertyTypeException::arrayExpected(
                 'a_price',
-                'currency',
-                'The currency does not exist',
                 PriceFilter::class,
-                'USD'
+                'NOT_AN_ARRAY'
             )
-        )->during('addAttributeFilter', [$price, Operators::EQUALS, ['amount' => 12, 'currency' => 'USD'], 'en_US', 'ecommerce']);
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::EQUALS, 'NOT_AN_ARRAY', 'en_US', 'ecommerce']
+        );
     }
 
-    function it_throws_an_exception_if_value_is_not_an_valid_array(
-        AttributeInterface $attribute,
+    function it_throws_if_the_value_array_is_not_expected(
+        $attributeValidatorHelper,
+        AttributeInterface $price,
         SearchQueryBuilder $sqb
     ) {
-        $attribute->getCode()->willReturn('a_price');
-        $value = ['currency' => 'YEN'];
+        $price->getCode()->willReturn('a_price');
+
+        $attributeValidatorHelper->validateLocale($price, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($price, 'ecommerce')->shouldBeCalled();
+
+        $sqb->addFilter()->shouldNotBeCalled();
 
         $this->setQueryBuilder($sqb);
         $this->shouldThrow(
@@ -432,38 +426,246 @@ class PriceFilterSpec extends ObjectBehavior
                 'a_price',
                 'amount',
                 PriceFilter::class,
-                $value
+                []
             )
-        )->during('addAttributeFilter', [$attribute, Operators::EQUALS, $value]);
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::EQUALS, [], 'en_US', 'ecommerce']
+        );
 
-        $value = ['amount' => 459];
+        $this->shouldThrow(
+            InvalidPropertyTypeException::validArrayStructureExpected(
+                'a_price',
+                sprintf('key "amount" has to be a numeric, "%s" given', gettype('NOT_AN_AMOUNT')),
+                PriceFilter::class,
+                ['amount' => 'NOT_AN_AMOUNT']
+            )
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::EQUALS, ['amount' => 'NOT_AN_AMOUNT'], 'en_US', 'ecommerce']
+        );
+
+        $this->shouldThrow(
+            InvalidPropertyTypeException::validArrayStructureExpected(
+                'a_price',
+                sprintf('key "amount" has to be a numeric, "%s" given', gettype(null)),
+                PriceFilter::class,
+                ['amount' => null]
+            )
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::EQUALS, ['amount' => null], 'en_US', 'ecommerce']
+        );
+    }
+
+    function it_throws_if_the_currency_is_not_supported(
+        $attributeValidatorHelper,
+        $currencyRepository,
+        AttributeInterface $price,
+        SearchQueryBuilder $sqb
+    ) {
+        $currencyRepository->getActivatedCurrencyCodes()->willReturn(['USD']);
+        $price->getCode()->willReturn('a_price');
+
+        $attributeValidatorHelper->validateLocale($price, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($price, 'ecommerce')->shouldBeCalled();
+
+        $sqb->addFilter()->shouldNotBeCalled();
+
+        $this->setQueryBuilder($sqb);
         $this->shouldThrow(
             InvalidPropertyTypeException::arrayKeyExpected(
                 'a_price',
                 'currency',
                 PriceFilter::class,
-                $value
+                ['amount' => 12]
             )
-        )->during('addAttributeFilter', [$attribute, Operators::EQUALS, $value]);
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::EQUALS, ['amount' => 12], 'en_US', 'ecommerce']
+        );
 
-        $value = ['amount' => 'YEN', 'currency' => 'YEN'];
         $this->shouldThrow(
-            InvalidPropertyTypeException::validArrayStructureExpected(
+            InvalidPropertyException::validEntityCodeExpected(
                 'a_price',
-                'key "amount" has to be a numeric, "string" given',
+                'currency',
+                'The currency does not exist',
                 PriceFilter::class,
-                $value
+                'YEN'
             )
-        )->during('addAttributeFilter', [$attribute, Operators::EQUALS, $value]);
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::EQUALS, ['amount' => 12, 'currency' => 'YEN'], 'en_US', 'ecommerce']
+        );
 
-        $value = ['amount' => 132, 'currency' => 42];
         $this->shouldThrow(
-            InvalidPropertyTypeException::validArrayStructureExpected(
+            InvalidPropertyException::validEntityCodeExpected(
                 'a_price',
-                'key "currency" has to be a string, "integer" given',
+                'currency',
+                'The currency does not exist',
                 PriceFilter::class,
-                $value
+                2
             )
-        )->during('addAttributeFilter', [$attribute, Operators::EQUALS, $value]);
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::EQUALS, ['amount' => 12, 'currency' => 2], 'en_US', 'ecommerce']
+        );
+
+        $this->shouldThrow(
+            InvalidPropertyException::validEntityCodeExpected(
+                'a_price',
+                'currency',
+                'The currency does not exist',
+                PriceFilter::class,
+                ''
+            )
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::EQUALS, ['amount' => 12, 'currency' => ''], 'en_US', 'ecommerce']
+        );
+
+        $this->shouldThrow(
+            InvalidPropertyException::validEntityCodeExpected(
+                'a_price',
+                'currency',
+                'The currency does not exist',
+                PriceFilter::class,
+                null
+            )
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::EQUALS, ['amount' => 12, 'currency' => null], 'en_US', 'ecommerce']
+        );
+    }
+
+    function it_throws_an_exception_if_no_currency_is_provided_for_operator_empty_for_currency(
+        $attributeValidatorHelper,
+        AttributeInterface $price,
+        SearchQueryBuilder $sqb
+    ) {
+        $price->getCode()->willReturn('a_price');
+
+        $attributeValidatorHelper->validateLocale($price, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($price, 'ecommerce')->shouldBeCalled();
+
+        $sqb->addFilter()->shouldNotBeCalled();
+
+        $this->setQueryBuilder($sqb);
+        $this->shouldThrow(
+            InvalidPropertyTypeException::arrayKeyExpected(
+                'a_price',
+                'currency',
+                PriceFilter::class,
+                []
+            )
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::IS_EMPTY_FOR_CURRENCY, [], 'en_US', 'ecommerce']
+        );
+    }
+
+    function it_throws_an_exception_if_no_currency_is_provided_for_operator_not_empty_for_currency(
+        $attributeValidatorHelper,
+        AttributeInterface $price,
+        SearchQueryBuilder $sqb
+    ) {
+        $price->getCode()->willReturn('a_price');
+
+        $attributeValidatorHelper->validateLocale($price, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($price, 'ecommerce')->shouldBeCalled();
+
+        $sqb->addFilter()->shouldNotBeCalled();
+
+        $this->setQueryBuilder($sqb);
+        $this->shouldThrow(
+            InvalidPropertyTypeException::arrayKeyExpected(
+                'a_price',
+                'currency',
+                PriceFilter::class,
+                []
+            )
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::IS_NOT_EMPTY_FOR_CURRENCY, [], 'en_US', 'ecommerce']
+        );
+    }
+
+    function it_throws_an_exception_when_it_filters_on_an_unsupported_operator(
+        $attributeValidatorHelper,
+        $currencyRepository,
+        AttributeInterface $price,
+        SearchQueryBuilder $sqb
+    ) {
+        $currencyRepository->getActivatedCurrencyCodes()->willReturn(['USD']);
+        $price->getCode()->willReturn('a_price');
+        $price->getBackendType()->willReturn('prices');
+
+        $attributeValidatorHelper->validateLocale($price, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($price, 'ecommerce')->shouldBeCalled();
+
+        $this->setQueryBuilder($sqb);
+
+        $this->shouldThrow(
+            InvalidOperatorException::notSupported(
+                'IN CHILDREN',
+                PriceFilter::class
+            )
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::IN_CHILDREN_LIST, ['amount' => 10, 'currency' => 'USD'], 'en_US', 'ecommerce', []]
+        );
+    }
+
+    function it_throws_an_exception_when_an_exception_is_thrown_by_the_attribute_validator_on_locale_validation(
+        $attributeValidatorHelper,
+        AttributeInterface $price,
+        SearchQueryBuilder $sqb
+    ) {
+        $price->getCode()->willReturn('a_price');
+        $price->getBackendType()->willReturn('prices');
+        $price->isLocaleSpecific()->willReturn(true);
+        $price->getAvailableLocaleCodes('fr_FR');
+
+        $e = new \LogicException('Attribute "prices" expects a locale, none given.');
+        $attributeValidatorHelper->validateLocale($price, 'en_US')->willThrow($e);
+
+        $this->setQueryBuilder($sqb);
+
+        $this->shouldThrow(
+            InvalidPropertyException::expectedFromPreviousException(
+                'a_price',
+                PriceFilter::class,
+                $e
+            )
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::LOWER_OR_EQUAL_THAN, ['amount' => 10, 'currency' => 'USD'], 'en_US', 'ecommerce', []]
+        );
+    }
+
+    function it_throws_an_exception_when_an_exception_is_thrown_by_the_attribute_validator_on_scope_validation(
+        $attributeValidatorHelper,
+        AttributeInterface $price,
+        SearchQueryBuilder $sqb
+    ) {
+        $price->getCode()->willReturn('a_price');
+        $price->getBackendType()->willReturn('prices');
+        $price->isScopable()->willReturn(false);
+
+        $e = new \LogicException('Attribute "a_price" does not expect a scope, "ecommerce" given.');
+        $attributeValidatorHelper->validateLocale($price, 'en_US')->willThrow($e);
+
+        $this->setQueryBuilder($sqb);
+
+        $this->shouldThrow(
+            InvalidPropertyException::expectedFromPreviousException(
+                'a_price',
+                PriceFilter::class,
+                $e
+            )
+        )->during(
+            'addAttributeFilter',
+            [$price, Operators::LOWER_OR_EQUAL_THAN, ['amount' => 10, 'currency' => 'USD'], 'en_US', 'ecommerce', []]
+        );
     }
 }

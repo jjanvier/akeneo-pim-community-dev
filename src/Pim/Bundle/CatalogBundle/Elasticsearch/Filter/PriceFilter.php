@@ -61,23 +61,24 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
 
         $this->checkLocaleAndChannel($attribute, $locale, $channel);
 
-        if (Operators::IS_EMPTY === $operator || Operators::IS_NOT_EMPTY === $operator) {
-            if (!array_key_exists('amount', $value)) {
-                $value['amount'] = null;
-            }
-            if (!array_key_exists('currency', $value)) {
-                $value['currency'] = null;
-            } else {
-                $this->checkCurrency($attribute, $value);
-            }
-        } else {
-            $this->checkValue($attribute, $value);
+        if (Operators::IS_EMPTY_FOR_CURRENCY === $operator ||
+            Operators::IS_NOT_EMPTY_FOR_CURRENCY === $operator
+        ) {
+            $this->checkCurrency($attribute, $value);
+        } elseif (Operators::IS_EMPTY_ON_ALL_CURRENCIES !== $operator &&
+            Operators::IS_EMPTY !== $operator &&
+            Operators::IS_NOT_EMPTY_ON_AT_LEAST_ONE_CURRENCY !== $operator &&
+            Operators::IS_NOT_EMPTY !== $operator
+        ) {
+            $this->checkAmount($attribute, $value);
+            $this->checkCurrency($attribute, $value);
         }
 
-        $attributePath = $this->getAttributePathForCurrency($attribute, $locale, $channel, $value);
+        $attributePath = $this->getAttributePath($attribute, $locale, $channel);
 
         switch ($operator) {
             case Operators::LOWER_THAN:
+                $attributePath .= '.' . $value['currency'];
                 $clause = [
                     'range' => [
                         $attributePath => ['lt' => $value['amount']],
@@ -85,7 +86,9 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
                 break;
+
             case Operators::LOWER_OR_EQUAL_THAN:
+                $attributePath .= '.' . $value['currency'];
                 $clause = [
                     'range' => [
                         $attributePath => ['lte' => $value['amount']],
@@ -93,7 +96,9 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
                 break;
+
             case Operators::EQUALS:
+                $attributePath .= '.' . $value['currency'];
                 $clause = [
                     'term' => [
                         $attributePath => $value['amount'],
@@ -101,7 +106,9 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
                 break;
+
             case Operators::NOT_EQUAL:
+                $attributePath .= '.' . $value['currency'];
                 $mustNotClause = [
                     'term' => [
                         $attributePath => $value['amount'],
@@ -115,7 +122,9 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
                 $this->searchQueryBuilder->addMustNot($mustNotClause);
                 $this->searchQueryBuilder->addFilter($filterClause);
                 break;
+
             case Operators::GREATER_OR_EQUAL_THAN:
+                $attributePath .= '.' . $value['currency'];
                 $clause = [
                     'range' => [
                         $attributePath => ['gte' => $value['amount']],
@@ -123,7 +132,9 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
                 break;
+
             case Operators::GREATER_THAN:
+                $attributePath .= '.' . $value['currency'];
                 $clause = [
                     'range' => [
                         $attributePath => ['gt' => $value['amount']],
@@ -131,7 +142,9 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
                 break;
+
             case Operators::IS_EMPTY:
+            case Operators::IS_EMPTY_ON_ALL_CURRENCIES:
                 $clause = [
                     'exists' => [
                         'field' => $attributePath,
@@ -139,7 +152,19 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
                 ];
                 $this->searchQueryBuilder->addMustNot($clause);
                 break;
+
+            case Operators::IS_EMPTY_FOR_CURRENCY:
+                $attributePath .= '.' . $value['currency'];
+                $filterClause = [
+                    'exists' => [
+                        'field' => $attributePath,
+                    ],
+                ];
+                $this->searchQueryBuilder->addMustNot($filterClause);
+                break;
+
             case Operators::IS_NOT_EMPTY:
+            case Operators::IS_NOT_EMPTY_ON_AT_LEAST_ONE_CURRENCY:
                 $clause = [
                     'exists' => [
                         'field' => $attributePath,
@@ -147,6 +172,17 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
                 ];
                 $this->searchQueryBuilder->addFilter($clause);
                 break;
+
+            case Operators::IS_NOT_EMPTY_FOR_CURRENCY:
+                $attributePath .= '.' . $value['currency'];
+                $filterClause = [
+                    'exists' => [
+                        'field' => $attributePath,
+                    ],
+                ];
+                $this->searchQueryBuilder->addFilter($filterClause);
+                break;
+
             default:
                 throw InvalidOperatorException::notSupported($operator, static::class);
         }
@@ -163,7 +199,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
      * @throws InvalidPropertyTypeException
      * @throws InvalidPropertyException
      */
-    protected function checkValue(AttributeInterface $attribute, $data)
+    protected function checkAmount(AttributeInterface $attribute, $data)
     {
         if (!is_array($data)) {
             throw InvalidPropertyTypeException::arrayExpected($attribute->getCode(), static::class, $data);
@@ -178,16 +214,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
             );
         }
 
-        if (!array_key_exists('currency', $data)) {
-            throw InvalidPropertyTypeException::arrayKeyExpected(
-                $attribute->getCode(),
-                'currency',
-                static::class,
-                $data
-            );
-        }
-
-        if (null !== $data['amount'] && !is_numeric($data['amount'])) {
+        if (!is_numeric($data['amount'])) {
             throw InvalidPropertyTypeException::validArrayStructureExpected(
                 $attribute->getCode(),
                 sprintf('key "amount" has to be a numeric, "%s" given', gettype($data['amount'])),
@@ -195,8 +222,6 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
                 $data
             );
         }
-
-        $this->checkCurrency($attribute, $data);
     }
 
     /**
@@ -208,26 +233,23 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
      */
     protected function checkCurrency(AttributeInterface $attribute, $data)
     {
-        if (!array_key_exists('currency', $data) || !is_string($data['currency'])) {
-            throw InvalidPropertyTypeException::validArrayStructureExpected(
+        if (!is_array($data)) {
+            throw InvalidPropertyTypeException::arrayExpected($attribute->getCode(), static::class, $data);
+        }
+
+        if (!array_key_exists('currency', $data)) {
+            throw InvalidPropertyTypeException::arrayKeyExpected(
                 $attribute->getCode(),
-                sprintf('key "currency" has to be a string, "%s" given', gettype($data['currency'])),
+                'currency',
                 static::class,
                 $data
             );
         }
 
-        if ('' === $data['currency'] || null !== $data['currency']) {
-            throw InvalidPropertyException::valueNotEmptyExpected(
-                $attribute->getCode(),
-                'currency',
-                'The currency does not exist',
-                static::class,
-                $data['currency']
-            );
-        }
-
-        if (!in_array($data['currency'], $this->currencyRepository->getActivatedCurrencyCodes())) {
+        if ('' === $data['currency'] ||
+            !is_string($data['currency']) ||
+            !in_array($data['currency'], $this->currencyRepository->getActivatedCurrencyCodes())
+        ) {
             throw InvalidPropertyException::validEntityCodeExpected(
                 $attribute->getCode(),
                 'currency',
@@ -236,26 +258,5 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
                 $data['currency']
             );
         }
-    }
-
-    /**
-     * Returns the attribute path with the currency if it exists
-     *
-     * @param AttributeInterface $attribute
-     * @param string             $locale
-     * @param string             $channel
-     * @param array              $value
-     *
-     * @return string
-     */
-    protected function getAttributePathForCurrency($attribute, $locale, $channel, array $value)
-    {
-        $attributePath = $this->getAttributePath($attribute, $locale, $channel);
-
-        if (null !== $value['currency'] && '' !== $value['currency']) {
-            $attributePath .= '.' . $value['currency'];
-        }
-
-        return $attributePath;
     }
 }
