@@ -1,6 +1,6 @@
 <?php
 
-namespace Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
+namespace Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute;
 
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
@@ -13,6 +13,9 @@ use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
 
 /**
  * Price filter for an Elasticsearch query
+ *
+ * The IS_EMPTY Operator is now deprecated, please use IS_EMPTY_ON_ALL_LOCALES instead
+ * The IS_NOT_EMPTY Operator is now deprecated, please use IS_NOT_EMPTY_ON_AT_LEAST_ONE_CURRENCY instead
  *
  * @author    Samir Boulil <samir.boulil@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
@@ -214,9 +217,17 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
             );
         }
 
-        if (!in_array($data['currency'], $this->currencyRepository->getActivatedCurrencyCodes()) &&
-            '' !== $data['currency']
-        ) {
+        if ('' === $data['currency'] || null !== $data['currency']) {
+            throw InvalidPropertyException::valueNotEmptyExpected(
+                $attribute->getCode(),
+                'currency',
+                'The currency does not exist',
+                static::class,
+                $data['currency']
+            );
+        }
+
+        if (!in_array($data['currency'], $this->currencyRepository->getActivatedCurrencyCodes())) {
             throw InvalidPropertyException::validEntityCodeExpected(
                 $attribute->getCode(),
                 'currency',
