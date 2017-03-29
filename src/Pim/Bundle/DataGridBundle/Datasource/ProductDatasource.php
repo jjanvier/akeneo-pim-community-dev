@@ -60,18 +60,14 @@ class ProductDatasource extends Datasource
         }
 
         $rows = [];
-        $cursor = $this->getProductQueryBuilder()->execute();
-        $i = 0;
+        $cursor = $this->getProductQueryBuilder()->getProductsSearchAfter(2, $this->getParameters()['identifier']);
         foreach ($cursor as $product) {
             $poo = array_merge(
                 $this->normalizer->normalize($product, 'internal_api'),
                 ['id' => $product->getId(), 'dataLocale' => $this->getConfiguration('locale_code')]
             );
 
-            $rows[] = new ResultRecord($poo, ['totalRecords' => 30]);
-            if (++$i > 10) {
-                break;
-            }
+            $rows[] = new ResultRecord($poo);
         }
 
         return $rows;

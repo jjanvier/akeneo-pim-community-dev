@@ -119,11 +119,9 @@ function($, _, Backbone) {
          */
         onChangePage: function (e) {
             e.preventDefault();
-
             if (!this.enabled) {
                 return;
             }
-
             var label = $(e.target).text();
             var ffConfig = this.fastForwardHandleConfig;
 

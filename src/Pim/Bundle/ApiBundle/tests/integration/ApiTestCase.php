@@ -2,6 +2,8 @@
 
 namespace Pim\Bundle\ApiBundle\tests\integration;
 
+use Akeneo\Bundle\ElasticsearchBundle\Client as ESClient;
+use Akeneo\Bundle\ElasticsearchBundle\IndexConfiguration\Loader;
 use Akeneo\Test\Integration\Configuration;
 use Akeneo\Test\Integration\ConnectionCloser;
 use Akeneo\Test\Integration\DatabaseSchemaHandler;
@@ -33,6 +35,12 @@ abstract class ApiTestCase extends WebTestCase
     /** @var string[] */
     protected static $refreshTokens;
 
+    /** @var Loader */
+    protected $esConfigurationLoader;
+
+    /** @var ESClient */
+    protected $esClient;
+
     /**
      * {@inheritdoc}
      */
@@ -57,14 +65,18 @@ abstract class ApiTestCase extends WebTestCase
 
         $configuration = $this->getConfiguration();
 
+        $this->esClient = $this->get('akeneo_elasticsearch.client');
+        $this->esConfigurationLoader = $this->get('akeneo_elasticsearch.index_configuration.loader');
+
         self::$count++;
 
-        if ($configuration->isDatabasePurgedForEachTest() || 1 === self::$count) {
-            $this->getDatabaseSchemaHandler()->reset();
-
-            $fixturesLoader = $this->getFixturesLoader($configuration);
-            $fixturesLoader->load();
-        }
+//        if ($configuration->isDatabasePurgedForEachTest() || 1 === self::$count) {
+//            $this->resetIndex();
+//            $this->getDatabaseSchemaHandler()->reset();
+//
+//            $fixturesLoader = $this->getFixturesLoader($configuration);
+//            $fixturesLoader->load();
+//        }
     }
 
     /**
@@ -242,5 +254,19 @@ abstract class ApiTestCase extends WebTestCase
         }
 
         throw new \Exception(sprintf('The fixture "%s" does not exist.', $name));
+    }
+
+    /**
+     * Resets the index used for the integration tests
+     */
+    protected function resetIndex()
+    {
+        $conf = $this->esConfigurationLoader->load();
+
+        if ($this->esClient->hasIndex()) {
+            $this->esClient->deleteIndex();
+        }
+
+        $this->esClient->createIndex($conf->buildAggregated());
     }
 }

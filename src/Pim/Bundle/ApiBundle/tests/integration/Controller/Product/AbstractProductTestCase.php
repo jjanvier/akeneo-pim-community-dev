@@ -3,7 +3,6 @@
 namespace Pim\Bundle\ApiBundle\tests\integration\Controller\Product;
 
 use Akeneo\Test\Integration\Configuration;
-use Akeneo\Test\Integration\DateSanitizer;
 use Akeneo\Test\Integration\MediaSanitizer;
 use Pim\Bundle\ApiBundle\tests\integration\ApiTestCase;
 

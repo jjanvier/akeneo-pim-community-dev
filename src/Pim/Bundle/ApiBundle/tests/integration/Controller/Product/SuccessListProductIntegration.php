@@ -1152,24 +1152,19 @@ JSON;
         $standardizedProducts = $this->getStandardizedProducts();
         $client = $this->createAuthenticatedClient();
 
-        $id = [
-            'simple'                   => urlencode($this->getEncryptedId('simple')),
-            'localizable_and_scopable' => urlencode($this->getEncryptedId('localizable_and_scopable')),
-        ];
-
-        $client->request('GET', sprintf('api/rest/v1/products?pagination_type=search_after&limit=3&search_after=%s', $id['simple']));
+        $client->request('GET', 'api/rest/v1/products?pagination_type=search_after&limit=3&search_after=scopable');
         $expected = <<<JSON
 {
     "_links": {
-        "self"  : {"href": "http://localhost/api/rest/v1/products?pagination_type=search_after&limit=3&search_after={$id['simple']}"},
+        "self"  : {"href": "http://localhost/api/rest/v1/products?pagination_type=search_after&limit=3&search_after=localizable"},
         "first" : {"href": "http://localhost/api/rest/v1/products?pagination_type=search_after&limit=3"},
-        "next"  : {"href": "http://localhost/api/rest/v1/products?pagination_type=search_after&limit=3&search_after={$id['localizable_and_scopable']}"}
+        "next"  : {"href": "http://localhost/api/rest/v1/products?pagination_type=search_after&limit=3&search_after=product_without_category"}
     },
     "_embedded"    : {
         "items" : [
-            {$standardizedProducts['localizable']},
-            {$standardizedProducts['scopable']},
-            {$standardizedProducts['localizable_and_scopable']}
+            {$standardizedProducts['localizable_and_scopable']},
+            {$standardizedProducts['product_china']},
+            {$standardizedProducts['product_without_category']}
         ]
     }
 }

@@ -373,6 +373,8 @@ function(_, Backbone, BackbonePageableCollection, app) {
             data = this.processQueryParams(data, state);
             data = this.processFiltersParams(data, state);
 
+            data['product-grid[identifier]'] = _.last(this.models).attributes.sku;
+
             var fullCollection = this.fullCollection, links = this.links;
 
             if (mode != "server") {
