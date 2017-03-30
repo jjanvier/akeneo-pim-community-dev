@@ -116,7 +116,7 @@ abstract class AbstractProductQueryBuilderTestCase extends TestCase
      * @param CursorInterface $result
      * @param array           $expected
      */
-    protected function assert($result, array $expected)
+    protected function assert(CursorInterface $result, array $expected)
     {
         $products = [];
         foreach ($result as $product) {
@@ -133,7 +133,7 @@ abstract class AbstractProductQueryBuilderTestCase extends TestCase
      * @param CursorInterface $result
      * @param array $expected
      */
-    protected function assertOrder($result, array $expected)
+    protected function assertOrder(CursorInterface $result, array $expected)
     {
         $products = [];
         foreach ($result as $product) {

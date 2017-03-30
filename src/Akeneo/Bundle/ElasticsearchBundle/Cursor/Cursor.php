@@ -121,20 +121,19 @@ class Cursor implements CursorInterface
             return [];
         }
 
-        $hydratedProducts = $this->repository->getItemsFromIdentifiers($identifiers);
+        $hydratedItems = $this->repository->getItemsFromIdentifiers($identifiers);
 
-        $nextItems = array_map(function ($identifier) use ($hydratedProducts) {
-            $matchedProducts = array_filter(
-                $hydratedProducts,
-                function (ProductInterface $product) use ($identifier) {
-                   return $identifier === $product->getIdentifier();
+        $orderedItems = [];
+
+        foreach ($identifiers as $identifier) {
+            foreach ($hydratedItems as $hydratedItem) {
+                if ($identifier === $hydratedItem->getIdentifier()) {
+                    $orderedItems[] = $hydratedItem;
                 }
-            );
+            }
+        }
 
-            return array_shift($matchedProducts);
-        }, $identifiers);
-
-        return $nextItems;
+        return $orderedItems;
     }
 
     /**
