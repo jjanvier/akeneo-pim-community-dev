@@ -257,7 +257,7 @@ class LocalizableScopableFilterIntegration extends AbstractProductQueryBuilderTe
                 ['locale' => 'fr_FR', 'scope' => 'ecommerce'],
             ],
         ]);
-        $this->assert($result, ['product_one']);
+        $this->assert($result, ['empty_product', 'product_one']);
     }
 
     public function testOperatorEmptyForCurrency()
