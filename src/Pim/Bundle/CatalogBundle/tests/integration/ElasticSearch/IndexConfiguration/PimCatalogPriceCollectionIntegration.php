@@ -320,6 +320,20 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
 
     /**
      * This method indexes dummy products in elastic search.
+     *
+     * A few information regarding the mapping of prices and the data indexed in ES below.
+     *
+     * We indexed data of different types:
+     *  - integer as a php integer
+     *  - integer as a php string
+     *  - float as a php float
+     *  - float as a php string
+     *
+     * What we want to test is that our ES queries are still correctly working despite those variations (eg, the
+     * resilience of the ES indexing).
+     *
+     * In this precise case, some data might not be catched by our dynamic mapping, but ES is capable of casting them
+     * and the queries are still working.
      */
     protected function addProducts()
     {
@@ -330,7 +344,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                     'a_price-prices' => [
                         '<all_channels>' => [
                             '<all_locales>' => [
-                                'USD' => '5',
+                                'USD' => 5,
                                 'EUR' => '15.55',
                             ],
                         ],
@@ -357,7 +371,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                         '<all_channels>' => [
                             '<all_locales>' => [
                                 'USD' => '16',
-                                'EUR' => '6.60',
+                                'EUR' => 6.60,
                             ],
                         ],
                     ],
@@ -370,7 +384,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                         '<all_channels>' => [
                             '<all_locales>' => [
                                 'USD' => '10',
-                                'EUR' => '10',
+                                'EUR' => 10,
                             ],
                         ],
                     ],
@@ -397,7 +411,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                     'a_price-prices' => [
                         '<all_channels>' => [
                             '<all_locales>' => [
-                                'CNY' => '150',
+                                'CNY' => 150,
                             ],
                         ],
                     ],

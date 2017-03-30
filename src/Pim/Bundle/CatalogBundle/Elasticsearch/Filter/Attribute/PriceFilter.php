@@ -12,10 +12,28 @@ use Pim\Component\Catalog\Repository\CurrencyRepositoryInterface;
 use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
 
 /**
- * Price filter for an Elasticsearch query
+ * Price filter for an Elasticsearch query.
  *
- * The IS_EMPTY Operator is now deprecated, please use IS_EMPTY_ON_ALL_LOCALES instead
- * The IS_NOT_EMPTY Operator is now deprecated, please use IS_NOT_EMPTY_ON_AT_LEAST_ONE_CURRENCY instead
+ * Prior to 1.7 and before:
+ * The IS_EMPTY and IS_NOT_EMPTY operators had two different behaviors depending on the currency specified when adding
+ * the filter.
+ *
+ * Let's examine the behavior for the IS_EMPTY operator:
+ *
+ * If the currency was not specified, the filter would select every products where the price collection was empty (for
+ * the given locale and scope).
+ *
+ * If the currency was specified while calling `addAttributeFilter`, then the filter would select every products for
+ * which there was no price available for this currency within the price collection.
+ *
+ * Same holds true for the IS_NOT_EMPTY operator.
+ *
+ * The IS_EMPTY Operator is now deprecated, please use IS_EMPTY_ON_ALL_CURRENCIES instead.
+ * The IS_NOT_EMPTY Operator is now deprecated, please use IS_NOT_EMPTY_ON_AT_LEAST_ONE_CURRENCY instead.
+ *
+ * Note: the IS_EMPTY and IS_NOT_EMPTY operators are now mapped to the first behavior described above, meaning that it
+ * takes does not take any currency as a parameter and only checks if the price collection is empty for the (given
+ * locale and scope).
  *
  * @author    Samir Boulil <samir.boulil@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
@@ -226,7 +244,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
 
     /**
      * @param AttributeInterface $attribute
-     * @param array              $data
+     * @param mixed              $data
      *
      * @throws InvalidPropertyTypeException
      * @throws InvalidPropertyException
