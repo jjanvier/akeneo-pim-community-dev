@@ -202,7 +202,7 @@ class ScopableFilterIntegration extends AbstractProductQueryBuilderTestCase
         ]);
         $this->assert($result, ['empty_product']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_price',
                 Operators::IS_EMPTY_ON_ALL_CURRENCIES,
@@ -212,7 +212,7 @@ class ScopableFilterIntegration extends AbstractProductQueryBuilderTestCase
         ]);
         $this->assert($result, ['empty_product']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_price',
                 Operators::IS_EMPTY,
@@ -238,7 +238,7 @@ class ScopableFilterIntegration extends AbstractProductQueryBuilderTestCase
         ]);
         $this->assert($result, ['empty_product', 'product_one']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_price',
                 Operators::IS_EMPTY_FOR_CURRENCY,
@@ -251,7 +251,7 @@ class ScopableFilterIntegration extends AbstractProductQueryBuilderTestCase
 
     public function testOperatorNotEmptyOnAtLeastOneCurrency()
     {
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_price',
                 Operators::IS_NOT_EMPTY_ON_AT_LEAST_ONE_CURRENCY,

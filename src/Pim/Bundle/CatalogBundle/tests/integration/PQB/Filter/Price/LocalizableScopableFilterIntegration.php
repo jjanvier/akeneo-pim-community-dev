@@ -209,7 +209,7 @@ class LocalizableScopableFilterIntegration extends AbstractProductQueryBuilderTe
         ]);
         $this->assert($result, ['empty_product']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_localizable_price',
                 Operators::IS_EMPTY_ON_ALL_CURRENCIES,
@@ -219,7 +219,7 @@ class LocalizableScopableFilterIntegration extends AbstractProductQueryBuilderTe
         ]);
         $this->assert($result, ['empty_product']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_localizable_price',
                 Operators::IS_EMPTY_ON_ALL_CURRENCIES,
@@ -229,7 +229,7 @@ class LocalizableScopableFilterIntegration extends AbstractProductQueryBuilderTe
         ]);
         $this->assert($result, ['empty_product', 'product_one']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_localizable_price',
                 Operators::IS_EMPTY,
@@ -249,7 +249,7 @@ class LocalizableScopableFilterIntegration extends AbstractProductQueryBuilderTe
         ]);
         $this->assert($result, ['empty_product']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_localizable_price',
                 Operators::IS_EMPTY,
@@ -272,7 +272,7 @@ class LocalizableScopableFilterIntegration extends AbstractProductQueryBuilderTe
         ]);
         $this->assert($result, ['empty_product', 'product_one', 'product_two']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_localizable_price',
                 Operators::IS_EMPTY_FOR_CURRENCY,
@@ -285,7 +285,7 @@ class LocalizableScopableFilterIntegration extends AbstractProductQueryBuilderTe
 
     public function testOperatorNotEmptyOnAtLeastOneCurrency()
     {
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_localizable_price',
                 Operators::IS_NOT_EMPTY_ON_AT_LEAST_ONE_CURRENCY,
@@ -328,7 +328,7 @@ class LocalizableScopableFilterIntegration extends AbstractProductQueryBuilderTe
 
     public function testOperatorNotEmptyForCurrency()
     {
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_localizable_price',
                 Operators::IS_NOT_EMPTY_FOR_CURRENCY,
@@ -338,7 +338,7 @@ class LocalizableScopableFilterIntegration extends AbstractProductQueryBuilderTe
         ]);
         $this->assert($result, ['product_one', 'product_two']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_scopable_localizable_price',
                 Operators::IS_NOT_EMPTY_FOR_CURRENCY,

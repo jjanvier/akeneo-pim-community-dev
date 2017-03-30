@@ -128,19 +128,18 @@ class PriceFilterIntegration extends AbstractProductQueryBuilderTestCase
 
     public function testOperatorEmptyForCurrency()
     {
-        // TIP-706: sorter
-// $result = $this->executeFilter([['a_price', Operators::IS_EMPTY_FOR_CURRENCY, ['currency' => 'USD']]]);
-// $this->assert($result, ['empty_product', 'product_two']);
-//
-// $result = $this->execute([['a_price', Operators::IS_EMPTY_FOR_CURRENCY, ['currency' => 'EUR']]]);
-// $this->assert($result, ['empty_product']);
+        $result = $this->executeFilter([['a_price', Operators::IS_EMPTY_FOR_CURRENCY, ['currency' => 'USD']]]);
+        $this->assert($result, ['empty_product', 'product_two']);
+
+        $result = $this->executeFilter([['a_price', Operators::IS_EMPTY_FOR_CURRENCY, ['currency' => 'EUR']]]);
+        $this->assert($result, ['empty_product']);
     }
 
     public function testOperatorNotEmptyOnAtLeastOneCurrency(){
-        $result = $this->execute([['a_price', Operators::IS_NOT_EMPTY, []]]);
+        $result = $this->executeFilter([['a_price', Operators::IS_NOT_EMPTY, []]]);
         $this->assert($result, ['product_one', 'product_two']);
 
-        $result = $this->execute([['a_price', Operators::IS_NOT_EMPTY_ON_AT_LEAST_ONE_CURRENCY, []]]);
+        $result = $this->executeFilter([['a_price', Operators::IS_NOT_EMPTY_ON_AT_LEAST_ONE_CURRENCY, []]]);
         $this->assert($result, ['product_one', 'product_two']);
     }
 
@@ -149,7 +148,7 @@ class PriceFilterIntegration extends AbstractProductQueryBuilderTestCase
         $result = $this->executeFilter([['a_price', Operators::IS_NOT_EMPTY_FOR_CURRENCY, ['currency' => 'USD']]]);
         $this->assert($result, ['product_one']);
 
-        $result = $this->execute([['a_price', Operators::IS_NOT_EMPTY_FOR_CURRENCY, ['currency' => 'EUR']]]);
+        $result = $this->executeFilter([['a_price', Operators::IS_NOT_EMPTY_FOR_CURRENCY, ['currency' => 'EUR']]]);
         $this->assert($result, ['product_one', 'product_two']);
     }
 

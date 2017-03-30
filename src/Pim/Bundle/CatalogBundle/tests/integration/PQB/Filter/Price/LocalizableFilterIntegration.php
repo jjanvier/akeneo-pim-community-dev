@@ -222,7 +222,7 @@ class LocalizableFilterIntegration extends AbstractProductQueryBuilderTestCase
         $result = $this->executeFilter([['a_localizable_price', Operators::IS_EMPTY, [], ['locale' => 'en_US']]]);
         $this->assert($result, ['empty_product']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_localizable_price',
                 Operators::IS_EMPTY_ON_ALL_CURRENCIES,
@@ -232,7 +232,7 @@ class LocalizableFilterIntegration extends AbstractProductQueryBuilderTestCase
         ]);
         $this->assert($result, ['empty_product']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_localizable_price',
                 Operators::IS_EMPTY_ON_ALL_CURRENCIES,
@@ -255,7 +255,7 @@ class LocalizableFilterIntegration extends AbstractProductQueryBuilderTestCase
         ]);
         $this->assert($result, ['empty_product']);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_localizable_price',
                 Operators::IS_EMPTY_FOR_CURRENCY,
@@ -268,7 +268,7 @@ class LocalizableFilterIntegration extends AbstractProductQueryBuilderTestCase
 
     public function testOperatorNotEmptyOnAtLeastOneCurrency()
     {
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_localizable_price',
                 Operators::IS_NOT_EMPTY_ON_AT_LEAST_ONE_CURRENCY,
@@ -291,7 +291,7 @@ class LocalizableFilterIntegration extends AbstractProductQueryBuilderTestCase
 
     public function testOperatorNotEmptyForCurrency()
     {
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_localizable_price',
                 Operators::IS_NOT_EMPTY_FOR_CURRENCY,
@@ -301,7 +301,7 @@ class LocalizableFilterIntegration extends AbstractProductQueryBuilderTestCase
         ]);
         $this->assert($result, []);
 
-        $result = $this->execute([
+        $result = $this->executeFilter([
             [
                 'a_localizable_price',
                 Operators::IS_NOT_EMPTY_FOR_CURRENCY,
