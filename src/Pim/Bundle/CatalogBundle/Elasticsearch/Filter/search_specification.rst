@@ -941,8 +941,8 @@ Data model
 
   values => [
       'my-tags-options' => [
-          'fr_FR' => [
-              'mobile' => ['summer', 'winter']
+          'mobile' => [
+              'fr_FR' => ['summer', 'winter']
           ]
   ]
 
@@ -958,7 +958,7 @@ IN
 .. code-block:: php
 
     'terms' => [
-        'values.my-tags-options-fr_FR-mobile' => ['summer']
+        'values.my-tags-options.mobile.fr_FR' => ['summer']
     ]
 
 NOT IN
@@ -967,8 +967,19 @@ NOT IN
 
 .. code-block:: php
 
-    'terms' => [
-        'values.my-tags-options-fr_FR-mobile' => ['summer']
+    'query' => [
+        'bool' => [
+            'filter' => [
+                'exists' => [
+                    'field' => 'values.my-tags-options.mobile.fr_FR'
+                ]
+            ],
+            'must_not' => [
+                'terms' => [
+                    'values.my-tags-options.mobile.fr_FR' => ['summer']
+                ]
+            ]
+        ]
     ]
 
 IS EMPTY
@@ -978,7 +989,7 @@ IS EMPTY
 .. code-block:: php
 
     'exists' => [
-        'field' => 'values.my-tags-options-fr_FR-mobile'
+        'field' => 'values.my-tags-options.mobile.fr_FR'
     ]
 
 IS NOT EMPTY
@@ -988,7 +999,7 @@ IS NOT EMPTY
 .. code-block:: php
 
     'exists' => [
-        'field' => 'values.my-tags-options-fr_FR-mobile'
+        'field' => 'values.my-tags-options.mobile.fr_FR'
     ]
 
 Sorting

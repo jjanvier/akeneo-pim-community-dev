@@ -68,8 +68,8 @@ class OptionsNormalizerSpec extends ObjectBehavior
         $this->normalize($optionsValue, 'indexing')->shouldReturn(
             [
                 'tags-options' => [
-                    '<all_locales>' => [
-                        '<all_channels>' => [
+                    '<all_channels>' => [
+                        '<all_locales>' => [
                             'tagA',
                             'tagB'
                         ],
@@ -96,8 +96,8 @@ class OptionsNormalizerSpec extends ObjectBehavior
         $this->normalize($optionsValue, 'indexing')->shouldReturn(
             [
                 'tags-options' => [
-                    'en_US' => [
-                        '<all_channels>' => [
+                    '<all_channels>' => [
+                        'en_US' => [
                             'tagA',
                             'tagB'
                         ],
@@ -124,8 +124,8 @@ class OptionsNormalizerSpec extends ObjectBehavior
         $this->normalize($optionsValue, 'indexing')->shouldReturn(
             [
                 'tags-options' => [
-                    '<all_locales>' => [
-                        'ecommerce' => [
+                    'ecommerce' => [
+                        '<all_locales>' => [
                             'tagA',
                             'tagB'
                         ],
@@ -152,8 +152,8 @@ class OptionsNormalizerSpec extends ObjectBehavior
         $this->normalize($optionsValue, 'indexing')->shouldReturn(
             [
                 'tags-options' => [
-                    'en_US' => [
-                        'ecommerce' => [
+                    'ecommerce' => [
+                        'en_US' => [
                             'tagA',
                             'tagB'
                         ],

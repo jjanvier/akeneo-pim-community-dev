@@ -1,13 +1,13 @@
 <?php
 
-namespace spec\Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
+namespace spec\Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute;
 
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeOptionRepository;
-use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\AbstractAttributeFilter;
-use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\OptionsFilter;
+use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\AbstractAttributeFilter;
+use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\OptionsFilter;
 use Pim\Bundle\CatalogBundle\Elasticsearch\SearchQueryBuilder;
 use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Exception\ObjectNotFoundException;
@@ -90,7 +90,7 @@ class OptionsFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'terms' => [
-                    'values.tags-options.en_US.ecommerce' => ['summer'],
+                    'values.tags-options.ecommerce.en_US' => ['summer'],
                 ],
             ]
         )->shouldBeCalled();
@@ -118,14 +118,14 @@ class OptionsFilterSpec extends ObjectBehavior
         $sqb->addMustNot(
             [
                 'terms' => [
-                    'values.tags-options.en_US.ecommerce' => ['summer'],
+                    'values.tags-options.ecommerce.en_US' => ['summer'],
                 ],
             ]
         )->shouldBeCalled();
 
         $sqb->addFilter(
             [
-                'exists' => ['field' => 'values.tags-options.en_US.ecommerce'],
+                'exists' => ['field' => 'values.tags-options.ecommerce.en_US'],
             ]
         )->shouldBeCalled();
 
@@ -146,7 +146,7 @@ class OptionsFilterSpec extends ObjectBehavior
 
         $sqb->addMustNot(
             [
-                'exists' => ['field' => 'values.tags-options.en_US.ecommerce'],
+                'exists' => ['field' => 'values.tags-options.ecommerce.en_US'],
             ]
         )->shouldBeCalled();
 
@@ -167,7 +167,7 @@ class OptionsFilterSpec extends ObjectBehavior
 
         $sqb->addFilter(
             [
-                'exists' => ['field' => 'values.tags-options.en_US.ecommerce'],
+                'exists' => ['field' => 'values.tags-options.ecommerce.en_US'],
             ]
         )->shouldBeCalled();
 

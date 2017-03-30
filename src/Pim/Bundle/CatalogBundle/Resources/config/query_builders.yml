@@ -19,7 +19,7 @@ parameters:
     pim_catalog.query.elasticsearch.filter.text.class: Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\TextFilter
     pim_catalog.query.elasticsearch.filter.text_area.class: Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\TextAreaFilter
     pim_catalog.query.elasticsearch.filter.option.class:          Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\OptionFilter
-    pim_catalog.query.elasticsearch.filter.options.class:         Pim\Bundle\CatalogBundle\Elasticsearch\Filter\OptionsFilter
+    pim_catalog.query.elasticsearch.filter.options.class:         Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\OptionsFilter
 
 services:
     pim_catalog.query.product_query_builder_factory:
