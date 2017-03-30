@@ -129,6 +129,7 @@ class Cursor implements CursorInterface
             foreach ($hydratedItems as $hydratedItem) {
                 if ($identifier === $hydratedItem->getIdentifier()) {
                     $orderedItems[] = $hydratedItem;
+                    break;
                 }
             }
         }
