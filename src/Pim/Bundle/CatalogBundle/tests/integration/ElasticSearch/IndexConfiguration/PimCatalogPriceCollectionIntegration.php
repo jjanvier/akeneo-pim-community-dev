@@ -19,7 +19,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => ['lt' => 10],
+                            'values.a_price-prices.<all_channels>.<all_locales>.USD' => ['lt' => 10],
                         ],
                     ],
                 ],
@@ -35,7 +35,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'values.a_price-prices.<all_locales>.<all_channels>.EUR' => ['lt' => '10'],
+                            'values.a_price-prices.<all_channels>.<all_locales>.EUR' => ['lt' => '10'],
                         ],
                     ],
                 ],
@@ -54,7 +54,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => ['lte' => '10'],
+                            'values.a_price-prices.<all_channels>.<all_locales>.USD' => ['lte' => '10'],
                         ],
                     ],
                 ],
@@ -70,7 +70,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'values.a_price-prices.<all_locales>.<all_channels>.EUR' => ['lte' => 10],
+                            'values.a_price-prices.<all_channels>.<all_locales>.EUR' => ['lte' => 10],
                         ],
                     ],
                 ],
@@ -89,7 +89,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'term' => [
-                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => '10',
+                            'values.a_price-prices.<all_channels>.<all_locales>.USD' => '10',
                         ],
                     ],
                 ],
@@ -108,12 +108,12 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'must_not' => [
                         'term' => [
-                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => 10,
+                            'values.a_price-prices.<all_channels>.<all_locales>.USD' => 10,
                         ],
                     ],
                     'filter'   => [
                         'exists' => [
-                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.USD',
+                            'field' => 'values.a_price-prices.<all_channels>.<all_locales>.USD',
                         ],
                     ],
                 ],
@@ -135,7 +135,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => ['gte' => 10],
+                            'values.a_price-prices.<all_channels>.<all_locales>.USD' => ['gte' => 10],
                         ],
                     ],
                 ],
@@ -151,7 +151,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'values.a_price-prices.<all_locales>.<all_channels>.EUR' => ['gte' => '10'],
+                            'values.a_price-prices.<all_channels>.<all_locales>.EUR' => ['gte' => '10'],
                         ],
                     ],
                 ],
@@ -170,7 +170,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'values.a_price-prices.<all_locales>.<all_channels>.USD' => ['gt' => '10'],
+                            'values.a_price-prices.<all_channels>.<all_locales>.USD' => ['gt' => '10'],
                         ],
                     ],
                 ],
@@ -186,7 +186,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'range' => [
-                            'values.a_price-prices.<all_locales>.<all_channels>.EUR' => ['gt' => 10],
+                            'values.a_price-prices.<all_channels>.<all_locales>.EUR' => ['gt' => 10],
                         ],
                     ],
                 ],
@@ -208,7 +208,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'must_not' => [
                         'exists' => [
-                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>',
+                            'field' => 'values.a_price-prices.<all_channels>.<all_locales>',
                         ],
                     ],
                 ],
@@ -227,7 +227,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'must_not' => [
                         'exists' => [
-                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.USD',
+                            'field' => 'values.a_price-prices.<all_channels>.<all_locales>.USD',
                         ],
                     ],
                 ],
@@ -243,7 +243,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'must_not' => [
                         'exists' => [
-                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.CNY',
+                            'field' => 'values.a_price-prices.<all_channels>.<all_locales>.CNY',
                         ],
                     ],
                 ],
@@ -268,7 +268,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'exists' => [
-                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>',
+                            'field' => 'values.a_price-prices.<all_channels>.<all_locales>',
                         ],
                     ],
                 ],
@@ -290,7 +290,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'exists' => [
-                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.EUR',
+                            'field' => 'values.a_price-prices.<all_channels>.<all_locales>.EUR',
                         ],
                     ],
                 ],
@@ -306,7 +306,7 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'bool' => [
                     'filter' => [
                         'exists' => [
-                            'field' => 'values.a_price-prices.<all_locales>.<all_channels>.CNY',
+                            'field' => 'values.a_price-prices.<all_channels>.<all_locales>.CNY',
                         ],
                     ],
                 ],
@@ -328,8 +328,8 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'identifier' => 'product_1',
                 'values'     => [
                     'a_price-prices' => [
-                        '<all_locales>' => [
-                            '<all_channels>' => [
+                        '<all_channels>' => [
+                            '<all_locales>' => [
                                 'USD' => '5',
                                 'EUR' => '15.55',
                             ],
@@ -341,8 +341,8 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'identifier' => 'product_2',
                 'values'     => [
                     'a_price-prices' => [
-                        '<all_locales>' => [
-                            '<all_channels>' => [
+                        '<all_channels>' => [
+                            '<all_locales>' => [
                                 'USD' => '5',
                                 'EUR' => '15.55',
                             ],
@@ -354,8 +354,8 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'identifier' => 'product_3',
                 'values'     => [
                     'a_price-prices' => [
-                        '<all_locales>' => [
-                            '<all_channels>' => [
+                        '<all_channels>' => [
+                            '<all_locales>' => [
                                 'USD' => '16',
                                 'EUR' => '6.60',
                             ],
@@ -367,8 +367,8 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'identifier' => 'product_4',
                 'values'     => [
                     'a_price-prices' => [
-                        '<all_locales>' => [
-                            '<all_channels>' => [
+                        '<all_channels>' => [
+                            '<all_locales>' => [
                                 'USD' => '10',
                                 'EUR' => '10',
                             ],
@@ -383,8 +383,8 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'identifier' => 'product_6',
                 'values'     => [
                     'a_price-prices' => [
-                        '<all_locales>' => [
-                            '<all_channels>' => [
+                        '<all_channels>' => [
+                            '<all_locales>' => [
                                 'USD' => '150',
                             ],
                         ],
@@ -395,8 +395,8 @@ class PimCatalogPriceCollectionIntegration extends AbstractPimCatalogIntegration
                 'identifier' => 'product_7',
                 'values'     => [
                     'a_price-prices' => [
-                        '<all_locales>' => [
-                            '<all_channels>' => [
+                        '<all_channels>' => [
+                            '<all_locales>' => [
                                 'CNY' => '150',
                             ],
                         ],
