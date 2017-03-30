@@ -215,7 +215,7 @@ class PriceFilter extends AbstractAttributeFilter implements AttributeFilterInte
         }
 
         if (!is_numeric($data['amount'])) {
-            throw InvalidPropertyTypeException::validArrayStructureExpected(
+            throw InvalidPropertyTypeException::numericExpected(
                 $attribute->getCode(),
                 sprintf('key "amount" has to be a numeric, "%s" given', gettype($data['amount'])),
                 static::class,

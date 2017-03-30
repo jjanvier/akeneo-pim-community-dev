@@ -100,16 +100,16 @@ class ProductIndexingIntegration extends TestCase
                     '<all_channels>' => [
                         'en_US' => null,
                         'fr_FR' => null,
-                    ]
+                    ],
                 ],
                 'a_localized_and_scopable_text_area-text'        => [
                     'ecommerce' => [
                         'en_US' => 'a text area for ecommerce in English',
                     ],
-                    'tablet' => [
+                    'tablet'    => [
                         'en_US' => 'a text area for tablets in English',
                         'fr_FR' => 'une zone de texte pour les tablettes en français',
-                    ]
+                    ],
                 ],
                 'a_metric-metric'                                => [
                     '<all_channels>' => [
@@ -188,14 +188,13 @@ class ProductIndexingIntegration extends TestCase
                             'EUR' => '15.00',
                             'USD' => '20.00',
                         ],
-                        'tablet'    => [
+                    ],
+                    'tablet'    => [
+                        '<all_locales>' => [
                             'EUR' => '17.00',
                             'USD' => '24.00',
                         ],
                     ],
-                    'tablet' => [
-                        '<all_locales>' => null,
-                    ]
                 ],
                 'a_simple_select-option'                         => [
                     '<all_channels>' => [

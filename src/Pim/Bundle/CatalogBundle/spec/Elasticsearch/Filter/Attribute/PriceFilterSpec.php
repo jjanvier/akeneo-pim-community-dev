@@ -434,7 +434,7 @@ class PriceFilterSpec extends ObjectBehavior
         );
 
         $this->shouldThrow(
-            InvalidPropertyTypeException::validArrayStructureExpected(
+            InvalidPropertyTypeException::numericExpected(
                 'a_price',
                 sprintf('key "amount" has to be a numeric, "%s" given', gettype('NOT_AN_AMOUNT')),
                 PriceFilter::class,
@@ -446,7 +446,7 @@ class PriceFilterSpec extends ObjectBehavior
         );
 
         $this->shouldThrow(
-            InvalidPropertyTypeException::validArrayStructureExpected(
+            InvalidPropertyTypeException::numericExpected(
                 'a_price',
                 sprintf('key "amount" has to be a numeric, "%s" given', gettype(null)),
                 PriceFilter::class,

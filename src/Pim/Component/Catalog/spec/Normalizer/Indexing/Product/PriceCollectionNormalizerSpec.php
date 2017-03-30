@@ -63,8 +63,8 @@ class PriceCollectionNormalizerSpec extends ObjectBehavior
 
         $this->normalize($priceCollection, 'indexing')->shouldReturn([
             'a_price-prices' => [
-                '<all_locales>' => [
-                    '<all_channels>' => [
+                '<all_channels>' => [
+                    '<all_locales>' => [
                         'EUR' => '150.150129',
                         'USD' => '12',
                     ],
@@ -94,8 +94,8 @@ class PriceCollectionNormalizerSpec extends ObjectBehavior
 
         $this->normalize($priceCollection, 'indexing')->shouldReturn([
             'a_price-prices' => [
-                '<all_locales>' => [
-                    '<all_channels>' => [
+                '<all_channels>' => [
+                    '<all_locales>' => [
                         'EUR' => '-150.150129',
                         'USD' => '-12',
                     ],
@@ -125,8 +125,8 @@ class PriceCollectionNormalizerSpec extends ObjectBehavior
 
         $this->normalize($priceCollection, 'indexing')->shouldReturn([
             'a_price-prices' => [
-                'fr_FR' => [
-                    '<all_channels>' => [
+                '<all_channels>' => [
+                    'fr_FR' => [
                         'EUR' => '150.150129',
                         'USD' => '12',
                     ],
@@ -156,8 +156,8 @@ class PriceCollectionNormalizerSpec extends ObjectBehavior
 
         $this->normalize($priceCollection, 'indexing')->shouldReturn([
             'a_price-prices' => [
-                '<all_locales>' => [
-                    'ecommerce' => [
+                'ecommerce' => [
+                    '<all_locales>' => [
                         'EUR' => '150.150129',
                         'USD' => '12',
                     ],
@@ -187,8 +187,8 @@ class PriceCollectionNormalizerSpec extends ObjectBehavior
 
         $this->normalize($priceCollection, 'indexing')->shouldReturn([
             'a_price-prices' => [
-                'fr_FR' => [
-                    'ecommerce' => [
+                'ecommerce' => [
+                    'fr_FR' => [
                         'EUR' => '150.150129',
                         'USD' => '12',
                     ],
