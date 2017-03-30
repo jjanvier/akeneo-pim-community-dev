@@ -106,7 +106,7 @@ and filter with a ``bool`` query with ``must`` typed occurence of the following 
             'bool' => [
                 'filter' => [
                     'match_phrase' => [
-                        'description-text.en_US.mobile' => '30 pages'
+                        'description-text.mobile.en_US' => '30 pages'
                     ],
                     'match_phrase' => [
                             'name-text.<all_channels>.<all_locales>' => "canon"
@@ -115,7 +115,7 @@ and filter with a ``bool`` query with ``must`` typed occurence of the following 
                         'name-text.<all_channels>.<all_locales>' => 'Tshirt'
                     ],
                     'term' => [
-                        'price-prices.<all_locales>.<all_channels>.USD' => 30
+                        'price-prices.<all_channels>.<all_locales>.USD' => 30
                     ]
                 ]
             ]
@@ -1222,8 +1222,8 @@ Data model
             'a_price-prices' => [
                 'ecommerce' => [
                     'fr_FR' => [
-                        'USD' => '125.0000'
-                        'EUR' => '110.0000'
+                        'USD' => '125.53'
+                        'EUR' => '110'
                     ]
                 ]
             ]
@@ -1241,7 +1241,7 @@ Example for the ``>`` operator:
     [
         'filter' => [
             'range' => [
-                'price-prices.<all_locales>.<all_channels>.USD' => [ 'gt' => 100 ]
+                'price-prices.<all_channels>.<all_locales>.USD' => [ 'gt' => 100 ]
             ]
         ]
     ]

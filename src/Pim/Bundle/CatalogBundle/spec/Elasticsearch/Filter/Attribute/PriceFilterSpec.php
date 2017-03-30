@@ -1,11 +1,11 @@
 <?php
 
-namespace spec\Pim\Bundle\CatalogBundle\Elasticsearch\Filter;
+namespace spec\Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute;
 
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use PhpSpec\ObjectBehavior;
-use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\PriceFilter;
+use Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\PriceFilter;
 use Pim\Bundle\CatalogBundle\Elasticsearch\SearchQueryBuilder;
 use Pim\Component\Catalog\Exception\InvalidOperatorException;
 use Pim\Component\Catalog\Model\AttributeInterface;
@@ -85,7 +85,7 @@ class PriceFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'range' => [
-                    'values.a_price-prices.en_US.ecommerce.USD' => ['lt' => 10],
+                    'values.a_price-prices.ecommerce.en_US.USD' => ['lt' => 10],
                 ],
             ]
         )->shouldBeCalled();
@@ -117,7 +117,7 @@ class PriceFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'range' => [
-                    'values.a_price-prices.en_US.ecommerce.USD' => ['lte' => 10],
+                    'values.a_price-prices.ecommerce.en_US.USD' => ['lte' => 10],
                 ],
             ]
         )->shouldBeCalled();
@@ -149,7 +149,7 @@ class PriceFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'term' => [
-                    'values.a_price-prices.en_US.ecommerce.USD' => 10,
+                    'values.a_price-prices.ecommerce.en_US.USD' => 10,
                 ],
             ]
         )->shouldBeCalled();
@@ -181,7 +181,7 @@ class PriceFilterSpec extends ObjectBehavior
         $sqb->addMustNot(
             [
                 'term' => [
-                    'values.a_price-prices.en_US.ecommerce.USD' => 10,
+                    'values.a_price-prices.ecommerce.en_US.USD' => 10,
                 ],
             ]
         )->shouldBeCalled();
@@ -189,7 +189,7 @@ class PriceFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'exists' => [
-                    'field' => 'values.a_price-prices.en_US.ecommerce.USD',
+                    'field' => 'values.a_price-prices.ecommerce.en_US.USD',
                 ],
             ]
         )->shouldBeCalled();
@@ -221,7 +221,7 @@ class PriceFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'range' => [
-                    'values.a_price-prices.en_US.ecommerce.USD' => ['gte' => 10],
+                    'values.a_price-prices.ecommerce.en_US.USD' => ['gte' => 10],
                 ],
             ]
         )->shouldBeCalled();
@@ -253,7 +253,7 @@ class PriceFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'range' => [
-                    'values.a_price-prices.en_US.ecommerce.USD' => ['gt' => 10],
+                    'values.a_price-prices.ecommerce.en_US.USD' => ['gt' => 10],
                 ],
             ]
         )->shouldBeCalled();
@@ -283,7 +283,7 @@ class PriceFilterSpec extends ObjectBehavior
         $sqb->addMustNot(
             [
                 'exists' => [
-                    'field' => 'values.a_price-prices.en_US.ecommerce',
+                    'field' => 'values.a_price-prices.ecommerce.en_US',
                 ],
             ]
         )->shouldBeCalled();
@@ -309,7 +309,7 @@ class PriceFilterSpec extends ObjectBehavior
         $sqb->addMustNot(
             [
                 'exists' => [
-                    'field' => 'values.a_price-prices.en_US.ecommerce.USD',
+                    'field' => 'values.a_price-prices.ecommerce.en_US.USD',
                 ],
             ]
         )->shouldBeCalled();
@@ -339,7 +339,7 @@ class PriceFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'exists' => [
-                    'field' => 'values.a_price-prices.en_US.ecommerce',
+                    'field' => 'values.a_price-prices.ecommerce.en_US',
                 ],
             ]
         )->shouldBeCalled();
@@ -367,7 +367,7 @@ class PriceFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'exists' => [
-                    'field' => 'values.a_price-prices.en_US.ecommerce.USD',
+                    'field' => 'values.a_price-prices.ecommerce.en_US.USD',
                 ],
             ]
         )->shouldBeCalled();
