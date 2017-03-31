@@ -2,6 +2,8 @@
 
 namespace Pim\Bundle\DataGridBundle\Extension\Selector\Orm\Product;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Oro\Bundle\DataGridBundle\Datagrid\Common\DatagridConfiguration;
 use Oro\Bundle\DataGridBundle\Datasource\DatasourceInterface;
 use Pim\Bundle\DataGridBundle\Extension\Selector\SelectorInterface;
@@ -16,20 +18,26 @@ use Pim\Bundle\DataGridBundle\Extension\Selector\SelectorInterface;
 class FamilySelector implements SelectorInterface
 {
     /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function apply(DatasourceInterface $datasource, DatagridConfiguration $configuration)
     {
-        $esQb = $datasource->getQueryBuilder();
-        $qb = $esQb->getStorageQb();
-
         $locale = $configuration->offsetGetByPath('[source][locale_code]');
-        $rootAlias = $qb->getRootAlias();
 
+        $qb = $this->em->createQueryBuilder('f');
         $qb
-            ->leftJoin($rootAlias.'.family', 'family')
-            ->leftJoin('family.translations', 'ft', 'WITH', 'ft.locale = :dataLocale')
-            ->addSelect('COALESCE(NULLIF(ft.label, \'\'), CONCAT(\'[\', family.code, \']\')) as familyLabel')
+            ->leftJoin('f.translations', 'ft', 'WITH', 'ft.locale = :dataLocale')
+            ->addSelect('COALESCE(NULLIF(ft.label, \'\'), CONCAT(\'[\', f.code, \']\')) as familyLabel')
             ->setParameter('dataLocale', $locale);
     }
 }

@@ -1,0 +1,12 @@
+parameters:
+    pim_datagrid.normalizer.product.class: Pim\Bundle\DataGridBundle\Normalizer\ProductNormalizer
+
+services:
+    pim_datagrid.normalizer.product:
+        class: '%pim_datagrid.normalizer.product.class%'
+        arguments:
+            - '@pim_catalog.normalizer.standard.product'
+            - '@pim_catalog.repository.cached_family'
+            - '@pim_catalog.repository.group'
+        tags:
+            - { name: pim_serializer.normalizer, priority: 90 }

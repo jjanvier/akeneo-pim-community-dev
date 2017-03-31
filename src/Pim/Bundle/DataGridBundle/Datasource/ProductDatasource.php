@@ -60,10 +60,11 @@ class ProductDatasource extends Datasource
         }
 
         $rows = [];
-        $cursor = $this->getProductQueryBuilder()->getProductsSearchAfter(2, $this->getParameters()['identifier']);
+        $cursor = $this->getProductQueryBuilder()->getProductsSearchAfter(10, $this->getParameters()['identifier']);
+        $context = ['locale' => $options['locale_code'], 'channel' => $options['scope_code']];
         foreach ($cursor as $product) {
             $poo = array_merge(
-                $this->normalizer->normalize($product, 'internal_api'),
+                $this->normalizer->normalize($product, 'datagrid', $context),
                 ['id' => $product->getId(), 'dataLocale' => $this->getConfiguration('locale_code')]
             );
 

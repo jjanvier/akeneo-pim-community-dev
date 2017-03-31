@@ -11,8 +11,6 @@ use Twig_Function_Method;
 
 class MetadataExtension extends Twig_Extension
 {
-    const ROUTE = 'oro_datagrid_index';
-
     /** @var ContainerInterface */
     private $container;
 
@@ -51,10 +49,10 @@ class MetadataExtension extends Twig_Extension
      *
      * @return \stdClass
      */
-    public function getGridMetadata($name, $params = [])
+    public function getGridMetadata($name, $route, $params = [])
     {
         $metaData = $this->getDatagridManager()->getDatagrid($name)->getMetadata();
-        $metaData->offsetAddToArray('options', ['url' => $this->generateUrl($name, $params)]);
+        $metaData->offsetAddToArray('options', ['url' => $this->generateUrl($name, $route, $params)]);
 
         return $metaData->toArray();
     }
@@ -65,23 +63,25 @@ class MetadataExtension extends Twig_Extension
      *
      * @param \Twig_Environment $twig
      * @param string            $name
+     * @param string            $route
      * @param array             $params
      *
      * @return mixed
      */
-    public function getGridData(\Twig_Environment $twig, $name, $params = [])
+    public function getGridData(\Twig_Environment $twig, $name, $route, $params = [])
     {
-        return $twig->getExtension('actions')->renderUri($this->generateUrl($name, $params, true));
+        return $twig->getExtension('actions')->renderUri($this->generateUrl($name, $route, $params, true));
     }
 
     /**
      * @param string $name
+     * @param string $route
      * @param array  $params
      * @param bool   $mixRequest
      *
      * @return string
      */
-    protected function generateUrl($name, $params, $mixRequest = false)
+    protected function generateUrl($name, $route, $params, $mixRequest = false)
     {
         $additional = $mixRequest ? $this->getRequestParameters()->getRootParameterValue() : [];
         $params = [
@@ -89,7 +89,7 @@ class MetadataExtension extends Twig_Extension
             'gridName' => $name
         ];
 
-        return $this->getRouter()->generate(self::ROUTE, $params);
+        return $this->getRouter()->generate($route, $params);
     }
 
     /**

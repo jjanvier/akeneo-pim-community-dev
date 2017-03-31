@@ -89,7 +89,7 @@ class OrmSelectorExtension extends AbstractExtension
         return;
         $selectors = $this->getSelectorsToApply($config);
         foreach ($selectors as $selector) {
-            $selector->apply($datasource, $config);
+            $selector->apply($datasource, $config); break;
         }
     }
 

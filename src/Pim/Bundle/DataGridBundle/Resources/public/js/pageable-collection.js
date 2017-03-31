@@ -232,7 +232,7 @@ function(_, Backbone, BackbonePageableCollection, app) {
          * @return {Object}
          */
         parse: function(resp, options) {
-            this.state.totalRecords = 50;
+            this.state.totalRecords = 1118;
             this.state = this._checkState(this.state);
             return resp.data;
         },

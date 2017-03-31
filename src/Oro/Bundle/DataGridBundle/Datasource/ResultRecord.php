@@ -45,8 +45,11 @@ class ResultRecord implements ResultRecordInterface
     public function getValue($name)
     {
         foreach ($this->valueContainers as $data) {
+            $name = 'sku' === $name ? 'identifier' : $name;
             if (is_array($data) && array_key_exists($name, $data)) {
                 return $data[$name];
+            } elseif (is_array($data) && array_key_exists($name, $data['values'])) {
+                return $data['values'][$name];
             } elseif (is_object($data)) {
                 $fieldName = $name;
                 $camelizedFieldName = self::camelize($fieldName);
@@ -70,6 +73,7 @@ class ResultRecord implements ResultRecordInterface
             }
         }
 
+        return '';
         throw new \LogicException(sprintf('Unable to retrieve the value of "%s" property', $name));
     }
 

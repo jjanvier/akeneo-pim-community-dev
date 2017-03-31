@@ -44,9 +44,8 @@ class PriceProperty extends FieldProperty
     {
         $data = $this->getBackendData($value);
 
-        foreach ($data as $index => $price) {
-            $data[$index]['amount'] = $price['data'];
-            unset($price['data']);
+        if (!empty($data) && is_array($data)) {
+            $data = current($data)['data'];
         }
 
         return $this->presenter->present($data, ['locale' => $this->translator->getLocale()]);

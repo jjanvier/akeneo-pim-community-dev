@@ -4,3 +4,10 @@ pim_datagrid_load:
     requirements:
         _method: GET
         _format: json
+
+pim_product_datagrid_load:
+    path: /datagrid/product
+    defaults: { _controller: pim_datagrid.controller.datagrid:loadAction }
+    requirements:
+        _method: GET
+        _format: json

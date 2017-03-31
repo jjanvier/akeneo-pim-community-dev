@@ -47,4 +47,17 @@ class DatagridController
             new JsonResponse()
         );
     }
+
+    /**
+     * @param string $gridName
+     *
+     * @return JsonResponse
+     */
+    public function getAction($gridName)
+    {
+        $grid = $this->get('oro_datagrid.datagrid.manager')->getDatagrid($gridName);
+        $result = $grid->getData();
+
+        return new JsonResponse($result->toArray());
+    }
 }

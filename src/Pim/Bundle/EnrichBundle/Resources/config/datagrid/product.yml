@@ -10,14 +10,19 @@ datagrid:
             entity:            '%pim_catalog.entity.product.class%'
             repository_method: createDatagridQueryBuilder
         columns:
+            label:
+                label:         Label
             family:
                 label:         Family
-                data_name:     familyLabel
-                selector:      product_family
             enabled:
                 label:         Status
                 type:          twig
                 template:      PimDataGridBundle:Property:enabled.html.twig
+                frontend_type: html
+            completeness:
+                label:         Complete
+                type:          twig
+                template:      PimDataGridBundle:Property:completeness.html.twig
                 frontend_type: html
             created:
                 label:         Created At
@@ -190,5 +195,71 @@ datagrid:
                     empty_selection: pim_datagrid.mass_action.delete.empty_selection
                 launcherOptions:
                     group: quick_export
-        sorters: []
-        filters: []
+        sorters:
+            columns:
+                family:
+                    data_name: familyLabel
+                    sorter:    product_family
+                enabled:
+                    data_name: enabled
+                    sorter:    product_field
+                completeness:
+                    data_name: ratio
+                    sorter:    product_completeness
+                created:
+                    data_name: created
+                    sorter:    product_field
+                updated:
+                    data_name: updated
+                    sorter:    product_field
+            default:
+                updated: '%oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC'
+        filters:
+            columns:
+                family:
+                    type:      product_family
+                    label:     Family
+                    data_name: family
+                    options:
+                        field_options:
+                            multiple: true
+                            attr:
+                                empty_choice: true
+                groups:
+                    type:      product_groups
+                    label:     Groups
+                    data_name: groups
+                    options:
+                        field_options:
+                            multiple: true
+                enabled:
+                    type:      product_enabled
+                    ftype:     choice
+                    label:     Status
+                    data_name: enabled
+                    options:
+                        field_options:
+                            choices:
+                                1: Enabled
+                                0: Disabled
+                scope:
+                    type:      product_scope
+                    label:     Scope
+                    data_name: values.scope
+                    options:
+                        field_options:
+                            choices: '@pim_catalog.repository.channel->getLabelsIndexedByCode(@pim_user.context.user->getCurrentLocaleCode())'
+                completeness:
+                    type:      product_completeness
+                    label:     Complete
+                    data_name: ratio
+                created:
+                    type:      product_date
+                    ftype:     date
+                    data_name: created
+                    label:     Created At
+                updated:
+                    type:      product_date
+                    ftype:     date
+                    data_name: updated
+                    label:     Updated At

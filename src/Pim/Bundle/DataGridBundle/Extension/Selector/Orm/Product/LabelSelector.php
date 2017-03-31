@@ -20,7 +20,7 @@ class LabelSelector implements SelectorInterface
      */
     public function apply(DatasourceInterface $datasource, DatagridConfiguration $configuration)
     {
-        $esQb = $datasource->getQueryBuilder();
+        $esQb = $datasource->getProductQueryBuilder();
         $qb = $esQb->getStorageQb();
         $rootAlias = $qb->getRootAlias();
 

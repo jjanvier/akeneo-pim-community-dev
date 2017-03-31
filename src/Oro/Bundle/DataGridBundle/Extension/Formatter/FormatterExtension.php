@@ -77,6 +77,9 @@ class FormatterExtension extends AbstractExtension
         }
 
         $result->offsetSet('data', $rows);
+
+        $searchAfter = $currentRow['sku'];
+        $result->offsetSet('previous', $searchAfter);
     }
 
     /**

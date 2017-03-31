@@ -16,6 +16,12 @@ class AttributeOptionProperty extends FieldProperty
      */
     protected function convertValue($value)
     {
+        if (null === $value || '' === $value || !is_array($value)) {
+            return '';
+        }
+
+        return current($value)['data'];
+
         $data = $this->getBackendData($value);
 
         if (isset($data['optionValues']) && count($data['optionValues']) === 1) {
