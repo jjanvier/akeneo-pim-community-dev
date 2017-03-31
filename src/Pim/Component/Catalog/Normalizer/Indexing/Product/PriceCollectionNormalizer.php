@@ -34,7 +34,10 @@ class PriceCollectionNormalizer extends AbstractProductValueNormalizer implement
         $currencyIndexedPrices = [];
 
         foreach ($productValue->getData() as $price) {
-            $currencyIndexedPrices[$price->getCurrency()] = (string) $price->getData();
+            $currency = $price->getCurrency();
+            if (null !== $currency && '' !== $currency) {
+                $currencyIndexedPrices[$currency] = (string) $price->getData();
+            }
         }
 
         return $currencyIndexedPrices;
