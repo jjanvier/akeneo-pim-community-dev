@@ -113,22 +113,46 @@ class ProductIndexingIntegration extends TestCase
                 ],
                 'a_metric-metric'                                => [
                     '<all_channels>' => [
-                        '<all_locales>' => null,
+                        '<all_locales>' => [
+                            'amount'    => '987654321987.1234',
+                            'unit'      => 'KILOWATT',
+                            'base_data' => '9.8765432198712e+14',
+                            'base_unit' => 'WATT',
+                            'family'    => 'Power',
+                        ],
                     ],
                 ],
                 'a_metric_negative-metric'                       => [
                     '<all_channels>' => [
-                        '<all_locales>' => null,
+                        '<all_locales>' => [
+                            'amount'    => '-25.5000',
+                            'unit'      => 'CELSIUS',
+                            'base_data' => '252.65',
+                            'base_unit' => 'KELVIN',
+                            'family'    => 'Temperature',
+                        ],
                     ],
                 ],
                 'a_metric_without_decimal-metric'                => [
                     '<all_channels>' => [
-                        '<all_locales>' => null,
+                        '<all_locales>' => [
+                            'amount'    => '98',
+                            'unit'      => 'CENTIMETER',
+                            'base_data' => '0.98',
+                            'base_unit' => 'METER',
+                            'family'    => 'Length',
+                        ],
                     ],
                 ],
                 'a_metric_without_decimal_negative-metric'       => [
                     '<all_channels>' => [
-                        '<all_locales>' => null,
+                        '<all_locales>' => [
+                            'amount'    => '-20',
+                            'unit'      => 'CELSIUS',
+                            'base_data' => '253.15',
+                            'base_unit' => 'KELVIN',
+                            'family'    => 'Temperature',
+                        ],
                     ],
                 ],
                 'a_multi_select-options'                         => [
