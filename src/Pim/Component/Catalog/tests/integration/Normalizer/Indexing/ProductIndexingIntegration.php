@@ -114,44 +114,40 @@ class ProductIndexingIntegration extends TestCase
                 'a_metric-metric'                                => [
                     '<all_channels>' => [
                         '<all_locales>' => [
-                            'amount'    => '987654321987.1234',
-                            'unit'      => 'KILOWATT',
-                            'base_data' => '9.8765432198712e+14',
+                            'base_data' => '9.8765432198712E+14',
                             'base_unit' => 'WATT',
-                            'family'    => 'Power',
+                            'data'      => '987654321987.1234',
+                            'unit'      => 'KILOWATT',
                         ],
                     ],
                 ],
                 'a_metric_negative-metric'                       => [
                     '<all_channels>' => [
                         '<all_locales>' => [
-                            'amount'    => '-25.5000',
-                            'unit'      => 'CELSIUS',
                             'base_data' => '252.65',
                             'base_unit' => 'KELVIN',
-                            'family'    => 'Temperature',
+                            'data'      => '-20.5000',
+                            'unit'      => 'CELSIUS',
                         ],
                     ],
                 ],
                 'a_metric_without_decimal-metric'                => [
                     '<all_channels>' => [
                         '<all_locales>' => [
-                            'amount'    => '98',
-                            'unit'      => 'CENTIMETER',
                             'base_data' => '0.98',
+                            'data'    => '98',
                             'base_unit' => 'METER',
-                            'family'    => 'Length',
+                            'unit'      => 'CENTIMETER',
                         ],
                     ],
                 ],
                 'a_metric_without_decimal_negative-metric'       => [
                     '<all_channels>' => [
                         '<all_locales>' => [
-                            'amount'    => '-20',
-                            'unit'      => 'CELSIUS',
                             'base_data' => '253.15',
+                            'data'    => '-20',
                             'base_unit' => 'KELVIN',
-                            'family'    => 'Temperature',
+                            'unit'      => 'CELSIUS',
                         ],
                     ],
                 ],

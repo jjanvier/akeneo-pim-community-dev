@@ -66,7 +66,7 @@ mappings:
                 metric_data:
                     match_mapping_type: 'string'
                     mapping:
-                        type: 'double'
+                        index: 'no'
                     path_match: 'values.*-metric.*.data'
             -
                 metric_base_data:
@@ -78,13 +78,13 @@ mappings:
                 metric_unit:
                     match_mapping_type: 'string'
                     mapping:
-                        type: 'keyword'
+                        index: 'no'
                     path_match: 'values.*-metric.*.unit'
             -
                 metric_base_unit:
                     match_mapping_type: 'string'
                     mapping:
-                        type: 'keyword'
+                        index: 'no'
                     path_match: 'values.*-metric.*.base_unit'
 settings:
     analysis:
