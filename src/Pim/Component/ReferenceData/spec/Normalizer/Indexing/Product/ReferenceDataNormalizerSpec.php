@@ -32,9 +32,6 @@ class ReferenceDataNormalizerSpec extends ObjectBehavior
         $referenceDataProductValue->getAttribute()->willReturn($referenceData);
         $textValue->getAttribute()->willReturn($textAttribute);
 
-        $referenceData->getBackendType()->willReturn('reference_data_option');
-        $textAttribute->getBackendType()->willReturn('text');
-
         $this->supportsNormalization(new \stdClass(), 'indexing')->shouldReturn(false);
         $this->supportsNormalization(new \stdClass(), 'whatever')->shouldReturn(false);
 
@@ -44,7 +41,7 @@ class ReferenceDataNormalizerSpec extends ObjectBehavior
     }
 
     function it_normalize_an_empty_reference_data_product_value(
-        ProductValueInterface $referenceDataValue,
+        ReferenceDataProductValue $referenceDataValue,
         AttributeInterface $referenceData
     ) {
         $referenceDataValue->getAttribute()->willReturn($referenceData);
@@ -69,7 +66,7 @@ class ReferenceDataNormalizerSpec extends ObjectBehavior
     }
 
     function it_normalize_a_reference_data_product_value_with_no_locale_and_no_channel(
-        ProductValueInterface $referenceDataValue,
+        ReferenceDataProductValue $referenceDataValue,
         AttributeInterface $referenceData,
         Color $color
     ) {
@@ -96,7 +93,7 @@ class ReferenceDataNormalizerSpec extends ObjectBehavior
     }
 
     function it_normalizes_an_option_product_value_with_locale(
-        ProductValueInterface $referenceDataValue,
+        ReferenceDataProductValue $referenceDataValue,
         AttributeInterface $referenceData,
         Color $color
     ){
@@ -123,7 +120,7 @@ class ReferenceDataNormalizerSpec extends ObjectBehavior
     }
 
     function it_normalizes_a_reference_data_product_value_with_channel(
-        ProductValueInterface $referenceDataValue,
+        ReferenceDataProductValue $referenceDataValue,
         AttributeInterface $referenceData,
         Color $color
     ){
@@ -150,7 +147,7 @@ class ReferenceDataNormalizerSpec extends ObjectBehavior
     }
 
     function it_normalizes_a_reference_data_product_value_with_locale_and_channel(
-        ProductValueInterface $referenceDataValue,
+        ReferenceDataProductValue $referenceDataValue,
         AttributeInterface $referenceData,
         Color $color
     ) {

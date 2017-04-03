@@ -2,10 +2,9 @@
 
 namespace Pim\Component\ReferenceData\Normalizer\Indexing\Product;
 
-use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 use Pim\Component\Catalog\Normalizer\Indexing\Product\AbstractProductValueNormalizer;
-use Pim\Component\ReferenceData\Model\ReferenceDataInterface;
+use Pim\Component\ReferenceData\ProductValue\ReferenceDataProductValue;
 
 /**
  * @author    Philippe Mossière <philippe.mossiere@akeneo.com>
@@ -19,9 +18,7 @@ class ReferenceDataNormalizer extends AbstractProductValueNormalizer
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof ProductValueInterface &&
-            AttributeTypes::BACKEND_TYPE_REF_DATA_OPTION === $data->getAttribute()->getBackendType() &&
-            'indexing' === $format;
+        return $data instanceof ReferenceDataProductValue && 'indexing' === $format;
     }
 
     /**
@@ -30,7 +27,7 @@ class ReferenceDataNormalizer extends AbstractProductValueNormalizer
     protected function getNormalizedData(ProductValueInterface $productValue)
     {
         $data = $productValue->getData();
-        if ($data instanceof ReferenceDataInterface) {
+        if (null !== $data) {
             return $data->getCode();
         }
 

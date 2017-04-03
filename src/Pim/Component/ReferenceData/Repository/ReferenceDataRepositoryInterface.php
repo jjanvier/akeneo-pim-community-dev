@@ -35,9 +35,11 @@ interface ReferenceDataRepositoryInterface extends ObjectRepository
     public function findBySearch($search = null, array $options = []);
 
     /**
+     * Return an array of reference data codes
+     *
      * @param array $referenceDataCodes
      *
-     * @return ReferenceDataInterface[]
+     * @return array
      */
-    public function findByIdentifiers(array $referenceDataCodes);
+    public function findCodesByIdentifiers(array $referenceDataCodes);
 }

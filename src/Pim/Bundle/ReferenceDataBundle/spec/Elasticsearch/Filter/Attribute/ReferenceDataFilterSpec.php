@@ -107,7 +107,6 @@ class ReferenceDataFilterSpec extends ObjectBehavior
         $referenceDataRepositoryResolver,
         $attributeValidatorHelper,
         ReferenceDataRepositoryInterface $repository,
-        ReferenceDataInterface $blackColor,
         AttributeInterface $color,
         SearchQueryBuilder $sqb
     ) {
@@ -116,9 +115,7 @@ class ReferenceDataFilterSpec extends ObjectBehavior
         $color->getBackendType()->willReturn(AttributeTypes::BACKEND_TYPE_REF_DATA_OPTION);
 
         $referenceDataRepositoryResolver->resolve('color_reference_data')->willReturn($repository);
-        $repository->findByIdentifiers(['black'])->willReturn([$blackColor]);
-
-        $blackColor->getCode()->willReturn('black');
+        $repository->findCodesByIdentifiers(['black'])->willReturn([['code' => 'black']]);
 
         $attributeValidatorHelper->validateLocale($color, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($color, 'ecommerce')->shouldBeCalled();
@@ -162,7 +159,6 @@ class ReferenceDataFilterSpec extends ObjectBehavior
         $referenceDataRepositoryResolver,
         $attributeValidatorHelper,
         ReferenceDataRepositoryInterface $repository,
-        ReferenceDataInterface $blackColor,
         AttributeInterface $color,
         SearchQueryBuilder $sqb
     ) {
@@ -171,9 +167,7 @@ class ReferenceDataFilterSpec extends ObjectBehavior
         $color->getBackendType()->willReturn(AttributeTypes::BACKEND_TYPE_REF_DATA_OPTION);
 
         $referenceDataRepositoryResolver->resolve('color_reference_data')->willReturn($repository);
-        $repository->findByIdentifiers(['black'])->willReturn([$blackColor]);
-
-        $blackColor->getCode()->willReturn('black');
+        $repository->findCodesByIdentifiers(['black'])->willReturn([['code' => 'black']]);
 
         $attributeValidatorHelper->validateLocale($color, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($color, 'ecommerce')->shouldBeCalled();
@@ -254,7 +248,6 @@ class ReferenceDataFilterSpec extends ObjectBehavior
         $referenceDataRepositoryResolver,
         $attributeValidatorHelper,
         ReferenceDataRepositoryInterface $repository,
-        ReferenceDataInterface $blackColor,
         AttributeInterface $color,
         SearchQueryBuilder $sqb
     ) {
@@ -263,9 +256,7 @@ class ReferenceDataFilterSpec extends ObjectBehavior
         $color->getBackendType()->willReturn(AttributeTypes::BACKEND_TYPE_REF_DATA_OPTION);
 
         $referenceDataRepositoryResolver->resolve('color_reference_data')->willReturn($repository);
-        $repository->findByIdentifiers(['black'])->willReturn([$blackColor]);
-
-        $blackColor->getCode()->willReturn('black');
+        $repository->findCodesByIdentifiers(['black'])->willReturn([['code' => 'black']]);
 
         $attributeValidatorHelper->validateLocale($color, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($color, 'ecommerce')->shouldBeCalled();
@@ -342,7 +333,7 @@ class ReferenceDataFilterSpec extends ObjectBehavior
         $color->getBackendType()->willReturn(AttributeTypes::BACKEND_TYPE_REF_DATA_OPTION);
 
         $referenceDataRepositoryResolver->resolve('color_reference_data')->willReturn($repository);
-        $repository->findByIdentifiers(['black'])->willReturn([]);
+        $repository->findCodesByIdentifiers(['black'])->willReturn([]);
 
         $attributeValidatorHelper->validateLocale($color, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($color, 'ecommerce')->shouldBeCalled();

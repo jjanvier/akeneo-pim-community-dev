@@ -227,7 +227,7 @@ class ProductIndexingIntegration extends TestCase
                 ],
                 'a_ref_data_simple_select-reference_data_option' => [
                     '<all_channels>' => [
-                        '<all_locales>' => null,
+                        '<all_locales>' => 'colorB',
                     ],
                 ],
                 'a_scopable_price-prices'                        => [

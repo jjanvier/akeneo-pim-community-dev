@@ -13,7 +13,6 @@ use Pim\Component\Catalog\Query\Filter\FieldFilterHelper;
 use Pim\Component\Catalog\Query\Filter\Operators;
 use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
 use Pim\Component\ReferenceData\ConfigurationRegistryInterface;
-use Pim\Component\ReferenceData\Repository\ReferenceDataRepositoryInterface;
 
 /**
  * Reference data filter for an Elasticsearch query
@@ -28,7 +27,7 @@ class ReferenceDataFilter extends AbstractAttributeFilter implements AttributeFi
     protected $referenceDataRepositoryResolver;
 
     /** @var ConfigurationRegistryInterface */
-    private $registry;
+    protected $registry;
 
     /**
      * @param AttributeValidatorHelper         $attrValidatorHelper
@@ -157,10 +156,10 @@ class ReferenceDataFilter extends AbstractAttributeFilter implements AttributeFi
         }
 
         $referenceDataRepository = $this->referenceDataRepositoryResolver->resolve($attribute->getReferenceDataName());
-        $existingReferenceData =  $referenceDataRepository->findByIdentifiers($values);
+        $existingReferenceData =  $referenceDataRepository->findCodesByIdentifiers($values);
         $referenceDataCodes = array_map(
             function ($referenceData) {
-                return $referenceData->getCode();
+                return $referenceData['code'];
             },
             $existingReferenceData
         );
@@ -170,7 +169,7 @@ class ReferenceDataFilter extends AbstractAttributeFilter implements AttributeFi
             throw new ObjectNotFoundException(
                 sprintf(
                     'Object "%s" with code "%s" does not exist',
-                    AttributeTypes::BACKEND_TYPE_REF_DATA_OPTION,
+                    $attribute->getBackendType(),
                     reset($unexistingValues)
                 )
             );

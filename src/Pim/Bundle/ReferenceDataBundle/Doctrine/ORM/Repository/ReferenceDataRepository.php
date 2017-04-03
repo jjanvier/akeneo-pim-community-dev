@@ -92,10 +92,10 @@ class ReferenceDataRepository extends EntityRepository implements
     /**
      * {@inheritdoc}
      */
-    public function findByIdentifiers(array $referenceDataCodes)
+    public function findCodesByIdentifiers(array $referenceDataCodes)
     {
         return $this->createQueryBuilder($this->getAlias())
-            ->select($this->getAlias())
+            ->select($this->getAlias() . '.code')
             ->andWhere($this->getAlias() . '.code IN (:reference_data_codes)')
             ->setParameter('reference_data_codes', $referenceDataCodes)
             ->getQuery()

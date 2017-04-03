@@ -105,7 +105,7 @@ class ReferenceDataMultiSelectFilterIntegration extends AbstractProductQueryBuil
     public function testOperatorNotIn()
     {
         $result = $this->executeFilter([['a_ref_data_multi_select', Operators::NOT_IN_LIST, ['ballisticnylon']]]);
-        $this->assert($result, ['product_one', 'product_three']);
+        $this->assert($result, ['product_three']);
 
         $result = $this->executeFilter([['a_ref_data_multi_select', Operators::NOT_IN_LIST, ['bobbinet']]]);
         $this->assert($result, ['product_one', 'product_two']);
