@@ -160,7 +160,7 @@ class ReferenceDataFilter extends AbstractAttributeFilter implements AttributeFi
         $existingReferenceData =  $referenceDataRepository->findByIdentifiers($values);
         $referenceDataCodes = array_map(
             function ($referenceData) {
-                return $referenceData['code'];
+                return $referenceData->getCode();
             },
             $existingReferenceData
         );

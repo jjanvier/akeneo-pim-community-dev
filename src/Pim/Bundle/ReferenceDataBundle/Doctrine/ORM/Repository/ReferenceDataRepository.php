@@ -95,7 +95,7 @@ class ReferenceDataRepository extends EntityRepository implements
     public function findByIdentifiers(array $referenceDataCodes)
     {
         return $this->createQueryBuilder($this->getAlias())
-            ->select($this->getAlias() . '.code')
+            ->select($this->getAlias())
             ->andWhere($this->getAlias() . '.code IN (:reference_data_codes)')
             ->setParameter('reference_data_codes', $referenceDataCodes)
             ->getQuery()
