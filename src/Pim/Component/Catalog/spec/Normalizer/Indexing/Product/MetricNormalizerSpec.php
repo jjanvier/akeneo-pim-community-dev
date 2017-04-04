@@ -7,6 +7,7 @@ use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\MetricInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 use Pim\Component\Catalog\Normalizer\Indexing\Product\MetricNormalizer;
+use Pim\Component\Catalog\ProductValue\MetricProductValueInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class MetricNormalizerSpec extends ObjectBehavior
@@ -22,13 +23,12 @@ class MetricNormalizerSpec extends ObjectBehavior
     }
 
     function it_support_metric_product_value(
-        ProductValueInterface $metricValue,
+        MetricProductValueInterface $metricValue,
         ProductValueInterface $textValue,
         AttributeInterface $metricAttribute,
         AttributeInterface $textAttribute
     ) {
         $metricValue->getAttribute()->willReturn($metricAttribute);
-        $metricAttribute->getBackendType()->willReturn('metric');
 
         $textValue->getAttribute()->willReturn($textAttribute);
         $textAttribute->getBackendType()->willReturn('text');
@@ -42,16 +42,14 @@ class MetricNormalizerSpec extends ObjectBehavior
     }
 
     function it_normalizes_an_empty_metric_product_value_with_no_locale_and_no_channel(
-        ProductValueInterface $metricValue,
-        AttributeInterface $metricAttribute,
-        MetricInterface $metric
+        MetricProductValueInterface $metricValue,
+        AttributeInterface $metricAttribute
     ) {
         $metricValue->getAttribute()->willReturn($metricAttribute);
         $metricValue->getLocale()->willReturn(null);
         $metricValue->getScope()->willReturn(null);
         $metricValue->getData()->willReturn(null);
 
-        $metricAttribute->isDecimalsAllowed()->willReturn(false);
         $metricAttribute->getCode()->willReturn('weight');
         $metricAttribute->getBackendType()->willReturn('metric');
 
@@ -63,7 +61,7 @@ class MetricNormalizerSpec extends ObjectBehavior
             ],
         ]);
     }
-    
+
     function it_normalizes_a_metric_product_value_with_no_locale_and_no_channel(
         ProductValueInterface $metricValue,
         AttributeInterface $metricAttribute,
@@ -79,7 +77,6 @@ class MetricNormalizerSpec extends ObjectBehavior
         $metricValue->getScope()->willReturn(null);
         $metricValue->getData()->willReturn($metric);
 
-        $metricAttribute->isDecimalsAllowed()->willReturn(false);
         $metricAttribute->getCode()->willReturn('weight');
         $metricAttribute->getBackendType()->willReturn('metric');
 

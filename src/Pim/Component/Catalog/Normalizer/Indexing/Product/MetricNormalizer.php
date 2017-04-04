@@ -5,6 +5,7 @@ namespace Pim\Component\Catalog\Normalizer\Indexing\Product;
 use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 use Pim\Component\Catalog\ProductValue\MetricProductValue;
+use Pim\Component\Catalog\ProductValue\MetricProductValueInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -21,9 +22,7 @@ class MetricNormalizer extends AbstractProductValueNormalizer implements Normali
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof ProductValueInterface &&
-            AttributeTypes::BACKEND_TYPE_METRIC === $data->getAttribute()->getBackendType() &&
-            'indexing' === $format;
+        return $data instanceof MetricProductValueInterface && 'indexing' === $format;
     }
 
     /**

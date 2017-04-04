@@ -1062,10 +1062,14 @@ Data model
     [
         'values' => [
             'weight-metric' => [
-                'base_data' => '10.5559',
-                'base_unit' => 'KILOGRAM',
-                'data' => '10555.9',
-                'unit'  => 'GRAM'
+                '<all_channels>' => [
+                    '<all_locales> => [
+                        'base_data' => '10.5559',
+                        'base_unit' => 'KILOGRAM',
+                        'data' => '10555.9',
+                        'unit'  => 'GRAM'
+                    ]
+                ]
             ]
         ]
     ]
