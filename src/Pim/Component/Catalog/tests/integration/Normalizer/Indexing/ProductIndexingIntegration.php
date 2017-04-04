@@ -222,7 +222,10 @@ class ProductIndexingIntegration extends TestCase
                 ],
                 'a_ref_data_multi_select-reference_data_options' => [
                     '<all_channels>' => [
-                        '<all_locales>' => null,
+                        '<all_locales>' => [
+                            'fabricA',
+                            'fabricB',
+                        ],
                     ],
                 ],
                 'a_ref_data_simple_select-reference_data_option' => [
