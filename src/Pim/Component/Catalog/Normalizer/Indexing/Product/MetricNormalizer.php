@@ -8,7 +8,7 @@ use Pim\Component\Catalog\ProductValue\MetricProductValue;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * Normalizer for a text (simple text) product value
+ * Normalizer for a metric product value
  *
  * @author    Samir Boulil <samir.boulil@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
@@ -21,7 +21,7 @@ class MetricNormalizer extends AbstractProductValueNormalizer implements Normali
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof MetricProductValue &&
+        return $data instanceof ProductValueInterface &&
             AttributeTypes::BACKEND_TYPE_METRIC === $data->getAttribute()->getBackendType() &&
             'indexing' === $format;
     }
@@ -32,6 +32,10 @@ class MetricNormalizer extends AbstractProductValueNormalizer implements Normali
     protected function getNormalizedData(ProductValueInterface $productValue)
     {
         $productMetric = $productValue->getData();
+
+        if (null === $productMetric) {
+            return [];
+        }
 
         return [
             'data'      => (string) $productMetric->getData(),

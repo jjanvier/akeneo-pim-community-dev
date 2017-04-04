@@ -27,7 +27,7 @@ class MetricFilter extends AbstractAttributeFilter implements AttributeFilterInt
     protected $measureManager;
 
     /** @var MeasureConverter */
-    protected $metricConverter;
+    protected $measureConverter;
 
     /**
      * @param AttributeValidatorHelper $attrValidatorHelper
@@ -45,7 +45,7 @@ class MetricFilter extends AbstractAttributeFilter implements AttributeFilterInt
     ) {
         $this->attrValidatorHelper = $attrValidatorHelper;
         $this->measureManager = $measureManager;
-        $this->metricConverter = $measureConverter;
+        $this->measureConverter = $measureConverter;
         $this->supportedAttributeTypes = $supportedAttributeTypes;
         $this->supportedOperators = $supportedOperators;
     }
@@ -193,7 +193,7 @@ class MetricFilter extends AbstractAttributeFilter implements AttributeFilterInt
             );
         }
 
-        if (null !== $data['amount'] && !is_numeric($data['amount'])) {
+        if (null === $data['amount'] || !is_numeric($data['amount'])) {
             throw InvalidPropertyTypeException::validArrayStructureExpected(
                 $attribute->getCode(),
                 sprintf('key "amount" has to be a numeric, "%s" given', gettype($data['amount'])),
@@ -238,8 +238,8 @@ class MetricFilter extends AbstractAttributeFilter implements AttributeFilterInt
      */
     protected function convertValue(AttributeInterface $attribute, array $data)
     {
-        $this->metricConverter->setFamily($attribute->getMetricFamily());
+        $this->measureConverter->setFamily($attribute->getMetricFamily());
 
-        return $this->metricConverter->convertBaseToStandard($data['unit'], $data['amount']);
+        return $this->measureConverter->convertBaseToStandard($data['unit'], $data['amount']);
     }
 }
