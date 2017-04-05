@@ -12,8 +12,8 @@ datagrid:
         columns:
             label:
                 label:         Label
-#                data_name:     productLabel
-#                selector:      product_label
+                data_name:     '[meta][label]'
+                type:          label
             family:
                 label:         Family
 #                data_name:     familyLabel
