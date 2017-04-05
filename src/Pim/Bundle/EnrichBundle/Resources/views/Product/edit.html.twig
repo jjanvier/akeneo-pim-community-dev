@@ -56,7 +56,7 @@
                                     FetcherRegistry.initialize().done(function () {
                                         FetcherRegistry.getFetcher('product').fetch('{{ productId }}')
                                             .then(function (product) {
-                                                var sku      = _.escape(product.meta.label[UserContext.get('catalogLocale')]);
+                                                var sku      = _.escape(product.meta.labels.product[UserContext.get('catalogLocale')]);
                                                 var newTitle = document.title.replace('%product.sku%', sku);
 
                                                 document.title  = newTitle;

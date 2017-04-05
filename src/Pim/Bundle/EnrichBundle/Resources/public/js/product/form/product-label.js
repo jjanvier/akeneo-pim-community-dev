@@ -18,8 +18,8 @@ define(
             getLabel: function () {
                 var meta = this.getFormData().meta;
 
-                if (meta && meta.label) {
-                    return meta.label[UserContext.get('catalogLocale')];
+                if (meta && meta.labels.product) {
+                    return meta.labels.product[UserContext.get('catalogLocale')];
                 }
 
                 return null;
