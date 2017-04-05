@@ -12,33 +12,33 @@ datagrid:
         columns:
             label:
                 label:         Label
-                data_name:     '[meta][label]'
+                data_name:     '[meta][labels][product]'
                 type:          label
             family:
                 label:         Family
-#                data_name:     familyLabel
-#                selector:      product_family
+                data_name:     '[meta][labels][family]'
+                type:          label
             enabled:
                 label:         Status
                 type:          twig
                 template:      PimDataGridBundle:Property:enabled.html.twig
                 frontend_type: html
-#            completeness:
-#                label:         Complete
-#                type:          twig
-#                template:      PimDataGridBundle:Property:completeness.html.twig
-#                frontend_type: html
+            completeness:
+                label:         Complete
+                type:          twig
+                template:      PimDataGridBundle:Property:completeness.html.twig
+                data_name:     '[meta][completeness]'
+                frontend_type: html
             created:
                 label:         Created At
                 type:          product_value_date
-                frontend_type: date
             updated:
                 label:         Updated At
                 type:          product_value_date
-                frontend_type: date
-#            groups:
-#                label:         Groups
-#                type:          product_groups
+            groups:
+                label:         Groups
+                data_name:     '[meta][labels][groups]'
+                type:          label
         properties:
             id: ~
             edit_link:

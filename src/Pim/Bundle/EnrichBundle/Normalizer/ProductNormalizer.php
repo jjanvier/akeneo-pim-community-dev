@@ -103,7 +103,7 @@ class ProductNormalizer implements NormalizerInterface
             'updated'           => $updated,
             'model_type'        => 'product',
             'structure_version' => $this->structureVersionProvider->getStructureVersion(),
-        ] + $this->getLabels($product) + $this->getAssociationMeta($product);
+        ] + $this->getLabels($product) + $this->getAssociationMeta($product) + $this->getCompleteness($product);
 
         return $normalizedProduct;
     }
@@ -117,6 +117,8 @@ class ProductNormalizer implements NormalizerInterface
     }
 
     /**
+     * Get labels of product, family & groups
+     *
      * @param ProductInterface $product
      *
      * @return array
@@ -126,10 +128,41 @@ class ProductNormalizer implements NormalizerInterface
         $labels = [];
 
         foreach ($this->localeRepository->getActivatedLocaleCodes() as $localeCode) {
-            $labels[$localeCode] = $product->getLabel($localeCode);
+            $labels['product'][$localeCode] = $product->getLabel($localeCode);
         }
 
-        return ['label' => $labels];
+        $family = $product->getFamily();
+        foreach ($family->getTranslations() as $translation) {
+            $label = '' !== $translation->getLabel() ? $translation->getLabel() : sprintf('[%s]', $family->getCode());
+            $labels['family'][$translation->getLocale()] = $label;
+        }
+
+        foreach ($product->getGroups() as $group) {
+            foreach ($group->getTranslations() as $translation) {
+                $label = '' !== $translation->getLabel() ? $translation->getLabel() : sprintf('[%s]', $group->getCode());
+                $labels['groups'][$translation->getLocale()][] = $label;
+            }
+        }
+
+        return ['labels' => $labels];
+    }
+
+    /**
+     * Get the completenesses of the product
+     *
+     * @param ProductInterface $product
+     *
+     * @return array
+     */
+    protected function getCompleteness(ProductInterface $product)
+    {
+        $completenesses = [];
+
+        foreach ($product->getCompletenesses() as $completeness) {
+            $completenesses[$completeness->getChannel()->getCode()][$completeness->getLocale()->getCode()] = $completeness->getRatio();
+        }
+
+        return ['completeness' => $completenesses];
     }
 
     /**
