@@ -9,7 +9,7 @@ use Pim\Component\Catalog\Exception\InvalidDirectionException;
 use Pim\Component\Catalog\Query\Sorter\Directions;
 use Pim\Component\Catalog\Query\Sorter\FieldSorterInterface;
 
-class BaseSorterSpec extends ObjectBehavior
+class BaseFieldSorterSpec extends ObjectBehavior
 {
     function let()
     {
