@@ -234,12 +234,14 @@ class MetricFilter extends AbstractAttributeFilter implements AttributeFilterInt
      * @param AttributeInterface $attribute
      * @param array              $data
      *
-     * @return float
+     * @return string
      */
     protected function convertValue(AttributeInterface $attribute, array $data)
     {
         $this->measureConverter->setFamily($attribute->getMetricFamily());
 
-        return $this->measureConverter->convertBaseToStandard($data['unit'], $data['amount']);
+        $convertedValue = $this->measureConverter->convertBaseToStandard($data['unit'], $data['amount']);
+
+        return (string) $convertedValue;
     }
 }
