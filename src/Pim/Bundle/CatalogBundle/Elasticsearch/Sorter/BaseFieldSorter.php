@@ -57,8 +57,8 @@ class BaseFieldSorter implements FieldSorterInterface
             case Directions::ASCENDING:
                 $sortClause = [
                     $field => [
-                        "order" => $direction,
-                        "missing" => "_last"
+                        'order' => 'ASC',
+                        'missing' => '_last'
                     ]
                 ];
                 $this->searchQueryBuilder->addSort($sortClause);
@@ -67,8 +67,8 @@ class BaseFieldSorter implements FieldSorterInterface
             case Directions::DESCENDING:
                 $sortClause = [
                     $field => [
-                        "order" => $direction,
-                        "missing" => "_last"
+                        'order' => 'DESC',
+                        'missing' => '_last'
                     ]
                 ];
 

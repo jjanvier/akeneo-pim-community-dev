@@ -51,8 +51,8 @@ abstract class AbstractAttributeSorter implements AttributeSorterInterface
             case Directions::ASCENDING:
                 $sortClause = [
                     $attributePath => [
-                        "order"   => $direction,
-                        "missing" => "_last",
+                        'order'   => 'ASC',
+                        'missing' => '_last',
                     ],
                 ];
                 $this->searchQueryBuilder->addSort($sortClause);
@@ -61,8 +61,8 @@ abstract class AbstractAttributeSorter implements AttributeSorterInterface
             case Directions::DESCENDING:
                 $sortClause = [
                     $attributePath => [
-                        "order"   => $direction,
-                        "missing" => "_last",
+                        'order'   => 'DESC',
+                        'missing' => '_last',
                     ],
                 ];
 
