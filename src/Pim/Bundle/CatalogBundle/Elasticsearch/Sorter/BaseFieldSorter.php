@@ -8,13 +8,13 @@ use Pim\Component\Catalog\Query\Sorter\Directions;
 use Pim\Component\Catalog\Query\Sorter\FieldSorterInterface;
 
 /**
- * Base sorter for an Elasticsearch query
+ * Field base sorter for an Elasticsearch query
  *
  * @author    Anaël Chardan <anael.chardan@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class BaseSorter implements FieldSorterInterface
+class BaseFieldSorter implements FieldSorterInterface
 {
     /** @var SearchQueryBuilder */
     protected $searchQueryBuilder;
