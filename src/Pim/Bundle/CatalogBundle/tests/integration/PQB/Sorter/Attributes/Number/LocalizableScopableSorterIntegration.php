@@ -16,7 +16,7 @@ use Pim\Component\Catalog\Query\Sorter\Directions;
 class LocalizableScopableSorterIntegration extends AbstractProductQueryBuilderTestCase
 {
     /**
-     * @{@inheritdoc}
+     * {@inheritdoc}
      */
     protected function setUp()
     {
@@ -34,7 +34,8 @@ class LocalizableScopableSorterIntegration extends AbstractProductQueryBuilderTe
             $this->createProduct('product_one', [
                 'values' => [
                     'a_localizable_scopable_number' => [
-                        ['data' => '192.103', 'locale' => 'en_US', 'scope' => 'ecommerce']
+                        ['data' => '192.103', 'locale' => 'en_US', 'scope' => 'ecommerce'],
+                        ['data' => '-16', 'locale' => 'fr_FR', 'scope' => 'tablet']
                     ]
                 ]
             ]);
@@ -42,7 +43,8 @@ class LocalizableScopableSorterIntegration extends AbstractProductQueryBuilderTe
             $this->createProduct('product_two', [
                 'values' => [
                     'a_localizable_scopable_number' => [
-                        ['data' => '-16', 'locale' => 'en_US', 'scope' => 'ecommerce']
+                        ['data' => '-16', 'locale' => 'en_US', 'scope' => 'ecommerce'],
+                        ['data' => '192.103', 'locale' => 'fr_FR', 'scope' => 'tablet'],
                     ]
                 ]
             ]);
@@ -50,7 +52,7 @@ class LocalizableScopableSorterIntegration extends AbstractProductQueryBuilderTe
             $this->createProduct('product_three', [
                 'values' => [
                     'a_localizable_scopable_number' => [
-                        ['data' => '52', 'locale' => 'fr_FR', 'scope' => 'tablet']
+                        ['data' => '52', 'locale' => 'de_DE', 'scope' => 'tablet']
                     ]
                 ]
             ]);
@@ -61,12 +63,18 @@ class LocalizableScopableSorterIntegration extends AbstractProductQueryBuilderTe
     {
         $result = $this->executeSorter([['a_localizable_scopable_number', Directions::ASCENDING, ['locale' => 'en_US', 'scope' => 'ecommerce']]]);
         $this->assertOrder($result, ['product_two', 'product_one', 'product_three']);
+
+        $result = $this->executeSorter([['a_localizable_scopable_number', Directions::ASCENDING, ['locale' => 'fr_FR', 'scope' => 'tablet']]]);
+        $this->assertOrder($result, ['product_one', 'product_two', 'product_three']);
     }
 
     public function testSorterDescending()
     {
         $result = $this->executeSorter([['a_localizable_scopable_number', Directions::DESCENDING, ['locale' => 'en_US', 'scope' => 'ecommerce']]]);
         $this->assertOrder($result, ['product_one', 'product_two', 'product_three']);
+
+        $result = $this->executeSorter([['a_localizable_scopable_number', Directions::DESCENDING, ['locale' => 'fr_FR', 'scope' => 'tablet']]]);
+        $this->assertOrder($result, ['product_two', 'product_one', 'product_three']);
     }
 
     /**

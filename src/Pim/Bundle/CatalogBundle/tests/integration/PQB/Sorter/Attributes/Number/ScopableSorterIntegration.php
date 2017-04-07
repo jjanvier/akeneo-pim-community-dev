@@ -16,7 +16,7 @@ use Pim\Component\Catalog\Query\Sorter\Directions;
 class ScopableSorterIntegration extends AbstractProductQueryBuilderTestCase
 {
     /**
-     * @{@inheritdoc}
+     * {@inheritdoc}
      */
     protected function setUp()
     {
@@ -24,27 +24,29 @@ class ScopableSorterIntegration extends AbstractProductQueryBuilderTestCase
 
         if (1 === self::$count || $this->getConfiguration()->isDatabasePurgedForEachTest()) {
             $this->createAttribute([
-                'code'                => 'a_scopable_number',
-                'type'                => AttributeTypes::NUMBER,
-                'localizable'         => false,
-                'scopable'            => true,
-                'negative_allowed'    => true
+                'code'             => 'a_scopable_number',
+                'type'             => AttributeTypes::NUMBER,
+                'localizable'      => false,
+                'scopable'         => true,
+                'negative_allowed' => true,
             ]);
 
             $this->createProduct('product_one', [
                 'values' => [
                     'a_scopable_number' => [
-                        ['data' => '192.103', 'locale' => null, 'scope' => 'ecommerce']
-                    ]
-                ]
+                        ['data' => '192.103', 'locale' => null, 'scope' => 'ecommerce'],
+                        ['data' => '16', 'locale' => null, 'scope' => 'tablet'],
+                    ],
+                ],
             ]);
 
             $this->createProduct('product_two', [
                 'values' => [
                     'a_scopable_number' => [
-                        ['data' => '16', 'locale' => null, 'scope' => 'ecommerce']
-                    ]
-                ]
+                        ['data' => '16', 'locale' => null, 'scope' => 'ecommerce'],
+                        ['data' => '192.103', 'locale' => null, 'scope' => 'tablet'],
+                    ],
+                ],
             ]);
 
             $this->createProduct('empty_product', []);
@@ -55,12 +57,18 @@ class ScopableSorterIntegration extends AbstractProductQueryBuilderTestCase
     {
         $result = $this->executeSorter([['a_scopable_number', Directions::ASCENDING, ['scope' => 'ecommerce']]]);
         $this->assertOrder($result, ['product_two', 'product_one', 'empty_product']);
+
+        $result = $this->executeSorter([['a_scopable_number', Directions::ASCENDING, ['scope' => 'tablet']]]);
+        $this->assertOrder($result, ['product_one', 'product_two', 'empty_product']);
     }
 
     public function testSorterDescending()
     {
         $result = $this->executeSorter([['a_scopable_number', Directions::DESCENDING, ['scope' => 'ecommerce']]]);
         $this->assertOrder($result, ['product_one', 'product_two', 'empty_product']);
+
+        $result = $this->executeSorter([['a_scopable_number', Directions::DESCENDING, ['scope' => 'tablet']]]);
+        $this->assertOrder($result, ['product_two', 'product_one', 'empty_product']);
     }
 
     /**
