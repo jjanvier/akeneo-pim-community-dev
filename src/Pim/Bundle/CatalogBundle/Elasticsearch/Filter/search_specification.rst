@@ -406,6 +406,35 @@ Same syntax than the contains but must be include in a ``must_not`` boolean occu
         ]
     ]
 
+Sorting
+~~~~~~~
+
+Operators
+.........
+Ascendant
+"""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'values.name-varchar.<all_channels>.<all_locales>' => [
+            'order'   => 'ASC',
+            'missing' => '_last'
+        ]
+    ]
+
+Descendant
+""""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'values.name-varchar.<all_channels>.<all_locales>' => [
+            'order'   => 'DESC',
+            'missing' => '_last'
+        ]
+    ]
+
 Identifier
 **********
 :Apply: apply datatype 'keyword' on the 'identifier' field
@@ -907,6 +936,35 @@ NOT EMPTY
     ]
 
 
+Sorting
+~~~~~~~
+
+Operators
+.........
+Ascendant
+"""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'values.packet_count-decimal.<all_channels>.<all_locales>' => [
+            'order'   => 'ASC',
+            'missing' => '_last'
+        ]
+    ]
+
+Descendant
+""""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'values.packet_count-decimal.<all_channels>.<all_locales>' => [
+            'order'   => 'DESC',
+            'missing' => '_last'
+        ]
+    ]
+
 Option
 ******
 :Apply: pim_catalog_simpleselect attributes
@@ -987,15 +1045,32 @@ NOT IN
 
 Sorting
 ~~~~~~~
+Operators
+.........
+Ascendant
+"""""""""
 
 .. code-block:: php
 
     'sort' => [
         'values.color-option.<all_channels>.<all_locales>' => [
-            'order'   => 'asc',
-            'missing' => '_first'
+            'order'   => 'ASC',
+            'missing' => '_last'
         ]
     ]
+
+Descendant
+""""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'values.color-option.<all_channels>.<all_locales>' => [
+            'order'   => 'DESC',
+            'missing' => '_last'
+        ]
+    ]
+
 
 Simple select reference data
 ****************************
@@ -1276,7 +1351,23 @@ Filtering
 ~~~~~~~~~
 Operators
 .........
-All operators are identical to the one used on numbers.
+
+All operators are identical to the one used on numbers except we filter on the `base_data` value. So the attribute path becomes:
+
+.. code-block:: php
+
+    'values.weight-metric.mobile.fr_FR.base_data'
+
+Sorting
+~~~~~~~
+Operators
+.........
+
+All operators are identical to the one used on numbers except we filter on the `base_data` value. So the attribute path becomes:
+
+.. code-block:: php
+
+    'values.weight-metric.mobile.fr_FR.base_data'
 
 Boolean
 *******
@@ -1308,7 +1399,7 @@ Equals (=)
 
     'filter' => [
         'term' => [
-            'values.description-text.<all_channels>.<all_locales>' => true
+            'values.a_yes_no-boolean.<all_channels>.<all_locales>' => true
         ]
     ]
 
@@ -1320,12 +1411,12 @@ Not Equals (!=)
 
     'must_not' => [
         'term' => [
-            'values.description-text.<all_channels>.<all_locales>' => true
+            'values.a_yes_no-boolean.<all_channels>.<all_locales>' => true
         ]
     ],
     'filter' => [
         'exists' => [
-            'field' => 'values.description-text.<all_channels>.<all_locales>'
+            'field' => 'values.a_yes_no-boolean.<all_channels>.<all_locales>'
         ]
     ]
 
@@ -1456,6 +1547,8 @@ NOT IN CHILDREN
 :Type: filter
 
 Same as above but with a ``must_not`` occured type
+
+
 
 Price
 *****
