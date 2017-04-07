@@ -16,7 +16,7 @@ use Pim\Component\Catalog\Query\Sorter\Directions;
 class LocalizableSorterIntegration extends AbstractProductQueryBuilderTestCase
 {
     /**
-     * @{@inheritdoc}
+     * {@inheritdoc}
      */
     protected function setUp()
     {
@@ -24,35 +24,37 @@ class LocalizableSorterIntegration extends AbstractProductQueryBuilderTestCase
 
         if (1 === self::$count || $this->getConfiguration()->isDatabasePurgedForEachTest()) {
             $this->createAttribute([
-                'code'                => 'a_localizable_number',
-                'type'                => AttributeTypes::NUMBER,
-                'localizable'         => true,
-                'scopable'            => false,
-                'negative_allowed'    => true
+                'code'             => 'a_localizable_number',
+                'type'             => AttributeTypes::NUMBER,
+                'localizable'      => true,
+                'scopable'         => false,
+                'negative_allowed' => true,
             ]);
 
             $this->createProduct('product_one', [
                 'values' => [
                     'a_localizable_number' => [
-                        ['data' => '192.103', 'locale' => 'en_US', 'scope' => null]
-                    ]
-                ]
+                        ['data' => '192.103', 'locale' => 'en_US', 'scope' => null],
+                        ['data' => '-16', 'locale' => 'fr_FR', 'scope' => null],
+                    ],
+                ],
             ]);
 
             $this->createProduct('product_two', [
                 'values' => [
                     'a_localizable_number' => [
-                        ['data' => '-16', 'locale' => 'en_US', 'scope' => null]
-                    ]
-                ]
+                        ['data' => '-16', 'locale' => 'en_US', 'scope' => null],
+                        ['data' => '192.103', 'locale' => 'fr_FR', 'scope' => null],
+                    ],
+                ],
             ]);
 
             $this->createProduct('product_three', [
                 'values' => [
                     'a_localizable_number' => [
-                        ['data' => '52', 'locale' => 'fr_FR', 'scope' => null]
-                    ]
-                ]
+                        ['data' => '52', 'locale' => 'de_DE', 'scope' => null],
+                    ],
+                ],
             ]);
         }
     }
@@ -61,12 +63,18 @@ class LocalizableSorterIntegration extends AbstractProductQueryBuilderTestCase
     {
         $result = $this->executeSorter([['a_localizable_number', Directions::ASCENDING, ['locale' => 'en_US']]]);
         $this->assertOrder($result, ['product_two', 'product_one', 'product_three']);
+
+        $result = $this->executeSorter([['a_localizable_number', Directions::ASCENDING, ['locale' => 'fr_FR']]]);
+        $this->assertOrder($result, ['product_one', 'product_two', 'product_three']);
     }
 
     public function testSorterDescending()
     {
         $result = $this->executeSorter([['a_localizable_number', Directions::DESCENDING, ['locale' => 'en_US']]]);
         $this->assertOrder($result, ['product_one', 'product_two', 'product_three']);
+
+        $result = $this->executeSorter([['a_localizable_number', Directions::DESCENDING, ['locale' => 'fr_FR']]]);
+        $this->assertOrder($result, ['product_two', 'product_one', 'product_three']);
     }
 
     /**

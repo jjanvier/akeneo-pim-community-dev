@@ -15,7 +15,7 @@ use Pim\Component\Catalog\Query\Sorter\Directions;
 class TextSorterIntegration extends AbstractProductQueryBuilderTestCase
 {
     /**
-     * @{@inheritdoc}
+     * {@inheritdoc}
      */
     protected function setUp()
     {
