@@ -981,6 +981,35 @@ NOT EMPTY
     ]
 
 
+Sorting
+~~~~~~~
+
+Operators
+.........
+Ascendant
+"""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'values.packet_count-decimal.<all_channels>.<all_locales>' => [
+            'order'   => 'ASC',
+            'missing' => '_last'
+        ]
+    ]
+
+Descendant
+""""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'values.packet_count-decimal.<all_channels>.<all_locales>' => [
+            'order'   => 'DESC',
+            'missing' => '_last'
+        ]
+    ]
+
 Option
 ******
 :Apply: pim_catalog_simpleselect attributes
