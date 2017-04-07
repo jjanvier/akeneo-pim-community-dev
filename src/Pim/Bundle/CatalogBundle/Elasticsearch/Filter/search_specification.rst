@@ -452,6 +452,35 @@ Same syntax than the contains but must be include in a ``must_not`` boolean occu
         ]
     ]
 
+Sorting
+~~~~~~~
+
+Operators
+.........
+Ascendant
+"""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'values.name-varchar.<all_channels>.<all_locales>' => [
+            'order'   => 'ASC',
+            'missing' => '_last'
+        ]
+    ]
+
+Descendant
+""""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'values.name-varchar.<all_channels>.<all_locales>' => [
+            'order'   => 'DESC',
+            'missing' => '_last'
+        ]
+    ]
+
 Identifier
 **********
 :Apply: apply datatype 'keyword' on the 'identifier' field
@@ -1090,15 +1119,32 @@ NOT IN
 
 Sorting
 ~~~~~~~
+Operators
+.........
+Ascendant
+"""""""""
 
 .. code-block:: php
 
     'sort' => [
         'values.color-option.<all_channels>.<all_locales>' => [
-            'order'   => 'asc',
+            'order'   => 'ASC',
             'missing' => '_last'
         ]
     ]
+
+Descendant
+""""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'values.color-option.<all_channels>.<all_locales>' => [
+            'order'   => 'DESC',
+            'missing' => '_last'
+        ]
+    ]
+
 
 Simple select reference data
 ****************************
@@ -1396,7 +1442,23 @@ Filtering
 ~~~~~~~~~
 Operators
 .........
-All operators are identical to the one used on numbers.
+
+All operators are identical to the one used on numbers except we filter on the `base_data` value. So the attribute path becomes:
+
+.. code-block:: php
+
+    'values.weight-metric.mobile.fr_FR.base_data'
+
+Sorting
+~~~~~~~
+Operators
+.........
+
+All operators are identical to the one used on numbers except we filter on the `base_data` value. So the attribute path becomes:
+
+.. code-block:: php
+
+    'values.weight-metric.mobile.fr_FR.base_data'
 
 Boolean
 *******
@@ -1605,6 +1667,8 @@ NOT IN CHILDREN
 :Type: filter
 
 Same as above but with a ``must_not`` occured type
+
+
 
 Price
 *****
