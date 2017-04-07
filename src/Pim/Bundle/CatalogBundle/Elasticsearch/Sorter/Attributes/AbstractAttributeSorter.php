@@ -9,7 +9,7 @@ use Pim\Component\Catalog\Query\Sorter\AttributeSorterInterface;
 use Pim\Component\Catalog\Query\Sorter\Directions;
 
 /**
- * Attribute base sorter for an Elasticsearch query
+ * Abstract attribute sorter for an Elasticsearch query
  *
  * @author    Samir Boulil <samir.boulil@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
