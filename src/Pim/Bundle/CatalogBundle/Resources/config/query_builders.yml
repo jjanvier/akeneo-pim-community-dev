@@ -25,7 +25,6 @@ parameters:
     pim_catalog.query.elasticsearch.filter.text.class: Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\TextFilter
     pim_catalog.query.elasticsearch.filter.text_area.class: Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\TextAreaFilter
     pim_catalog.query.elasticsearch.filter.option.class: Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\OptionFilter
-    pim_catalog.query.elasticsearch.filter.options.class: Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\OptionsFilter
     pim_catalog.query.elasticsearch.filter.price.class: Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\PriceFilter
     pim_catalog.query.elasticsearch.filter.metric.class: Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\MetricFilter
     pim_catalog.query.elasticsearch.filter.media.class: Pim\Bundle\CatalogBundle\Elasticsearch\Filter\Attribute\MediaFilter
@@ -291,9 +290,16 @@ services:
             - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
 
     pim_catalog.query.elasticsearch.sorter.number:
-        class: '%pim_catalog.query.elasticsearch.sorter.base_attribute.class%'
+        class: '%pim_catalog.query.elasticsearch.sorter.attribute.base.class%'
         arguments:
             - ['pim_catalog_number']
+        tags:
+            - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
+
+    pim_catalog.query.elasticsearch.sorter.option:
+        class: '%pim_catalog.query.elasticsearch.sorter.attribute.base.class%'
+        arguments:
+            - ['pim_catalog_simpleselect']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
 
