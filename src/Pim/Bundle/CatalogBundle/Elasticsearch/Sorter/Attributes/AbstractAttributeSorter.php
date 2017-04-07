@@ -111,8 +111,12 @@ abstract class AbstractAttributeSorter implements AttributeSorterInterface
         $channel = (null === $channel) ? '<all_channels>' : $channel;
 
         return 'values.' . $attribute->getCode() . '-' . $attribute->getBackendType() . '.' . $channel . '.' . $locale;
-
     }
 
+    /**
+     * Returns the extra suffix to add to the attribute path
+     *
+     * @return mixed
+     */
     abstract protected function getAttributePathSuffix();
 }

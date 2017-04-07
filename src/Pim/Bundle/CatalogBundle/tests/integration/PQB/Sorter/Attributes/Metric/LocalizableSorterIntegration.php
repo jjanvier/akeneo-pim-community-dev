@@ -44,7 +44,7 @@ class LocalizableSorterIntegration extends AbstractProductQueryBuilderTestCase
             $this->createProduct('product_two', [
                 'values' => [
                     'a_localizable_metric' => [
-                        ['data' => ['amount' => '15', 'unit' => 'KILOWATT'], 'locale' => 'fr_FR', 'scope' => null]
+                        ['data' => ['amount' => '15000', 'unit' => 'WATT'], 'locale' => 'fr_FR', 'scope' => null]
                     ]
                 ]
             ]);

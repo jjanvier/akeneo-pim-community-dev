@@ -44,7 +44,7 @@ class ScopableSorterIntegration extends AbstractProductQueryBuilderTestCase
             $this->createProduct('product_two', [
                 'values' => [
                     'a_scopable_metric' => [
-                        ['data' => ['amount' => '15', 'unit' => 'KILOWATT'], 'locale' => null, 'scope' => 'ecommerce']
+                        ['data' => ['amount' => '15000', 'unit' => 'WATT'], 'locale' => null, 'scope' => 'ecommerce']
                     ]
                 ]
             ]);

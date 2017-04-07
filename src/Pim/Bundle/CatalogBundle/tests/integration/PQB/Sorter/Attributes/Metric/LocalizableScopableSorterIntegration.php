@@ -44,7 +44,7 @@ class LocalizableScopableSorterIntegration extends AbstractProductQueryBuilderTe
             $this->createProduct('product_two', [
                 'values' => [
                     'a_localizable_scopable_metric' => [
-                        ['data' => ['amount' => '15', 'unit' => 'KILOWATT'], 'locale' => 'fr_FR', 'scope' => 'tablet']
+                        ['data' => ['amount' => '15000', 'unit' => 'KILOWATT'], 'locale' => 'fr_FR', 'scope' => 'tablet']
                     ]
                 ]
             ]);

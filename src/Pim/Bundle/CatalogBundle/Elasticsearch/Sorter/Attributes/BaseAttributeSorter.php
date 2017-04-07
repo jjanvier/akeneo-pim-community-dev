@@ -12,6 +12,9 @@ namespace Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\Attributes;
 class BaseAttributeSorter extends AbstractAttributeSorter
 {
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getAttributePathSuffix()
     {
         return null;
