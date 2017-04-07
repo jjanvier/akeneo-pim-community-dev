@@ -3,6 +3,7 @@
 namespace Pim\Bundle\CatalogBundle\tests\integration\PQB\Sorter\Number;
 
 use Pim\Bundle\CatalogBundle\tests\integration\PQB\AbstractProductQueryBuilderTestCase;
+use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Query\Sorter\Directions;
 
 /**
@@ -12,7 +13,7 @@ use Pim\Component\Catalog\Query\Sorter\Directions;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class NumberSorterIntegration extends AbstractProductQueryBuilderTestCase
+class LocalizableSorterIntegration extends AbstractProductQueryBuilderTestCase
 {
     /**
      * @{@inheritdoc}
@@ -22,44 +23,50 @@ class NumberSorterIntegration extends AbstractProductQueryBuilderTestCase
         parent::setUp();
 
         if (1 === self::$count || $this->getConfiguration()->isDatabasePurgedForEachTest()) {
+            $this->createAttribute([
+                'code'                => 'a_localizable_number',
+                'type'                => AttributeTypes::NUMBER,
+                'localizable'         => true,
+                'scopable'            => false,
+                'negative_allowed'    => true
+            ]);
+
             $this->createProduct('product_one', [
                 'values' => [
-                    'a_number_float_negative' => [
-                        ['data' => '192.103', 'locale' => null, 'scope' => null]
+                    'a_localizable_number' => [
+                        ['data' => '192.103', 'locale' => 'en_US', 'scope' => null]
                     ]
                 ]
             ]);
 
             $this->createProduct('product_two', [
                 'values' => [
-                    'a_number_float_negative' => [
-                        ['data' => '16', 'locale' => null, 'scope' => null]
+                    'a_localizable_number' => [
+                        ['data' => '-16', 'locale' => 'en_US', 'scope' => null]
                     ]
                 ]
             ]);
 
             $this->createProduct('product_three', [
                 'values' => [
-                    'a_number_float_negative' => [
-                        ['data' => '-162.5654', 'locale' => null, 'scope' => null]
+                    'a_localizable_number' => [
+                        ['data' => '52', 'locale' => 'fr_FR', 'scope' => null]
                     ]
                 ]
             ]);
-
-            $this->createProduct('empty_product', []);
         }
     }
 
     public function testSorterAscending()
     {
-        $result = $this->executeSorter([['a_number_float_negative', Directions::ASCENDING]]);
-        $this->assertOrder($result, ['product_three', 'product_two', 'product_one', 'empty_product']);
+        $result = $this->executeSorter([['a_localizable_number', Directions::ASCENDING, ['locale' => 'en_US']]]);
+        $this->assertOrder($result, ['product_two', 'product_one', 'product_three']);
     }
 
     public function testSorterDescending()
     {
-        $result = $this->executeSorter([['a_number_float_negative', Directions::DESCENDING]]);
-        $this->assertOrder($result, ['product_one', 'product_two', 'product_three', 'empty_product']);
+        $result = $this->executeSorter([['a_localizable_number', Directions::DESCENDING, ['locale' => 'en_US']]]);
+        $this->assertOrder($result, ['product_one', 'product_two', 'product_three']);
     }
 
     /**
@@ -68,6 +75,6 @@ class NumberSorterIntegration extends AbstractProductQueryBuilderTestCase
      */
     public function testErrorOperatorNotSupported()
     {
-        $this->executeSorter([['a_number_float_negative', 'A_BAD_DIRECTION']]);
+        $this->executeSorter([['a_localizable_number', 'A_BAD_DIRECTION', ['locale' => 'en_US']]]);
     }
 }
