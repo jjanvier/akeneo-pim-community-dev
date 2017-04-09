@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\AnalyticsBundle\DataCollector;
 
+use Akeneo\Bundle\StorageUtilsBundle\DependencyInjection\AkeneoStorageUtilsExtension;
 use Akeneo\Component\Analytics\DataCollectorInterface;
 
 /**
@@ -17,27 +18,6 @@ use Akeneo\Component\Analytics\DataCollectorInterface;
 class StorageDataCollector implements DataCollectorInterface
 {
     const DIVERGENT_MARIADB_VERSION = '10';
-
-    /** @var string */
-    protected $catalogStorage;
-
-    /** @var string */
-    protected $mongoServer;
-
-    /** @var string */
-    protected $mongoDatabase;
-
-    /**
-     * @param string       $catalogStorage
-     * @param string|null  $mongoServer
-     * @param string|null  $mongoDatabase
-     */
-    public function __construct($catalogStorage, $mongoServer = null, $mongoDatabase = null)
-    {
-        $this->catalogStorage = $catalogStorage;
-        $this->mongoServer = $mongoServer;
-        $this->mongoDatabase = $mongoDatabase;
-    }
 
     /**
      * {@inheritdoc}
@@ -57,7 +37,7 @@ class StorageDataCollector implements DataCollectorInterface
      */
     protected function getStorageDriver()
     {
-        return ['pim_storage_driver' => $this->catalogStorage];
+        return ['pim_storage_driver' => AkeneoStorageUtilsExtension::DOCTRINE_ORM];
     }
 
     /**
@@ -68,13 +48,6 @@ class StorageDataCollector implements DataCollectorInterface
     public function getStorageVersion()
     {
         $version = $this->getSQLVersion();
-
-        if (null !== $this->mongoServer && null !== $this->mongoDatabase) {
-            $version = array_merge(
-                $version,
-                $this->getMongoDBVersion()
-            );
-        }
 
         return $version;
     }
@@ -99,20 +72,5 @@ class StorageDataCollector implements DataCollectorInterface
             $storage = 'mysql_version';
 
         return [$storage => $version];
-    }
-
-    /**
-     * Returns the version of MongoDB, if used.
-     *
-     * @return array
-     */
-    protected function getMongoDBVersion()
-    {
-        $client = new \MongoClient($this->mongoServer);
-
-        $mongo = new \MongoDB($client, $this->mongoDatabase);
-        $mongodbInfo = $mongo->command(['serverStatus' => true]);
-
-        return ['mongodb_version' => $mongodbInfo['version']];
     }
 }
