@@ -2,7 +2,6 @@
 
 namespace Pim\Bundle\AnalyticsBundle\DataCollector;
 
-use Akeneo\Bundle\StorageUtilsBundle\DependencyInjection\AkeneoStorageUtilsExtension;
 use Akeneo\Component\Analytics\DataCollectorInterface;
 
 /**
@@ -37,7 +36,7 @@ class StorageDataCollector implements DataCollectorInterface
      */
     protected function getStorageDriver()
     {
-        return ['pim_storage_driver' => AkeneoStorageUtilsExtension::DOCTRINE_ORM];
+        return ['pim_storage_driver' => 'doctrine/orm'];
     }
 
     /**
