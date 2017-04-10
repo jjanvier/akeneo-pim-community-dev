@@ -1090,11 +1090,29 @@ Sorting
 ~~~~~~~
 Sorting will be done on the localized label:
 
+Operators
+.........
+ASCENDANT
+"""""""""
+
+
 .. code-block:: php
 
     'sort' => [
         'values.brand-reference_data_option.<all_channels>.<all_locales>' => [
             'order'   => 'asc',
+            'missing' => '_last'
+        ]
+    ]
+
+DESCENDANT
+""""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'values.brand-reference_data_option.<all_channels>.<all_locales>' => [
+            'order'   => 'desc',
             'missing' => '_last'
         ]
     ]
