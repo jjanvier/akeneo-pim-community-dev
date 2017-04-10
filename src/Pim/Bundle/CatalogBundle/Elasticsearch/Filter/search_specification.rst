@@ -131,7 +131,8 @@ Sorting
 .. code-block:: php
 
     'sort' => [
-        'name-varchar.<all_channels>.<all_locales>' => "asc"
+        'name-varchar.<all_channels>.<all_locales>' => 'asc',
+        'missing' => '_last'
     ]
 
 Sorting and tokenization
@@ -145,7 +146,8 @@ In this case, the sort becomes:
 .. code-block:: php
 
     'sort' => [
-        'name-text.<all_channels>.<all_locales>.raw' => 'asc'
+        'name-text.<all_channels>.<all_locales>.raw' => 'asc',
+        'missing' => '_last'
     ]
 
 Text area
@@ -516,6 +518,33 @@ Not In list
         ]
     ]
 
+Filtering
+~~~~~~~~~
+Operators
+.........
+
+Whenever one wants to sort on the field 'identifier' or an attribute of type 'pim_catalog_identifier'. The PQB will always sort on the field 'identifier'
+
+ASCENDANT
+"""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'identifier' => 'ASC',
+        'missing' => '_last'
+    ]
+
+DESCENDANT
+""""""""""
+
+.. code-block:: php
+
+    'sort' => [
+        'identifier' => 'DESC',
+        'missing' => '_last'
+    ]
+
 Media
 *****
 
@@ -524,6 +553,7 @@ Media
 
 Data model
 ~~~~~~~~~~
+
 .. code-block:: php
 
     [
