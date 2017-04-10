@@ -4,7 +4,7 @@ namespace spec\Pim\Bundle\CatalogBundle\Elasticsearch\Sorter;
 
 use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CatalogBundle\Elasticsearch\SearchQueryBuilder;
-use Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\IdentifierSorter;
+use Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\BaseFieldSorter;
 use Pim\Component\Catalog\Exception\InvalidDirectionException;
 use Pim\Component\Catalog\Query\Sorter\Directions;
 use Pim\Component\Catalog\Query\Sorter\FieldSorterInterface;
@@ -18,7 +18,7 @@ class BaseFieldSorterSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(IdentifierSorter::class);
+        $this->shouldHaveType(BaseFieldSorter::class);
     }
 
     function it_is_a_fieldSorter()
@@ -78,7 +78,7 @@ class BaseFieldSorterSpec extends ObjectBehavior
         $this->shouldThrow(
             InvalidDirectionException::notSupported(
                 'A_BAD_DIRECTION',
-                IdentifierSorter::class
+                BaseFieldSorter::class
             )
         )->during('addFieldSorter', ['updated', 'A_BAD_DIRECTION']);
     }
