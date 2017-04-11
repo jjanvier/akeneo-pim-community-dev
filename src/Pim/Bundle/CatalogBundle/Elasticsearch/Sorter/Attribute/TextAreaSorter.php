@@ -1,6 +1,6 @@
 <?php
 
-namespace Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\Attributes;
+namespace Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\Attribute;
 
 /**
  * Text area sorter for an Elastic search query

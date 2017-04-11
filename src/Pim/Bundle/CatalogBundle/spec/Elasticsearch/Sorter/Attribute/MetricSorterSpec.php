@@ -3,8 +3,7 @@
 namespace spec\Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\Attributes;
 
 use Pim\Bundle\CatalogBundle\Elasticsearch\SearchQueryBuilder;
-use Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\Attributes\BaseAttributeSorter;
-use Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\Attributes\MetricSorter;
+use Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\Attribute\MetricSorter;
 use PhpSpec\ObjectBehavior;
 use Pim\Component\Catalog\Exception\InvalidDirectionException;
 use Pim\Component\Catalog\Model\AttributeInterface;
