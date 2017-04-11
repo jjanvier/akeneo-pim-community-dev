@@ -18,8 +18,6 @@ use Pim\Component\Catalog\Validator\AttributeValidatorHelper;
  */
 class TextAreaFilter extends AbstractAttributeFilter implements AttributeFilterInterface
 {
-    const PREPROCESSED_FIELD = 'preprocessed';
-
     /**
      * @param AttributeValidatorHelper $attrValidatorHelper
      * @param array                    $supportedAttributeTypes
@@ -61,7 +59,7 @@ class TextAreaFilter extends AbstractAttributeFilter implements AttributeFilterI
 
         switch ($operator) {
             case Operators::STARTS_WITH:
-                $attributePath .= '.' . self::PREPROCESSED_FIELD;
+                $attributePath .= '.preprocessed';
                 $clause = [
                     'query_string' => [
                         'default_field' => $attributePath,
@@ -72,7 +70,7 @@ class TextAreaFilter extends AbstractAttributeFilter implements AttributeFilterI
                 break;
 
             case Operators::CONTAINS:
-                $attributePath .= '.' . self::PREPROCESSED_FIELD;
+                $attributePath .= '.preprocessed';
                 $clause = [
                     'query_string' => [
                         'default_field' => $attributePath,
@@ -83,7 +81,7 @@ class TextAreaFilter extends AbstractAttributeFilter implements AttributeFilterI
                 break;
 
             case Operators::DOES_NOT_CONTAIN:
-                $attributePath .= '.' . self::PREPROCESSED_FIELD;
+                $attributePath .= '.preprocessed';
                 $mustNotClause = [
                     'query_string' => [
                         'default_field' => $attributePath,
@@ -100,7 +98,7 @@ class TextAreaFilter extends AbstractAttributeFilter implements AttributeFilterI
                 break;
 
             case Operators::EQUALS:
-                $attributePath .= '.' . self::PREPROCESSED_FIELD;
+                $attributePath .= '.preprocessed';
                 $clause = [
                     'term' => [
                         $attributePath => $value,
@@ -110,7 +108,7 @@ class TextAreaFilter extends AbstractAttributeFilter implements AttributeFilterI
                 break;
 
             case Operators::NOT_EQUAL:
-                $attributePath .= '.' . self::PREPROCESSED_FIELD;
+                $attributePath .= '.preprocessed';
                 $mustNotClause = [
                     'term' => [
                         $attributePath => $value,
