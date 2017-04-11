@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\CatalogBundle\Elasticsearch\Sorter;
 
+use Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\Field\BaseFieldSorter;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Query\Sorter\AttributeSorterInterface;
 
