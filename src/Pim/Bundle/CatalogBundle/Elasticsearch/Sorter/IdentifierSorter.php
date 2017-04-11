@@ -9,7 +9,7 @@ use Pim\Component\Catalog\Query\Sorter\AttributeSorterInterface;
  * Identifier sorter for an Elasticsearch query.
  *
  * As the identifier product value is not indexed in ES. Whenever you want to sort on the attribute identifier 'sku'
- * or on the field 'Identifier', the PQB will use this class which sorts on the field identifier.
+ * or on the field 'identifier', the PQB will use this class which sorts on the field identifier.
  *
  * @author    Samir Boulil <samir.boulil@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
@@ -28,14 +28,6 @@ class IdentifierSorter extends BaseFieldSorter implements AttributeSorterInterfa
     {
         $this->supportedFields = $supportedFields;
         $this->supportedAttributes = $supportedAttributes;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsField($field)
-    {
-        return in_array($field, $this->supportedFields);
     }
 
     /**

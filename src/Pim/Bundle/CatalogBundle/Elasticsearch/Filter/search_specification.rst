@@ -518,12 +518,12 @@ Not In list
         ]
     ]
 
-Filtering
-~~~~~~~~~
+Sorting
+~~~~~~~
 Operators
 .........
 
-Whenever one wants to sort on the field 'identifier' or an attribute of type 'pim_catalog_identifier'. The PQB will always sort on the field 'identifier'
+Whenever one wants to sort on the field 'identifier' or an attribute of type 'pim_catalog_identifier'. The sort query will be performed on the field 'identifier'.
 
 ASCENDANT
 """""""""
