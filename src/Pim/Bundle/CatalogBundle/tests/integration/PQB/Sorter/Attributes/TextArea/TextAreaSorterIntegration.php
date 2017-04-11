@@ -32,7 +32,6 @@ class TextAreaSorterIntegration extends AbstractProductQueryBuilderTestCase
                 ],
             ]);
 
-
             $this->createProduct('best_cat', [
                 'values' => [
                     'a_text_area' => [
