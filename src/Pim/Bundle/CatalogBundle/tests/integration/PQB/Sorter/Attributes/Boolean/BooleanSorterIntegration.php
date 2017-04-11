@@ -34,6 +34,12 @@ class BooleanSorterIntegration extends AbstractProductQueryBuilderTestCase
                 ]
             ]);
 
+            $this->createProduct('null_product', [
+                'values' => [
+                    'a_yes_no' => [['data' => null, 'locale' => null, 'scope' => null]]
+                ]
+            ]);
+
             $this->createProduct('empty_product', []);
         }
     }
@@ -41,13 +47,13 @@ class BooleanSorterIntegration extends AbstractProductQueryBuilderTestCase
     public function testSorterAscending()
     {
         $result = $this->executeSorter([['a_yes_no', Directions::ASCENDING]]);
-        $this->assertOrder($result, ['no', 'yes', 'empty_product']);
+        $this->assertOrder($result, ['no', 'yes', 'empty_product', 'null_product']);
     }
 
     public function testSorterDescending()
     {
         $result = $this->executeSorter([['a_yes_no', Directions::DESCENDING]]);
-        $this->assertOrder($result, ['yes', 'no', 'empty_product']);
+        $this->assertOrder($result, ['yes', 'no', 'empty_product', 'null_product']);
     }
 
     /**
