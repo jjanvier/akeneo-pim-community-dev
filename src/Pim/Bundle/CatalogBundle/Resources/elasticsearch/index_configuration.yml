@@ -4,8 +4,9 @@ mappings:
             # "completeness" property is handled by the "completeness" dynamic template
             categories:
                 type: 'keyword'
-            family:
-                type: 'keyword'
+            family.code:
+                    type: 'keyword'
+            # family labels are handled by the "family" dynamic template
             enabled:
                 type: 'boolean'
             groups:
@@ -22,6 +23,12 @@ mappings:
                 type: 'keyword'
                 normalizer: 'varchar_normalizer'
         dynamic_templates:
+            -
+                family:
+                    path_match: 'family.labels.*'
+                    match_mapping_type: 'string'
+                    mapping:
+                        type: 'keyword'
             -
                 text_area:
                     path_match: 'values.*-text.*'
