@@ -38,45 +38,53 @@ class FamilySorter extends BaseFieldSorter
             throw new \LogicException('The search query builder is not initialized in the sorter.');
         }
 
+        $familyLabelPath = null;
+
         if (null !== $locale && !in_array($locale, $this->localeRepository->getActivatedLocaleCodes())) {
-            throw new \InvalidArgumentException(sprintf('Expects a valid locale code. "%s" given.', $locale));
+            throw new \InvalidArgumentException(
+                sprintf('Expects a valid locale code to filter on family labels. "%s" given.', $locale)
+            );
+        } elseif (null !== $locale) {
+            $familyLabelPath = 'family.labels.' . $locale;
         }
 
         switch ($direction) {
             case Directions::ASCENDING:
-                $familyLabelPath = 'family.labels.' . $locale;
-                $sortFamilyLabelClause = [
-                    $familyLabelPath => [
-                        'order'   => 'ASC',
-                        'missing' => '_last'
-                    ]
-                ];
-                $this->searchQueryBuilder->addSort($sortFamilyLabelClause);
+                if (null !== $familyLabelPath) {
+                    $sortFamilyLabelClause = [
+                        $familyLabelPath => [
+                            'order'   => 'ASC',
+                            'missing' => '_last',
+                        ],
+                    ];
+                    $this->searchQueryBuilder->addSort($sortFamilyLabelClause);
+                }
 
                 $sortFamilyCodeClause = [
                     'family.code' => [
                         'order'   => 'ASC',
-                        'missing' => '_last'
-                    ]
+                        'missing' => '_last',
+                    ],
                 ];
                 $this->searchQueryBuilder->addSort($sortFamilyCodeClause);
 
                 break;
             case Directions::DESCENDING:
-                $familyLabelPath = 'family.labels.' . $locale;
-                $sortFamilyLabelClause = [
-                    $familyLabelPath => [
-                        'order'   => 'DESC',
-                        'missing' => '_last'
-                    ]
-                ];
-                $this->searchQueryBuilder->addSort($sortFamilyLabelClause);
+                if (null !== $familyLabelPath) {
+                    $sortFamilyLabelClause = [
+                        $familyLabelPath => [
+                            'order'   => 'DESC',
+                            'missing' => '_last',
+                        ],
+                    ];
+                    $this->searchQueryBuilder->addSort($sortFamilyLabelClause);
+                }
 
                 $sortFamilyCodeClause = [
-                    $field => [
+                    'family.code' => [
                         'order'   => 'DESC',
-                        'missing' => '_last'
-                    ]
+                        'missing' => '_last',
+                    ],
                 ];
 
                 $this->searchQueryBuilder->addSort($sortFamilyCodeClause);
