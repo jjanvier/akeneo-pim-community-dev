@@ -23,7 +23,8 @@ interface ProductInterface extends
     CommentSubjectInterface,
     ReferableInterface,
     CategoryAwareInterface,
-    FlexibleValuesInterface
+    FlexibleValuesInterface,
+    CanHaveProductModelInterface
 {
     /**
      * Get the ID of the product
@@ -260,4 +261,9 @@ interface ProductInterface extends
      * @return ProductInterface
      */
     public function setFamilyId($familyId);
+
+    /**
+     * @return bool
+     */
+    public function isVariant();
 }

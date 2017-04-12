@@ -7,6 +7,7 @@ use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Pim\Component\Catalog\Factory\ProductValueCollectionFactory;
 use Pim\Component\Catalog\Factory\ProductValueFactory;
+use Pim\Component\Catalog\Model\FlexibleValuesInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -76,7 +77,7 @@ class LoadProductValuesSubscriber implements EventSubscriber
     public function postLoad(LifecycleEventArgs $event)
     {
         $product = $event->getObject();
-        if (!$product instanceof ProductInterface) {
+        if (!$product instanceof FlexibleValuesInterface) {
             return;
         }
 

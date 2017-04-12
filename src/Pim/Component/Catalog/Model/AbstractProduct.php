@@ -79,6 +79,9 @@ abstract class AbstractProduct implements ProductInterface
     /** @var string */
     protected $identifier;
 
+    /** @var ProductModelInterface */
+    protected $model;
+
     /**
      * Constructor
      */
@@ -663,5 +666,27 @@ abstract class AbstractProduct implements ProductInterface
     public function getReference()
     {
         return $this->getIdentifier();
+    }
+
+    public function setModel(ProductModelInterface $model)
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    public function hasModel()
+    {
+       return null !== $this->model;
+    }
+
+    public function isVariant()
+    {
+        return $this->hasModel();
     }
 }

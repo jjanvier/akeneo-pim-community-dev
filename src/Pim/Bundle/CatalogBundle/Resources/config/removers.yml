@@ -28,6 +28,13 @@ services:
             - '@event_dispatcher'
             - '%pim_catalog.entity.product.class%'
 
+    pim_catalog.remover.product_model:
+        class: '%pim_catalog.remover.base.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+            - '%pim_catalog.entity.product_model.class%'
+
     pim_catalog.remover.association_type:
         class: '%pim_catalog.remover.base.class%'
         arguments:
