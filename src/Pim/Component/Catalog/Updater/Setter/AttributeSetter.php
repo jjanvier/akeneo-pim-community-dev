@@ -2,9 +2,9 @@
 
 namespace Pim\Component\Catalog\Updater\Setter;
 
-use Pim\Component\Catalog\Builder\ProductBuilderInterface;
+use Pim\Component\Catalog\Builder\FlexibleValuesBuilderInterface;
 use Pim\Component\Catalog\Model\AttributeInterface;
-use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Model\FlexibleValuesInterface;
 
 /**
  * Sets a data in a product.
@@ -17,12 +17,12 @@ use Pim\Component\Catalog\Model\ProductInterface;
 class AttributeSetter extends AbstractAttributeSetter
 {
     /**
-     * @param ProductBuilderInterface $productBuilder
-     * @param string[]                $supportedTypes
+     * @param FlexibleValuesBuilderInterface $flexibleValuesBuilder
+     * @param string[]                       $supportedTypes
      */
-    public function __construct(ProductBuilderInterface $productBuilder, array $supportedTypes)
+    public function __construct(FlexibleValuesBuilderInterface $flexibleValuesBuilder, array $supportedTypes)
     {
-        parent::__construct($productBuilder);
+        parent::__construct($flexibleValuesBuilder);
 
         $this->supportedTypes = $supportedTypes;
     }
@@ -31,15 +31,15 @@ class AttributeSetter extends AbstractAttributeSetter
      * {@inheritdoc}
      */
     public function setAttributeData(
-        ProductInterface $product,
+        FlexibleValuesInterface $flexibleValues,
         AttributeInterface $attribute,
         $data,
         array $options = []
     ) {
         $options = $this->resolver->resolve($options);
 
-        $this->productBuilder->addOrReplaceProductValue(
-            $product,
+        $this->flexibleValuesBuilder->addOrReplaceValue(
+            $flexibleValues,
             $attribute,
             $options['locale'],
             $options['scope'],

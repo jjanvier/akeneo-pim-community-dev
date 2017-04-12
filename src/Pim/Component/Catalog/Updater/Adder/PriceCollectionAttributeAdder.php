@@ -87,7 +87,7 @@ class PriceCollectionAttributeAdder extends AbstractAttributeAdder
             $data = $this->addNewPrices($value->getData(), $data);
         }
 
-        $this->productBuilder->addOrReplaceProductValue($product, $attribute, $locale, $scope, $data);
+        $this->productBuilder->addOrReplaceValue($product, $attribute, $locale, $scope, $data);
     }
 
     /**

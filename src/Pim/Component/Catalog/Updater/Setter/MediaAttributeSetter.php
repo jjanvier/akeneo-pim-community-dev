@@ -6,10 +6,10 @@ use Akeneo\Component\FileStorage\File\FileStorerInterface;
 use Akeneo\Component\FileStorage\Model\FileInfoInterface;
 use Akeneo\Component\FileStorage\Repository\FileInfoRepositoryInterface;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
-use Pim\Component\Catalog\Builder\ProductBuilderInterface;
+use Pim\Component\Catalog\Builder\FlexibleValuesBuilderInterface;
 use Pim\Component\Catalog\FileStorage;
 use Pim\Component\Catalog\Model\AttributeInterface;
-use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Model\FlexibleValuesInterface;
 
 /**
  * Sets a media data in a product.
@@ -27,18 +27,18 @@ class MediaAttributeSetter extends AbstractAttributeSetter
     protected $repository;
 
     /**
-     * @param ProductBuilderInterface     $productBuilder
+     * @param FlexibleValuesBuilderInterface     $flexibleValuesBuilder
      * @param FileStorerInterface         $storer
      * @param FileInfoRepositoryInterface $repository
      * @param string[]                    $supportedTypes
      */
     public function __construct(
-        ProductBuilderInterface $productBuilder,
+        FlexibleValuesBuilderInterface $flexibleValuesBuilder,
         FileStorerInterface $storer,
         FileInfoRepositoryInterface $repository,
         array $supportedTypes
     ) {
-        parent::__construct($productBuilder);
+        parent::__construct($flexibleValuesBuilder);
 
         $this->storer = $storer;
         $this->repository = $repository;
@@ -51,7 +51,7 @@ class MediaAttributeSetter extends AbstractAttributeSetter
      * Expected data input format :  "/absolute/file/path/filename.extension"
      */
     public function setAttributeData(
-        ProductInterface $product,
+        FlexibleValuesInterface $flexibleValues,
         AttributeInterface $attribute,
         $data,
         array $options = []
@@ -64,8 +64,8 @@ class MediaAttributeSetter extends AbstractAttributeSetter
             $file = $this->storeFile($attribute, $data);
         }
 
-        $this->productBuilder->addOrReplaceProductValue(
-            $product,
+        $this->flexibleValuesBuilder->addOrReplaceValue(
+            $flexibleValues,
             $attribute,
             $options['locale'],
             $options['scope'],

@@ -1,6 +1,8 @@
 parameters:
     pim_catalog.updater.product.class:                        Pim\Component\Catalog\Updater\ProductUpdater
+    pim_catalog.updater.flexible_values.class:                         Pim\Component\Catalog\Updater\FlexibleValuesUpdater
     pim_catalog.updater.product_property_setter.class:        Pim\Component\Catalog\Updater\ProductPropertySetter
+    pim_catalog.updater.flexible_value_property_setter.class: Pim\Component\Catalog\Updater\FlexibleValuePropertySetter
     pim_catalog.updater.product_property_adder.class:         Pim\Component\Catalog\Updater\ProductPropertyAdder
     pim_catalog.updater.product_property_copier.class:        Pim\Component\Catalog\Updater\ProductPropertyCopier
     pim_catalog.updater.product_property_remover.class:       Pim\Component\Catalog\Updater\ProductPropertyRemover
@@ -55,11 +57,23 @@ services:
         arguments:
             - '@pim_catalog.updater.product_property_setter'
             - '@pim_catalog.updater.product_template'
+            - '@pim_catalog.updater.flexible_values'
             - ['enabled', 'family', 'categories', 'variant_group', 'groups', 'associations']
             - ['identifier', 'created', 'updated']
 
+    pim_catalog.updater.flexible_values:
+        class: '%pim_catalog.updater.flexible_values.class%'
+        arguments:
+            - '@pim_catalog.updater.flexible_value_property_setter'
+
     pim_catalog.updater.product_property_setter:
         class: '%pim_catalog.updater.product_property_setter.class%'
+        arguments:
+            - '@pim_catalog.repository.cached_attribute'
+            - '@pim_catalog.updater.setter.registry'
+
+    pim_catalog.updater.flexible_value_property_setter:
+        class: '%pim_catalog.updater.flexible_value_property_setter.class%'
         arguments:
             - '@pim_catalog.repository.cached_attribute'
             - '@pim_catalog.updater.setter.registry'
@@ -178,7 +192,7 @@ services:
         class: '%pim_catalog.updater.setter.abstract.class%'
         public: false
         arguments:
-            - '@pim_catalog.builder.product'
+            - '@pim_catalog.builder.flexible_values'
 
     pim_catalog.updater.setter.text_value:
         class: '%pim_catalog.updater.setter.value.class%'
