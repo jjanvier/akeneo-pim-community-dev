@@ -309,13 +309,6 @@ services:
         tags:
             - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
 
-    pim_catalog.query.elasticsearch.sorter.text_area:
-        class: '%pim_catalog.query.elasticsearch.sorter.attribute.text_area.class%'
-        arguments:
-            - ['pim_catalog_textarea']
-        tags:
-            - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
-
     pim_catalog.query.elasticsearch.sorter.is_associated:
         class: '%pim_catalog.query.elasticsearch.sorter.base_field.class%'
         arguments:
@@ -349,6 +342,13 @@ services:
         class: '%pim_catalog.query.elasticsearch.sorter.attribute.base.class%'
         arguments:
             - ['pim_catalog_text']
+        tags:
+            - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
+
+    pim_catalog.query.elasticsearch.sorter.text_area:
+        class: '%pim_catalog.query.elasticsearch.sorter.attribute.text_area.class%'
+        arguments:
+            - ['pim_catalog_textarea']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
 
