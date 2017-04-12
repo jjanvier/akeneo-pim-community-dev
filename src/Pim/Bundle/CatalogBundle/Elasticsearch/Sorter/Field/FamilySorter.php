@@ -1,0 +1,89 @@
+<?php
+
+namespace Pim\Bundle\CatalogBundle\Elasticsearch\Sorter\Field;
+
+use Pim\Component\Catalog\Exception\InvalidDirectionException;
+use Pim\Component\Catalog\Query\Sorter\Directions;
+use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
+
+/**
+ * Family sorter for an Elasticsearch query.
+ *
+ * Sorting products on their family is done as following:
+ * - Sort with the label corresponding to the given locale first.
+ * - Then sort on the family code.
+ *
+ * @author    Samir Boulil <samir.boulil@akeneo.com>
+ * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+class FamilySorter extends BaseFieldSorter
+{
+    /** @var LocaleRepositoryInterface */
+    protected $localeRepository;
+
+    /**
+     * @param LocaleRepositoryInterface $localeRepository
+     * @param array                     $supportedFields
+     */
+    public function __construct(LocaleRepositoryInterface $localeRepository, array $supportedFields = [])
+    {
+        parent::__construct($supportedFields);
+        $this->localeRepository = $localeRepository;
+    }
+
+    public function addFieldSorter($field, $direction, $locale = null, $channel = null)
+    {
+        if (null === $this->searchQueryBuilder) {
+            throw new \LogicException('The search query builder is not initialized in the sorter.');
+        }
+
+        if (null !== $locale && !in_array($locale, $this->localeRepository->getActivatedLocaleCodes())) {
+            throw new \InvalidArgumentException(sprintf('Expects a valid locale code. "%s" given.', $locale));
+        }
+
+        switch ($direction) {
+            case Directions::ASCENDING:
+                $familyLabelPath = 'family.labels.' . $locale;
+                $sortFamilyLabelClause = [
+                    $familyLabelPath => [
+                        'order'   => 'ASC',
+                        'missing' => '_last'
+                    ]
+                ];
+                $this->searchQueryBuilder->addSort($sortFamilyLabelClause);
+
+                $sortFamilyCodeClause = [
+                    'family.code' => [
+                        'order'   => 'ASC',
+                        'missing' => '_last'
+                    ]
+                ];
+                $this->searchQueryBuilder->addSort($sortFamilyCodeClause);
+
+                break;
+            case Directions::DESCENDING:
+                $familyLabelPath = 'family.labels.' . $locale;
+                $sortFamilyLabelClause = [
+                    $familyLabelPath => [
+                        'order'   => 'DESC',
+                        'missing' => '_last'
+                    ]
+                ];
+                $this->searchQueryBuilder->addSort($sortFamilyLabelClause);
+
+                $sortFamilyCodeClause = [
+                    $field => [
+                        'order'   => 'DESC',
+                        'missing' => '_last'
+                    ]
+                ];
+
+                $this->searchQueryBuilder->addSort($sortFamilyCodeClause);
+
+                break;
+            default:
+                throw InvalidDirectionException::notSupported($direction, static::class);
+        }
+    }
+}

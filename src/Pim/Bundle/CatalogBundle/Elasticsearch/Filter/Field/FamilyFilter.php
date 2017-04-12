@@ -16,8 +16,6 @@ use Pim\Component\Catalog\Query\Filter\Operators;
  */
 class FamilyFilter extends AbstractFieldFilter implements FieldFilterInterface
 {
-    const FAMILY_KEY = 'family';
-
     /**
      * @param array $supportedFields
      * @param array $supportedOperators
@@ -53,7 +51,7 @@ class FamilyFilter extends AbstractFieldFilter implements FieldFilterInterface
             case Operators::IN_LIST:
                 $clause = [
                     'terms' => [
-                        self::FAMILY_KEY => $value
+                        'family.code' => $value
                     ]
                 ];
 
@@ -62,7 +60,7 @@ class FamilyFilter extends AbstractFieldFilter implements FieldFilterInterface
             case Operators::NOT_IN_LIST:
                 $clause = [
                     'terms' => [
-                        self::FAMILY_KEY => $value
+                        'family.code' => $value
                     ]
                 ];
 
@@ -70,14 +68,14 @@ class FamilyFilter extends AbstractFieldFilter implements FieldFilterInterface
                 break;
             case Operators::IS_EMPTY:
                 $clause = [
-                    'exists' => ['field' => self::FAMILY_KEY]
+                    'exists' => ['field' => 'family.code']
                 ];
 
                 $this->searchQueryBuilder->addMustNot($clause);
                 break;
             case Operators::IS_NOT_EMPTY:
                 $clause = [
-                    'exists' => ['field' => self::FAMILY_KEY]
+                    'exists' => ['field' => 'family.code']
                 ];
 
                 $this->searchQueryBuilder->addFilter($clause);
