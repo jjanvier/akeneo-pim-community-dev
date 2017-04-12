@@ -320,7 +320,7 @@ class FixturesContext extends BaseFixturesContext
         $product = $this->getProduct($sku);
 
         foreach ($this->listToArray($attributeCodes) as $code) {
-            $this->getProductBuilder()->addAttributeToProduct($product, $this->getAttribute($code));
+            $this->getProductBuilder()->addAttribute($product, $this->getAttribute($code));
         }
         $this->validate($product);
         $this->getProductSaver()->save($product);

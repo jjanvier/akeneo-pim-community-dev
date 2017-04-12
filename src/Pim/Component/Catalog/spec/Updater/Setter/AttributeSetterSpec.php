@@ -43,7 +43,7 @@ class AttributeSetterSpec extends ObjectBehavior
         $scope = 'mobile';
         $data = 'data';
 
-        $builder->addOrReplaceProductValue($product, $attribute, $locale, $scope, $data);
+        $builder->addOrReplaceValue($product, $attribute, $locale, $scope, $data);
 
         $this->setAttributeData($product, $attribute, $data, ['locale' => $locale, 'scope' => $scope]);
     }
