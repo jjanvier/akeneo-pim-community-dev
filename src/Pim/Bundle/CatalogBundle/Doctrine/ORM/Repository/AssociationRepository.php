@@ -91,4 +91,19 @@ class AssociationRepository extends EntityRepository implements
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAssociationsContainingProduct(ProductInterface $product)
+    {
+        $qb = $this->createQueryBuilder('pa');
+
+        $qb
+            ->join('pa.products', 'pap')
+            ->where('pap.id = :productId')
+            ->setParameter(':productId', $product->getId());
+
+        return $qb->getQuery()->getResult();
+    }
 }

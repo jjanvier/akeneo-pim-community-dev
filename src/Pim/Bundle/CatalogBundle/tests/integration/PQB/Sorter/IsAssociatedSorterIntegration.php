@@ -14,33 +14,153 @@ class IsAssociatedSorterIntegration extends AbstractProductQueryBuilderTestCase
 {
     public function testSortDescendant()
     {
-        $result = $this->executeSorter([['is_associated', Directions::DESCENDING]]);
+        $result = $this->executeSorter([['is_associated.PACK.foo_bar', Directions::DESCENDING]]);
         $this->assertOrder($result, [
+            'bar',
+            'foo_baz',
+            'foo',
+            'baz',
+            'foo_bar',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.SUBSTITUTION.foo_bar', Directions::DESCENDING]]);
+        $this->assertOrder($result, [
+            'foo',
+            'baz',
+            'bar',
             'foo_bar',
             'foo_baz',
-            'foo_bar_baz',
-            'foo_group_A',
-            'foo_group_B',
-            'foo_groups_AB',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.UPSELL.foo_bar', Directions::DESCENDING]]);
+        $this->assertOrder($result, [
             'foo',
             'bar',
             'baz',
+            'foo_bar',
+            'foo_baz',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.X_SELL.foo_bar', Directions::DESCENDING]]);
+        $this->assertOrder($result, [
+            'foo',
+            'bar',
+            'baz',
+            'foo_bar',
+            'foo_baz',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.PACK.foo_baz', Directions::DESCENDING]]);
+        $this->assertOrder($result, [
+            'baz',
+            'foo',
+            'bar',
+            'foo_bar',
+            'foo_baz',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.SUBSTITUTION.foo_baz', Directions::DESCENDING]]);
+        $this->assertOrder($result, [
+            'foo',
+            'bar',
+            'baz',
+            'foo_bar',
+            'foo_baz',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.UPSELL.foo_baz', Directions::DESCENDING]]);
+        $this->assertOrder($result, [
+            'bar',
+
+            'foo',
+            'baz',
+            'foo_bar',
+            'foo_baz',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.X_SELL.foo_baz', Directions::DESCENDING]]);
+        $this->assertOrder($result, [
+            'bar',
+            'foo_bar',
+
+            'foo',
+            'baz',
+            'foo_baz',
         ]);
     }
 
     public function testSortAscendant()
     {
-        $result = $this->executeSorter([['is_associated', Directions::ASCENDING]]);
+        $result = $this->executeSorter([['is_associated.PACK.foo_bar', Directions::ASCENDING]]);
+        $this->assertOrder($result, [
+            'foo',
+            'baz',
+            'foo_bar',
+            'bar',
+            'foo_baz',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.SUBSTITUTION.foo_bar', Directions::ASCENDING]]);
+        $this->assertOrder($result, [
+            'bar',
+            'foo_bar',
+            'foo_baz',
+            'foo',
+            'baz',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.UPSELL.foo_bar', Directions::ASCENDING]]);
         $this->assertOrder($result, [
             'foo',
             'bar',
             'baz',
             'foo_bar',
             'foo_baz',
-            'foo_bar_baz',
-            'foo_group_A',
-            'foo_group_B',
-            'foo_groups_AB',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.X_SELL.foo_bar', Directions::ASCENDING]]);
+        $this->assertOrder($result, [
+            'foo',
+            'bar',
+            'baz',
+            'foo_bar',
+            'foo_baz',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.PACK.foo_baz', Directions::ASCENDING]]);
+        $this->assertOrder($result, [
+            'foo',
+            'bar',
+            'foo_bar',
+            'foo_baz',
+            'baz',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.SUBSTITUTION.foo_baz', Directions::ASCENDING]]);
+        $this->assertOrder($result, [
+            'foo',
+            'bar',
+            'baz',
+            'foo_bar',
+            'foo_baz',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.UPSELL.foo_baz', Directions::ASCENDING]]);
+        $this->assertOrder($result, [
+            'foo',
+            'baz',
+            'foo_bar',
+            'foo_baz',
+            'bar',
+        ]);
+
+        $result = $this->executeSorter([['is_associated.X_SELL.foo_baz', Directions::ASCENDING]]);
+        $this->assertOrder($result, [
+            'foo',
+            'baz',
+            'foo_baz',
+            'bar',
+            'foo_bar',
         ]);
     }
 
@@ -50,7 +170,7 @@ class IsAssociatedSorterIntegration extends AbstractProductQueryBuilderTestCase
      */
     public function testErrorOperatorNotSupported()
     {
-        $this->executeSorter([['is_associated', 'A_BAD_DIRECTION']]);
+        $this->executeSorter([['is_associated.PACK.foo', 'A_BAD_DIRECTION']]);
     }
 
     /**
@@ -62,21 +182,21 @@ class IsAssociatedSorterIntegration extends AbstractProductQueryBuilderTestCase
 
         if (1 === self::$count || $this->getConfiguration()->isDatabasePurgedForEachTest()) {
             $this->createProduct('foo', []);
-            $this->createProduct('bar', ['groups' => ['groupA']]);
-            $this->createProduct('baz', ['groups' => ['groupB']]);
+            $this->createProduct('bar', []);
+            $this->createProduct('baz', []);
 
             $fooBar = $this->createProduct('foo_bar', []);
             $fooBaz = $this->createProduct('foo_baz', []);
-            $fooBarBaz = $this->createProduct('foo_bar_baz', []);
-            $fooGroupA = $this->createProduct('foo_group_A', []);
-            $fooGroupB = $this->createProduct('foo_group_B', []);
-            $fooGroupsAB = $this->createProduct('foo_groups_AB', []);
 
             $this->updateProduct($fooBar, [
                 'associations' => [
                     'PACK' => [
                         'groups'   => [],
-                        'products' => ['bar'],
+                        'products' => ['bar', 'foo_baz'],
+                    ],
+                    'SUBSTITUTION' => [
+                        'groups'   => [],
+                        'products' => ['foo', 'baz'],
                     ],
                 ],
             ]);
@@ -87,41 +207,13 @@ class IsAssociatedSorterIntegration extends AbstractProductQueryBuilderTestCase
                         'groups'   => [],
                         'products' => ['baz'],
                     ],
-                ],
-            ]);
-
-            $this->updateProduct($fooBarBaz, [
-                'associations' => [
-                    'SUBSTITUTION' => [
+                    'UPSELL' => [
                         'groups'   => [],
-                        'products' => ['bar', 'baz'],
+                        'products' => ['bar'],
                     ],
-                ],
-            ]);
-
-            $this->updateProduct($fooGroupA, [
-                'associations' => [
-                    'UPSELL' => [
-                        'groups'   => ['groupA'],
-                        'products' => [],
-                    ],
-                ],
-            ]);
-
-            $this->updateProduct($fooGroupB, [
-                'associations' => [
-                    'UPSELL' => [
-                        'groups'   => ['groupB'],
-                        'products' => [],
-                    ],
-                ],
-            ]);
-
-            $this->updateProduct($fooGroupsAB, [
-                'associations' => [
                     'X_SELL' => [
-                        'groups'   => ['groupA', 'groupB'],
-                        'products' => [],
+                        'groups'   => [],
+                        'products' => ['bar', 'foo_bar'],
                     ],
                 ],
             ]);

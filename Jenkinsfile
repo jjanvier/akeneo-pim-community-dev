@@ -111,7 +111,7 @@ if (launchIntegrationTests.equals("yes")) {
         tasks["phpunit-7.0-api-controller-product"] = {runIntegrationTest("7.0", "PIM_Api_Bundle_Controller_Product_Integration_Test")}
         tasks["phpunit-7.0-catalog"] = {runIntegrationTest("7.0", "PIM_Catalog_Integration_Test")}
         tasks["phpunit-7.0-completeness"] = {runIntegrationTest("7.0", "PIM_Catalog_Completeness_Integration_Test")}
-        tasks["phpunit-7.0-pqb"] = {runIntegrationTest("7.0", "PIM_Catalog_PQB_Integration_Test")}
+        tasks["phpunit-7.0-pqb"] = {runIntegrationTest("7.0", "PIM_PQB_Integration_Test")}
 
         tasks["phpunit-7.1-akeneo"] = {runIntegrationTest("7.1", "Akeneo_Integration_Test")}
         tasks["phpunit-7.1-api-base"] = {runIntegrationTest("7.1", "PIM_Api_Base_Integration_Test")}
@@ -120,7 +120,7 @@ if (launchIntegrationTests.equals("yes")) {
         tasks["phpunit-7.1-api-controller-product"] = {runIntegrationTest("7.1", "PIM_Api_Bundle_Controller_Product_Integration_Test")}
         tasks["phpunit-7.1-catalog"] = {runIntegrationTest("7.1", "PIM_Catalog_Integration_Test")}
         tasks["phpunit-7.1-completeness"] = {runIntegrationTest("7.1", "PIM_Catalog_Completeness_Integration_Test")}
-        tasks["phpunit-7.1-pqb"] = {runIntegrationTest("7.1", "PIM_Catalog_PQB_Integration_Test")}
+        tasks["phpunit-7.1-pqb"] = {runIntegrationTest("7.1", "PIM_PQB_Integration_Test")}
 
         parallel tasks
     }

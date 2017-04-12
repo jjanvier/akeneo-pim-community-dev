@@ -25,6 +25,7 @@
         <!-- Legacy PIM phpunit unit tests -->
         <testsuite name="PIM_Unit_Test">
             <directory suffix="Test.php">../src/Pim/Bundle/*Bundle/Tests/Unit</directory>
+            <directory suffix="Test.php">../src/Pim/Bundle/*Bundle/tests/unit</directory>
         </testsuite>
 
         <!-- Complete suite for PIM integration tests -->
@@ -73,11 +74,11 @@
             <directory suffix="Integration.php">../src/Pim/Bundle/CatalogBundle/tests/integration/Completeness</directory>
         </testsuite>
 
-        <testsuite name="PIM_Catalog_PQB_Integration_Test">
-            <directory suffix="Integration.php">../src/Pim/Bundle/CatalogBundle/tests/integration/PQB</directory>
+        <testsuite name="PIM_PQB_Integration_Test">
             <directory suffix="Integration.php">../src/Pim/Bundle/CatalogBundle/tests/integration/Elasticsearch</directory>
+            <directory suffix="Integration.php">../src/Pim/Bundle/CatalogBundle/tests/integration/PQB</directory>
+            <directory suffix="Integration.php">../src/Pim/Bundle/EnrichBundle/tests/integration/PQB</directory>
             <directory suffix="Integration.php">../src/Pim/Bundle/ReferenceDataBundle/tests/integration/PQB</directory>
-            <directory suffix="Integration.php">../src/Pim/Bundle/EnrichBundle/Tests/integration/PQB</directory>
         </testsuite>
 
     </testsuites>

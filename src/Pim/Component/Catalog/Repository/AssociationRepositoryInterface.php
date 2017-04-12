@@ -2,6 +2,7 @@
 
 namespace Pim\Component\Catalog\Repository;
 
+use Pim\Component\Catalog\Model\AssociationInterface;
 use Pim\Component\Catalog\Model\AssociationTypeInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
 
@@ -32,4 +33,13 @@ interface AssociationRepositoryInterface
      * @return \Pim\Component\Catalog\Model\Association[]
      */
     public function findByProductAndOwnerIds(ProductInterface $product, array $ownerIds);
+
+    /**
+     * Gets all associations that contains the specified product.
+     *
+     * @param ProductInterface $product
+     *
+     * @return AssociationInterface[]
+     */
+    public function getAssociationsContainingProduct(ProductInterface $product);
 }

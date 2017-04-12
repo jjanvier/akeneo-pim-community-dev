@@ -5,17 +5,22 @@ namespace spec\Pim\Component\Catalog\Normalizer\Indexing\Product;
 use Doctrine\Common\Collections\Collection;
 use PhpSpec\ObjectBehavior;
 use Pim\Bundle\CatalogBundle\Entity\Group;
+use Pim\Component\Catalog\Model\AssociationInterface;
+use Pim\Component\Catalog\Model\AssociationTypeInterface;
 use Pim\Component\Catalog\Model\FamilyInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Pim\Component\Catalog\Model\ProductValueCollectionInterface;
 use Pim\Component\Catalog\Normalizer\Indexing\Product\PropertiesNormalizer;
+use Pim\Component\Catalog\Repository\AssociationRepositoryInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class PropertiesNormalizerSpec extends ObjectBehavior
 {
-    function let(SerializerInterface $serializer)
+    function let(AssociationRepositoryInterface $associationRepository, SerializerInterface $serializer)
     {
+        $this->beConstructedWith($associationRepository);
+
         $serializer->implement(NormalizerInterface::class);
         $this->setSerializer($serializer);
     }
@@ -35,10 +40,10 @@ class PropertiesNormalizerSpec extends ObjectBehavior
 
     function it_normalizes_product_properties_with_empty_fields_and_values(
         $serializer,
+        $associationRepository,
         ProductInterface $product,
         ProductValueCollectionInterface $productValueCollection,
-        Collection $completenesses,
-        Collection $associations
+        Collection $completenesses
     ) {
         $product->getId()->willReturn(67);
         $family = null;
@@ -62,11 +67,9 @@ class PropertiesNormalizerSpec extends ObjectBehavior
         $product->getFamily()->willReturn(null);
         $product->getGroupCodes()->willReturn([]);
         $product->getVariantGroup()->willReturn(null);
+        $associationRepository->getAssociationsContainingProduct($product)->willReturn([]);
         $product->getCategoryCodes()->willReturn([]);
         $productValueCollection->isEmpty()->willReturn(true);
-
-        $product->getAssociations()->willReturn($associations);
-        $associations->isEmpty()->willReturn(true);
 
         $product->getCompletenesses()->willReturn($completenesses);
         $completenesses->isEmpty()->willReturn(true);
@@ -82,7 +85,7 @@ class PropertiesNormalizerSpec extends ObjectBehavior
                 'categories'    => [],
                 'groups'        => [],
                 'variant_group' => null,
-                'is_associated' => false,
+                'is_associated' => [],
                 'completeness'  => [],
                 'values'        => [],
             ]
@@ -91,10 +94,10 @@ class PropertiesNormalizerSpec extends ObjectBehavior
 
     function it_normalizes_product_with_completenesses(
         $serializer,
+        $associationRepository,
         ProductInterface $product,
         ProductValueCollectionInterface $productValueCollection,
-        Collection $completenesses,
-        Collection $associations
+        Collection $completenesses
     ) {
         $product->getId()->willReturn(67);
         $family = null;
@@ -122,11 +125,9 @@ class PropertiesNormalizerSpec extends ObjectBehavior
         $product->getFamily()->willReturn(null);
         $product->getGroupCodes()->willReturn([]);
         $product->getVariantGroup()->willReturn(null);
+        $associationRepository->getAssociationsContainingProduct($product)->willReturn([]);
         $product->getCategoryCodes()->willReturn([]);
         $productValueCollection->isEmpty()->willReturn(true);
-
-        $product->getAssociations()->willReturn($associations);
-        $associations->isEmpty()->willReturn(true);
 
         $product->getCompletenesses()->willReturn($completenesses);
         $completenesses->isEmpty()->willReturn(false);
@@ -144,7 +145,7 @@ class PropertiesNormalizerSpec extends ObjectBehavior
                 'categories'    => [],
                 'groups'        => [],
                 'variant_group' => null,
-                'is_associated' => false,
+                'is_associated' => [],
                 'completeness'  => ['the completenesses'],
                 'values'        => [],
             ]
@@ -153,12 +154,20 @@ class PropertiesNormalizerSpec extends ObjectBehavior
 
     function it_normalizes_product_fields_and_values(
         $serializer,
+        $associationRepository,
         ProductInterface $product,
         ProductValueCollectionInterface $productValueCollection,
         FamilyInterface $family,
         Collection $completenessCollection,
         Group $variantGroup,
-        Collection $associations
+        AssociationTypeInterface $associationType1,
+        AssociationTypeInterface $associationType2,
+        AssociationInterface $association1,
+        AssociationInterface $association2,
+        AssociationInterface $association3,
+        ProductInterface $owner1,
+        ProductInterface $owner2,
+        ProductInterface $owner3
     ) {
         $now = new \DateTime('now', new \DateTimeZone('UTC'));
 
@@ -199,9 +208,6 @@ class PropertiesNormalizerSpec extends ObjectBehavior
             ]
         );
 
-        $product->getAssociations()->willReturn($associations);
-        $associations->isEmpty()->willReturn(false);
-
         $completenessCollection->isEmpty()->willReturn(false);
         $product->getCompletenesses()->willReturn($completenessCollection);
         $serializer->normalize($completenessCollection, 'indexing', [])->willReturn(
@@ -230,6 +236,25 @@ class PropertiesNormalizerSpec extends ObjectBehavior
                 ]
             );
 
+        $associationRepository
+            ->getAssociationsContainingProduct($product)
+            ->willReturn([$association1, $association2, $association3]);
+
+        $association1->getAssociationType()->willReturn($associationType1);
+        $association2->getAssociationType()->willReturn($associationType2);
+        $association3->getAssociationType()->willReturn($associationType2);
+
+        $association1->getOwner()->willReturn($owner1);
+        $association2->getOwner()->willReturn($owner2);
+        $association3->getOwner()->willReturn($owner3);
+
+        $associationType1->getCode()->willReturn('asso_1');
+        $associationType2->getCode()->willReturn('asso_2');
+
+        $owner1->getIdentifier()->willReturn('sku-owner-001');
+        $owner2->getIdentifier()->willReturn('sku-owner-002');
+        $owner3->getIdentifier()->willReturn('sku-owner-003');
+
         $this->normalize($product, 'indexing')->shouldReturn(
             [
                 'id'            => '67',
@@ -252,7 +277,15 @@ class PropertiesNormalizerSpec extends ObjectBehavior
                     'second_group'    => true,
                     'a_variant_group' => true,
                 ],
-                'is_associated' => true,
+                'is_associated' => [
+                    'asso_1' => [
+                        'sku-owner-001' => true,
+                    ],
+                    'asso_2' => [
+                        'sku-owner-002' => true,
+                        'sku-owner-003' => true,
+                    ],
+                ],
                 'completeness'  => [
                     'ecommerce' => [
                         'en_US' => [

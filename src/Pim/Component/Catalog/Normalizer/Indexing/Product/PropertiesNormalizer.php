@@ -4,6 +4,7 @@ namespace Pim\Component\Catalog\Normalizer\Indexing\Product;
 
 use Pim\Component\Catalog\Model\ProductInterface;
 use Pim\Component\Catalog\Normalizer\Standard\Product\PropertiesNormalizer as StandardPropertiesNormalizer;
+use Pim\Component\Catalog\Repository\AssociationRepositoryInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer;
 
@@ -21,6 +22,17 @@ class PropertiesNormalizer extends SerializerAwareNormalizer implements Normaliz
     const FIELD_IS_ASSOCIATED = 'is_associated';
     const FIELD_IN_GROUP = 'in_group';
     const FIELD_ID = 'id';
+
+    /** @var AssociationRepositoryInterface */
+    protected $associationRepository;
+
+    /**
+     * @param AssociationRepositoryInterface $associationRepository
+     */
+    public function __construct(AssociationRepositoryInterface $associationRepository)
+    {
+        $this->associationRepository = $associationRepository;
+    }
 
     /**
      * {@inheritdoc}
@@ -59,7 +71,7 @@ class PropertiesNormalizer extends SerializerAwareNormalizer implements Normaliz
             $data[self::FIELD_IN_GROUP][$groupCode] = true;
         }
 
-        $data[self::FIELD_IS_ASSOCIATED] = !$product->getAssociations()->isEmpty();
+        $data[self::FIELD_IS_ASSOCIATED] = $this->getOwnerProducts($product);
 
         $data[self::FIELD_COMPLETENESS] = !$product->getCompletenesses()->isEmpty()
             ? $this->serializer->normalize($product->getCompletenesses(), 'indexing', $context) : [];
@@ -76,5 +88,67 @@ class PropertiesNormalizer extends SerializerAwareNormalizer implements Normaliz
     public function supportsNormalization($data, $format = null)
     {
         return $data instanceof ProductInterface && 'indexing' === $format;
+    }
+
+    /**
+     * Creates the "is_associated" field.
+     *
+     * If we consider 3 products "foo", "bar" and "bar", where "bar" and "baz"
+     * are associated to "foo" through association type "pack" and "upsell",
+     * respectively, this corresponds to the following in standard format:
+     *
+     * [
+     *     "identifier"   => "foo",
+     *     "associations" => [
+     *         "pack"   => [
+     *             "bar",
+     *         ],
+     *         "upsell" => [
+     *             "baz",
+     *         ],
+     *     ],
+     * ]
+     *
+     * When we index the "bar" product in Elasticsearch, we create the field
+     * "is_associated" as follow:
+     *
+     * [
+     *     "is_associated" => [
+     *         "pack" => [
+     *             "foo" => true,
+     *         ],
+     *     ],
+     * ]
+     *
+     * and we index the following for the "baz" product:
+     *
+     *
+     *
+     * [
+     *     "is_associated" => [
+     *         "upsell" => [
+     *             "foo" => true,
+     *         ],
+     *     ],
+     * ]
+     *
+     * @param ProductInterface $product
+     *
+     * @return array
+     */
+    protected function getOwnerProducts(ProductInterface $product)
+    {
+        $isAssociated = [];
+
+        $associations = $this->associationRepository->getAssociationsContainingProduct($product);
+
+        foreach ($associations as $association) {
+            $associationTypeCode = $association->getAssociationType()->getCode();
+            $ownerIdentifier = $association->getOwner()->getIdentifier();
+
+            $isAssociated[$associationTypeCode][$ownerIdentifier] = true;
+        }
+
+        return $isAssociated;
     }
 }
