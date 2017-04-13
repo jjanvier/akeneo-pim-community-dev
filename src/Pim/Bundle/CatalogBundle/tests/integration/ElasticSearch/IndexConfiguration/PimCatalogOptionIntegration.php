@@ -103,7 +103,7 @@ class PimCatalogOptionIntegration extends AbstractPimCatalogIntegration
                 [
                     'values.color-option.<all_channels>.<all_locales>' => [
                         'order'   => 'asc',
-                        'missing' => '_first',
+                        'missing' => '_last',
                     ],
                 ],
             ],
@@ -113,7 +113,7 @@ class PimCatalogOptionIntegration extends AbstractPimCatalogIntegration
 
         $this->assertSame(
             $productsFound,
-            ['product_7', 'product_3', 'product_1', 'product_4', 'product_5', 'product_2', 'product_6']
+            ['product_3', 'product_1', 'product_4', 'product_5', 'product_2', 'product_6', 'product_7']
         );
     }
 

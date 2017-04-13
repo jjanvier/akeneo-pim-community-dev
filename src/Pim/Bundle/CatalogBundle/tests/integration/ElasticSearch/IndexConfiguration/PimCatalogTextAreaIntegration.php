@@ -162,7 +162,7 @@ class PimCatalogTextAreaIntegration extends AbstractPimCatalogIntegration
                 [
                     'values.description-text.<all_channels>.<all_locales>.raw' => [
                         'order'   => 'asc',
-                        'missing' => '_first',
+                        'missing' => '_last',
                     ],
                 ],
             ],
@@ -172,7 +172,7 @@ class PimCatalogTextAreaIntegration extends AbstractPimCatalogIntegration
 
         $this->assertProducts(
             $productsFound,
-            ['product_6', 'product_4', 'product_5', 'product_2', 'product_1', 'product_3']
+            ['product_4', 'product_5', 'product_2', 'product_1', 'product_3', 'product_6']
         );
     }
 

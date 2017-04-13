@@ -307,7 +307,7 @@ class PimCatalogMetricIntegration extends AbstractPimCatalogIntegration
                 [
                     'values.a_metric-metric.<all_channels>.<all_locales>.base_data' => [
                         'order'   => 'asc',
-                        'missing' => '_first',
+                        'missing' => '_last',
                     ],
                 ],
             ],
@@ -317,7 +317,7 @@ class PimCatalogMetricIntegration extends AbstractPimCatalogIntegration
 
         $this->assertProducts(
             $productsFound,
-            ['product_7', 'product_2', 'product_5', 'product_6', 'product_1', 'product_4', 'product_3']
+            ['product_2', 'product_5', 'product_6', 'product_1', 'product_4', 'product_3', 'product_7']
         );
     }
 

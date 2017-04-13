@@ -309,7 +309,7 @@ class PimCatalogNumberIntegration extends AbstractPimCatalogIntegration
                 [
                     'values.box_quantity-decimal.<all_channels>.<all_locales>' => [
                         'order'   => 'asc',
-                        'missing' => '_first',
+                        'missing' => '_last',
                     ],
                 ],
             ],
@@ -319,7 +319,7 @@ class PimCatalogNumberIntegration extends AbstractPimCatalogIntegration
 
         $this->assertProducts(
             $productsFound,
-            ['product_7', 'product_2', 'product_5', 'product_6', 'product_1', 'product_4', 'product_3']
+            ['product_2', 'product_5', 'product_6', 'product_1', 'product_4', 'product_3', 'product_7']
         );
     }
 
