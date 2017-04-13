@@ -84,7 +84,10 @@ class ProductIndexingIntegration extends TestCase
             'identifier'    => 'foo',
             'created'       => $date->format('c'),
             'updated'       => $date->format('c'),
-            'family'        => 'familyA',
+            'family'        => [
+                'code'   => 'familyA',
+                'labels' => [],
+            ],
             'enabled'       => true,
             'categories'    => ['categoryA1', 'categoryB'],
             'groups'        => ['groupA', 'groupB'],
@@ -95,10 +98,7 @@ class ProductIndexingIntegration extends TestCase
                 'variantA' => true,
             ],
             'is_associated' => true,
-            'completeness'  => [
-                'ecommerce' => ['en_US' => 100],
-                'tablet'    => ['de_DE' => 89, 'en_US' => 100, 'fr_FR' => 100],
-            ],
+            'completeness'  => [],
             'values'        => [
                 'a_date-date'                                    => [
                     '<all_channels>' => [

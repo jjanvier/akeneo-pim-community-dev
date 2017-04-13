@@ -51,6 +51,7 @@ class FamilyFilterSpec extends ObjectBehavior
     function it_supports_family_field()
     {
         $this->supportsField('family')->shouldReturn(true);
+        $this->supportsField('family.code')->shouldReturn(false);
         $this->supportsField('a_not_supported_field')->shouldReturn(false);
     }
 
@@ -58,7 +59,7 @@ class FamilyFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'terms' => [
-                    'family' => ['familyA']
+                    'family.code' => ['familyA']
                 ]
             ]
         )->shouldBeCalled();
@@ -71,7 +72,7 @@ class FamilyFilterSpec extends ObjectBehavior
         $sqb->addMustNot(
             [
                 'terms' => [
-                    'family' => ['familyA']
+                    'family.code' => ['familyA']
                 ]
             ]
         )->shouldBeCalled();
@@ -83,7 +84,7 @@ class FamilyFilterSpec extends ObjectBehavior
     function it_adds_a_filter_with_operator_is_empty(SearchQueryBuilder $sqb) {
         $sqb->addMustNot(
             [
-                'exists' => ['field' => 'family']
+                'exists' => ['field' => 'family.code']
             ]
         )->shouldBeCalled();
 
@@ -94,7 +95,7 @@ class FamilyFilterSpec extends ObjectBehavior
     function it_adds_a_filter_with_operator_is_not_empty(SearchQueryBuilder $sqb) {
         $sqb->addFilter(
             [
-                'exists' => ['field' => 'family']
+                'exists' => ['field' => 'family.code']
             ]
         )->shouldBeCalled();
 
