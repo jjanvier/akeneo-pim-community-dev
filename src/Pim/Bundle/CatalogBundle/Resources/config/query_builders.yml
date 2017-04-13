@@ -326,6 +326,7 @@ services:
     pim_catalog.query.elasticsearch.sorter.metric:
         class: '%pim_catalog.query.elasticsearch.sorter.attribute.metric.class%'
         arguments:
+            - '@pim_catalog.validator.helper.attribute'
             - ['pim_catalog_metric']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
@@ -333,6 +334,7 @@ services:
     pim_catalog.query.elasticsearch.sorter.boolean:
         class: '%pim_catalog.query.elasticsearch.sorter.attribute.base.class%'
         arguments:
+            - '@pim_catalog.validator.helper.attribute'
             - ['pim_catalog_boolean']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
@@ -340,6 +342,7 @@ services:
     pim_catalog.query.elasticsearch.sorter.text:
         class: '%pim_catalog.query.elasticsearch.sorter.attribute.base.class%'
         arguments:
+            - '@pim_catalog.validator.helper.attribute'
             - ['pim_catalog_text']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
@@ -347,6 +350,7 @@ services:
     pim_catalog.query.elasticsearch.sorter.text_area:
         class: '%pim_catalog.query.elasticsearch.sorter.attribute.text_area.class%'
         arguments:
+            - '@pim_catalog.validator.helper.attribute'
             - ['pim_catalog_textarea']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
@@ -354,6 +358,7 @@ services:
     pim_catalog.query.elasticsearch.sorter.number:
         class: '%pim_catalog.query.elasticsearch.sorter.attribute.base.class%'
         arguments:
+            - '@pim_catalog.validator.helper.attribute'
             - ['pim_catalog_number']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
@@ -361,6 +366,7 @@ services:
     pim_catalog.query.elasticsearch.sorter.option:
         class: '%pim_catalog.query.elasticsearch.sorter.attribute.base.class%'
         arguments:
+            - '@pim_catalog.validator.helper.attribute'
             - ['pim_catalog_simpleselect']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
@@ -368,6 +374,7 @@ services:
     pim_catalog.query.elasticsearch.sorter.date:
         class: '%pim_catalog.query.elasticsearch.sorter.attribute.base.class%'
         arguments:
+            - '@pim_catalog.validator.helper.attribute'
             - ['pim_catalog_date']
         tags:
             - { name: 'pim_catalog.elasticsearch.query.sorter', priority: 30 }
