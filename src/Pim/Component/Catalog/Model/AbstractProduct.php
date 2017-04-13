@@ -363,13 +363,13 @@ abstract class AbstractProduct implements ProductInterface
                 if ($value = $this->getValue($attributeAsLabel->getCode())) {
                     $data = $value->getData();
                     if (!empty($data)) {
-                        return (string) $data;
+                        return (string)$data;
                     }
                 }
             }
         }
 
-        return (string) $this->getIdentifier();
+        return (string)$this->getIdentifier();
     }
 
     /**
@@ -566,7 +566,7 @@ abstract class AbstractProduct implements ProductInterface
      */
     public function __toString()
     {
-        return (string) $this->getLabel();
+        return (string)$this->getLabel();
     }
 
     /**
@@ -682,11 +682,45 @@ abstract class AbstractProduct implements ProductInterface
 
     public function hasModel()
     {
-       return null !== $this->model;
+        return null !== $this->model;
     }
 
     public function isVariant()
     {
         return $this->hasModel();
+    }
+
+    public function getAllValues()
+    {
+        $values = $this->getValues();
+
+        return $this->getParentValuesByRecursion($this, $values);
+
+    }
+
+    public function getParentValues() {
+
+        return $this->getParentValuesByRecursion($this);
+
+    }
+
+    private function getParentValuesByRecursion(
+        CanHaveProductModelInterface $canHaveProductModel,
+        ProductValueCollectionInterface $values = null
+    ) {
+        if (null === $values) {
+            $values = new ProductValueCollection();
+        }
+
+        if (false === $canHaveProductModel->hasModel()) {
+            return $values;
+        }
+
+        $parentModel = $canHaveProductModel->getModel();
+        foreach ($parentModel->getValues() as $value) {
+            $values->add($value);
+        }
+
+        return $this->getParentValuesByRecursion($parentModel, $values);
     }
 }

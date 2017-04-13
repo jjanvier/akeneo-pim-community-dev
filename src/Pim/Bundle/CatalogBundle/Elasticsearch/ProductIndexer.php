@@ -7,6 +7,7 @@ use Akeneo\Component\StorageUtils\Indexer\BulkIndexerInterface;
 use Akeneo\Component\StorageUtils\Indexer\IndexerInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Model\ProductModelInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -25,18 +26,23 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface
     protected $indexer;
 
     /** @var string */
-    protected $indexType;
+    protected $productIndexType;
+
+    /** @var */
+    private $productModelIndexType;
 
     /**
      * @param NormalizerInterface $normalizer
      * @param Client              $indexer
-     * @param string              $indexType
+     * @param string              $productIndexType
+     * @param                     $productModelIndexType
      */
-    public function __construct(NormalizerInterface $normalizer, Client $indexer, $indexType)
+    public function __construct(NormalizerInterface $normalizer, Client $indexer, $productIndexType, $productModelIndexType)
     {
         $this->normalizer = $normalizer;
         $this->indexer = $indexer;
-        $this->indexType = $indexType;
+        $this->productIndexType = $productIndexType;
+        $this->productModelIndexType = $productModelIndexType;
     }
 
     /**
@@ -45,9 +51,10 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface
     public function index($product, array $options = [])
     {
         $this->validateProduct($product);
+        $indexType = $product instanceof ProductInterface ? $this->productIndexType : $this->productModelIndexType;
 
         $normalizedProduct = $this->normalizer->normalize($product, 'indexing');
-        $this->indexer->index($this->indexType, $product->getIdentifier(), $normalizedProduct);
+        $this->indexer->index($indexType, $product->getIdentifier(), $normalizedProduct);
     }
 
     /**
@@ -56,12 +63,14 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface
     public function indexAll(array $products, array $options = [])
     {
         $normalizedProducts = [];
+        $indexType = current($products) instanceof ProductInterface ? $this->productIndexType : $this->productModelIndexType;
+
         foreach ($products as $product) {
             $this->validateProduct($product);
             $normalizedProducts[$product->getIdentifier()] = $this->normalizer->normalize($product, 'indexing');
         }
 
-        $this->indexer->bulkIndexes($this->indexType, $normalizedProducts, 'identifier');
+        $this->indexer->bulkIndexes($indexType, $normalizedProducts, 'identifier');
     }
 
     /**
@@ -69,7 +78,7 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface
      */
     protected function validateProduct($product)
     {
-        if (!$product instanceof ProductInterface) {
+        if (!$product instanceof ProductInterface && !$product instanceof ProductModelInterface) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Only products "Pim\Component\Catalog\Model\ProductInterface" can be indexed in the search engine, "%s" provided.',

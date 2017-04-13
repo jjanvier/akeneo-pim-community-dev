@@ -257,4 +257,38 @@ class ProductModel implements ProductModelInterface
     {
         return $this->childrenModels;
     }
+
+    public function getAllValues()
+    {
+        $values = $this->getValues();
+
+        return $this->getParentValuesByRecursion($this, $values);
+
+    }
+
+    public function getParentValues() {
+
+        return $this->getParentValuesByRecursion($this);
+
+    }
+
+    private function getParentValuesByRecursion(
+        CanHaveProductModelInterface $canHaveProductModel,
+        ProductValueCollectionInterface $values = null
+    ) {
+        if (null === $values) {
+            $values = new ProductValueCollection();
+        }
+
+        if (false === $canHaveProductModel->hasModel()) {
+            return $values;
+        }
+
+        $parentModel = $canHaveProductModel->getModel();
+        foreach ($parentModel->getValues() as $value) {
+            $values->add($value);
+        }
+
+        return $this->getParentValuesByRecursion($parentModel, $values);
+    }
 }

@@ -8,3 +8,4 @@ services:
             - '@pim_serializer'
             - '@akeneo_elasticsearch.client'
             - 'pim_catalog_product'
+            - 'pim_catalog_product_model'
