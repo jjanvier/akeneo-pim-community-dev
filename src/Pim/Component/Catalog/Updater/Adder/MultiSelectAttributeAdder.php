@@ -72,6 +72,6 @@ class MultiSelectAttributeAdder extends AbstractAttributeAdder
             $optionCodes = $optionsValue->getOptionCodes();
         }
 
-        $this->productBuilder->addOrReplaceProductValue($product, $attribute, $locale, $scope, array_unique($optionCodes));
+        $this->productBuilder->addOrReplaceValue($product, $attribute, $locale, $scope, array_unique($optionCodes));
     }
 }

@@ -56,7 +56,7 @@ class MetricConverter
                     ->setFamily($measureFamily)
                     ->convert($data->getUnit(), $channelUnit, $data->getData());
 
-                $this->productBuilder->addOrReplaceProductValue(
+                $this->productBuilder->addOrReplaceValue(
                     $product,
                     $attribute,
                     $value->getLocale(),

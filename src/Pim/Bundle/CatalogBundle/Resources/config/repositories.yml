@@ -12,6 +12,7 @@ parameters:
     pim_catalog.repository.group_type.class:            Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\GroupTypeRepository
     pim_catalog.repository.locale.class:                Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\LocaleRepository
     pim_catalog.repository.product_template.class:      Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductTemplateRepository
+    pim_catalog.repository.product_model.class: Doctrine\ORM\EntityRepository
 
 services:
     # Base repositories
@@ -116,6 +117,14 @@ services:
         factory_service: doctrine.orm.entity_manager
         factory_method: getRepository
         arguments: ['%pim_catalog.entity.product_template.class%']
+        tags:
+            - { name: 'pim_repository' }
+
+    pim_catalog.repository.product_model:
+        class: '%pim_catalog.repository.product_model.class%'
+        factory_service: doctrine.orm.entity_manager
+        factory_method: getRepository
+        arguments: ['%pim_catalog.entity.product_model.class%']
         tags:
             - { name: 'pim_repository' }
 

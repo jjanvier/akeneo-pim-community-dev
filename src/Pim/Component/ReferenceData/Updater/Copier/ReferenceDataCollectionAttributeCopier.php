@@ -104,7 +104,7 @@ class ReferenceDataCollectionAttributeCopier extends AbstractAttributeCopier
     ) {
         $fromValue = $fromProduct->getValue($fromAttribute->getCode(), $fromLocale, $fromScope);
         if (null !== $fromValue) {
-            $this->productBuilder->addOrReplaceProductValue(
+            $this->productBuilder->addOrReplaceValue(
                 $toProduct,
                 $toAttribute,
                 $toLocale,
