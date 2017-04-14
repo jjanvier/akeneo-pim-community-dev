@@ -36,10 +36,10 @@ class FamilySorterIntegration extends AbstractProductQueryBuilderTestCase
     public function testSortLabelDescendant()
     {
         $result = $this->executeSorter([['family', Directions::DESCENDING, ['locale' => 'en_US']]]);
-        $this->assertOrder($result, ['fooA', 'fooA1', 'fooA2', 'baz']);
+        $this->assertOrder($result, ['fooA1', 'fooA', 'fooA2', 'baz']);
 
         $result = $this->executeSorter([['family', Directions::DESCENDING, ['locale'=> 'fr_FR']]]);
-        $this->assertOrder($result, ['fooA2', 'fooA', 'fooA1', 'baz']);
+        $this->assertOrder($result, ['fooA', 'fooA2', 'fooA1', 'baz']);
     }
 
     public function testSortCodeAscendant()
@@ -51,10 +51,10 @@ class FamilySorterIntegration extends AbstractProductQueryBuilderTestCase
     public function testSortLabelAscendant()
     {
         $result = $this->executeSorter([['family', Directions::ASCENDING, ['locale' => 'en_US']]]);
-        $this->assertOrder($result, ['fooA1', 'fooA', 'fooA2', 'baz']);
+        $this->assertOrder($result, ['fooA', 'fooA1', 'fooA2', 'baz']);
 
         $result = $this->executeSorter([['family', Directions::ASCENDING, ['locale' => 'fr_FR']]]);
-        $this->assertOrder($result, ['fooA', 'fooA2', 'fooA1', 'baz']);
+        $this->assertOrder($result, ['fooA', 'fooA1', 'fooA2', 'baz']);
     }
 
     /**
