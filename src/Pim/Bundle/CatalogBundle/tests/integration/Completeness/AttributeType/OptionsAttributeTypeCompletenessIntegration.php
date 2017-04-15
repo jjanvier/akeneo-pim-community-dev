@@ -33,6 +33,7 @@ class OptionsAttributeTypeCompletenessIntegration extends AbstractCompletenessPe
             ]
         );
         $this->assertComplete($productComplete);
+        $this->assertFilledInAttributeForProduct($productComplete, ['sku', 'a_multi_select']);
 
         $productCompleteOneOption = $this->createProductWithStandardValues(
             $family,
@@ -50,6 +51,7 @@ class OptionsAttributeTypeCompletenessIntegration extends AbstractCompletenessPe
             ]
         );
         $this->assertComplete($productCompleteOneOption);
+        $this->assertFilledInAttributeForProduct($productCompleteOneOption, ['sku', 'a_multi_select']);
     }
 
     public function testNotCompleteOptions()
@@ -73,6 +75,7 @@ class OptionsAttributeTypeCompletenessIntegration extends AbstractCompletenessPe
         );
         $this->assertNotComplete($productDataEmptyArray);
         $this->assertMissingAttributeForProduct($productDataEmptyArray, ['a_multi_select']);
+        $this->assertFilledInAttributeForProduct($productDataEmptyArray, ['sku']);
 
         $productDataNull = $this->createProductWithStandardValues(
             $family,
@@ -91,6 +94,7 @@ class OptionsAttributeTypeCompletenessIntegration extends AbstractCompletenessPe
         );
         $this->assertNotComplete($productDataNull);
         $this->assertMissingAttributeForProduct($productDataNull, ['a_multi_select']);
+        $this->assertFilledInAttributeForProduct($productDataNull, ['sku']);
     }
 
     /**

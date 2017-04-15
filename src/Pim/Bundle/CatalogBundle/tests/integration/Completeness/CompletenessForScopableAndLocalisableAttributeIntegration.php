@@ -40,6 +40,7 @@ class CompletenessForScopableAndLocalisableAttributeIntegration extends Abstract
         $this->assertEquals(5, $completeness->getRequiredCount());
         $this->assertEquals(3, $completeness->getMissingCount());
         $this->assertMissingAttributeCodes($completeness, ['name', 'price', 'size']);
+        $this->assertFilledInAttributeCodes($completeness, ['sku', 'color']);
 
         $completeness = $this->getCompletenessByChannelAndLocaleCodes($sandals, 'tablet', 'en_US');
         $this->assertNotNull($completeness->getLocale());
@@ -53,6 +54,7 @@ class CompletenessForScopableAndLocalisableAttributeIntegration extends Abstract
             $completeness,
             ['name', 'price', 'size', 'description', 'rating', 'side_view']
         );
+        $this->assertFilledInAttributeCodes($completeness, ['sku', 'color']);
 
         $completeness = $this->getCompletenessByChannelAndLocaleCodes($sandals, 'mobile', 'fr_FR');
         $this->assertNotNull($completeness->getLocale());
@@ -63,6 +65,7 @@ class CompletenessForScopableAndLocalisableAttributeIntegration extends Abstract
         $this->assertEquals(5, $completeness->getRequiredCount());
         $this->assertEquals(2, $completeness->getMissingCount());
         $this->assertMissingAttributeCodes($completeness, ['price', 'size']);
+        $this->assertFilledInAttributeCodes($completeness, ['sku', 'color', 'name']);
 
         $completeness = $this->getCompletenessByChannelAndLocaleCodes($sandals, 'tablet', 'fr_FR');
         $this->assertNotNull($completeness->getLocale());
@@ -73,6 +76,7 @@ class CompletenessForScopableAndLocalisableAttributeIntegration extends Abstract
         $this->assertEquals(8, $completeness->getRequiredCount());
         $this->assertEquals(4, $completeness->getMissingCount());
         $this->assertMissingAttributeCodes($completeness, ['price', 'size', 'rating', 'side_view']);
+        $this->assertFilledInAttributeCodes($completeness, ['sku', 'color', 'description', 'name']);
     }
 
     public function testProductCompleteOnOneChannel()
@@ -98,6 +102,10 @@ class CompletenessForScopableAndLocalisableAttributeIntegration extends Abstract
         $this->assertEquals(5, $completeness->getRequiredCount());
         $this->assertEquals(0, $completeness->getMissingCount());
         $this->assertEquals(0, $completeness->getMissingAttributes()->count());
+        $this->assertFilledInAttributeCodes(
+            $completeness,
+            ['sku', 'color', 'name', 'price', 'size', 'weather_conditions']
+        );
 
         $completeness = $this->getCompletenessByChannelAndLocaleCodes($sandals, 'tablet', 'en_US');
         $this->assertNotNull($completeness->getLocale());
@@ -108,6 +116,10 @@ class CompletenessForScopableAndLocalisableAttributeIntegration extends Abstract
         $this->assertEquals(9, $completeness->getRequiredCount());
         $this->assertEquals(1, $completeness->getMissingCount());
         $this->assertMissingAttributeCodes($completeness, ['side_view']);
+        $this->assertFilledInAttributeCodes(
+            $completeness,
+            ['sku', 'color', 'description', 'name', 'price', 'rating', 'size', 'weather_conditions']
+        );
 
         $completeness = $this->getCompletenessByChannelAndLocaleCodes($sandals, 'mobile', 'fr_FR');
         $this->assertNotNull($completeness->getLocale());
@@ -118,6 +130,10 @@ class CompletenessForScopableAndLocalisableAttributeIntegration extends Abstract
         $this->assertEquals(5, $completeness->getRequiredCount());
         $this->assertEquals(0, $completeness->getMissingCount());
         $this->assertEquals(0, $completeness->getMissingAttributes()->count());
+        $this->assertFilledInAttributeCodes(
+            $completeness,
+            ['sku', 'color', 'name', 'price', 'size']
+        );
 
         $completeness = $this->getCompletenessByChannelAndLocaleCodes($sandals, 'tablet', 'fr_FR');
         $this->assertNotNull($completeness->getLocale());
@@ -128,6 +144,10 @@ class CompletenessForScopableAndLocalisableAttributeIntegration extends Abstract
         $this->assertEquals(9, $completeness->getRequiredCount());
         $this->assertEquals(2, $completeness->getMissingCount());
         $this->assertMissingAttributeCodes($completeness, ['description', 'side_view']);
+        $this->assertFilledInAttributeCodes(
+            $completeness,
+            ['sku', 'color', 'name', 'price', 'rating', 'size', 'weather_conditions']
+        );
     }
 
     /**

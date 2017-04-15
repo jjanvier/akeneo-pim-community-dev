@@ -47,7 +47,7 @@ class CompletenessForNonRequiredAttributeIntegration extends AbstractCompletenes
             ]
         );
 
-        $this->assertComplete($product, 1);
+        $this->assertComplete($product, 1, ['sku']);
     }
 
     public function testAttributeRequiredByFamily()
@@ -75,16 +75,17 @@ class CompletenessForNonRequiredAttributeIntegration extends AbstractCompletenes
             ]
         );
 
-        $this->assertComplete($product, 2);
+        $this->assertComplete($product, 2, ['sku', 'a_text']);
     }
 
     /**
      * @param ProductInterface $product
      * @param int              $requiredCount
+     * @param string[]         $expectedFilledInAttributeCodes
      *
      * @internal param string $localeCode
      */
-    private function assertComplete(ProductInterface $product, $requiredCount)
+    private function assertComplete(ProductInterface $product, $requiredCount, array $expectedFilledInAttributeCodes)
     {
         $this->assertCompletenessesCount($product, 1);
 
@@ -98,6 +99,7 @@ class CompletenessForNonRequiredAttributeIntegration extends AbstractCompletenes
         $this->assertEquals($requiredCount, $completeness->getRequiredCount());
         $this->assertEquals(0, $completeness->getMissingCount());
         $this->assertEquals(0, $completeness->getMissingAttributes()->count());
+        $this->assertFilledInAttributeCodes($completeness, $expectedFilledInAttributeCodes);
     }
 
     /**

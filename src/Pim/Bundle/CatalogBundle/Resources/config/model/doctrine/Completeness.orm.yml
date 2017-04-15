@@ -23,6 +23,9 @@ Pim\Component\Catalog\Model\Completeness:
         missingCount:
             type: integer
             column: missing_count
+        filledInCount:
+            type: integer
+            column: filled_in_count
         requiredCount:
             type: integer
             column: required_count
@@ -60,4 +63,15 @@ Pim\Component\Catalog\Model\Completeness:
                         onDelete: CASCADE
                 inverseJoinColumns:
                     missing_attribute_id:
+                        referencedColumnName: id
+        filledInAttributes:
+            targetEntity: Pim\Component\Catalog\Model\AttributeInterface
+            joinTable:
+                name: pim_catalog_completeness_filled_in_attribute
+                joinColumns:
+                    completeness_id:
+                        referencedColumnName: id
+                        onDelete: CASCADE
+                inverseJoinColumns:
+                    filled_in_attribute_id:
                         referencedColumnName: id

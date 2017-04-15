@@ -40,6 +40,7 @@ class MetricAttributeTypeCompletenessIntegration extends AbstractCompletenessPer
             ]
         );
         $this->assertComplete($productComplete);
+        $this->assertFilledInAttributeForProduct($productComplete, ['sku', 'a_metric']);
 
         $productAmountZero = $this->createProductWithStandardValues(
             $family,
@@ -57,6 +58,7 @@ class MetricAttributeTypeCompletenessIntegration extends AbstractCompletenessPer
             ]
         );
         $this->assertComplete($productAmountZero);
+        $this->assertFilledInAttributeForProduct($productAmountZero, ['sku', 'a_metric']);
     }
 
     public function testNotCompleteMetric()
@@ -87,6 +89,7 @@ class MetricAttributeTypeCompletenessIntegration extends AbstractCompletenessPer
         );
         $this->assertNotComplete($productDataNull);
         $this->assertMissingAttributeForProduct($productDataNull, ['a_metric']);
+        $this->assertFilledInAttributeForProduct($productDataNull, ['sku']);
 
         $productAmountNull = $this->createProductWithStandardValues(
             $family,
@@ -105,6 +108,7 @@ class MetricAttributeTypeCompletenessIntegration extends AbstractCompletenessPer
         );
         $this->assertNotComplete($productAmountNull);
         $this->assertMissingAttributeForProduct($productAmountNull, ['a_metric']);
+        $this->assertFilledInAttributeForProduct($productAmountNull, ['sku']);
 
         $productAmountAndUnitNull = $this->createProductWithStandardValues(
             $family,
@@ -123,6 +127,7 @@ class MetricAttributeTypeCompletenessIntegration extends AbstractCompletenessPer
         );
         $this->assertNotComplete($productAmountAndUnitNull);
         $this->assertMissingAttributeForProduct($productAmountAndUnitNull, ['a_metric']);
+        $this->assertFilledInAttributeForProduct($productAmountAndUnitNull, ['sku']);
     }
 
     /**

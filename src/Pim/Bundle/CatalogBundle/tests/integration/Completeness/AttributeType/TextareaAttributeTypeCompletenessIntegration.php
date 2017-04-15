@@ -39,6 +39,7 @@ class TextareaAttributeTypeCompletenessIntegration extends AbstractCompletenessP
         );
 
         $this->assertComplete($productComplete);
+        $this->assertFilledInAttributeForProduct($productComplete, ['sku', 'a_text_area']);
     }
 
     public function testNotCompleteTextarea()
@@ -67,6 +68,7 @@ class TextareaAttributeTypeCompletenessIntegration extends AbstractCompletenessP
         );
         $this->assertNotComplete($productDataNull);
         $this->assertMissingAttributeForProduct($productDataNull, ['a_text_area']);
+        $this->assertFilledInAttributeForProduct($productDataNull, ['sku']);
 
         $productDataEmptyString = $this->createProductWithStandardValues(
             $family,
@@ -85,9 +87,11 @@ class TextareaAttributeTypeCompletenessIntegration extends AbstractCompletenessP
         );
         $this->assertNotComplete($productDataEmptyString);
         $this->assertMissingAttributeForProduct($productDataEmptyString, ['a_text_area']);
+        $this->assertFilledInAttributeForProduct($productDataEmptyString, ['sku']);
 
         $productWithoutValue = $this->createProductWithStandardValues($family, 'product_without_values');
         $this->assertNotComplete($productWithoutValue);
         $this->assertMissingAttributeForProduct($productWithoutValue, ['a_text_area']);
+        $this->assertFilledInAttributeForProduct($productWithoutValue, ['sku']);
     }
 }

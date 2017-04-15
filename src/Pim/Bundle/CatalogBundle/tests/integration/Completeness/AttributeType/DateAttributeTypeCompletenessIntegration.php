@@ -39,6 +39,7 @@ class DateAttributeTypeCompletenessIntegration extends AbstractCompletenessPerAt
         );
 
         $this->assertComplete($productComplete);
+        $this->assertFilledInAttributeForProduct($productComplete, ['sku', 'a_date']);
     }
 
     public function testNotCompleteDate()
@@ -67,9 +68,11 @@ class DateAttributeTypeCompletenessIntegration extends AbstractCompletenessPerAt
         );
         $this->assertNotComplete($productDataNull);
         $this->assertMissingAttributeForProduct($productDataNull, ['a_date']);
+        $this->assertFilledInAttributeForProduct($productDataNull, ['sku']);
 
         $productWithoutValues = $this->createProductWithStandardValues($family, 'product_without_values');
         $this->assertNotComplete($productWithoutValues);
         $this->assertMissingAttributeForProduct($productWithoutValues, ['a_date']);
+        $this->assertFilledInAttributeForProduct($productWithoutValues, ['sku']);
     }
 }

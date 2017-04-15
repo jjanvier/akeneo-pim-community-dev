@@ -39,6 +39,7 @@ class TextAttributeTypeCompletenessIntegration extends AbstractCompletenessPerAt
         );
 
         $this->assertComplete($productComplete);
+        $this->assertFilledInAttributeForProduct($productComplete, ['sku', 'a_text']);
     }
 
     public function testNotCompleteText()
@@ -67,6 +68,7 @@ class TextAttributeTypeCompletenessIntegration extends AbstractCompletenessPerAt
         );
         $this->assertNotComplete($productDataNull);
         $this->assertMissingAttributeForProduct($productDataNull, ['a_text']);
+        $this->assertFilledInAttributeForProduct($productDataNull, ['sku']);
 
         $productDataEmptyString = $this->createProductWithStandardValues(
             $family,
@@ -85,9 +87,11 @@ class TextAttributeTypeCompletenessIntegration extends AbstractCompletenessPerAt
         );
         $this->assertNotComplete($productDataEmptyString);
         $this->assertMissingAttributeForProduct($productDataEmptyString, ['a_text']);
+        $this->assertFilledInAttributeForProduct($productDataEmptyString, ['sku']);
 
         $productWithoutValue = $this->createProductWithStandardValues($family, 'product_without_values');
         $this->assertNotComplete($productWithoutValue);
         $this->assertMissingAttributeForProduct($productWithoutValue, ['a_text']);
+        $this->assertFilledInAttributeForProduct($productWithoutValue, ['sku']);
     }
 }

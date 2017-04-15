@@ -136,7 +136,7 @@ interface ProductValueCollectionInterface extends \Countable, \IteratorAggregate
     /**
      * Gets a native PHP array representation of the collection.
      *
-     * @return array
+     * @return ProductValueInterface[]
      */
     public function toArray();
 

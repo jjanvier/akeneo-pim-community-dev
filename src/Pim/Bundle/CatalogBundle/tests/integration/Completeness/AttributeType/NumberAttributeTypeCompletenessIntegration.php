@@ -38,6 +38,7 @@ class NumberAttributeTypeCompletenessIntegration extends AbstractCompletenessPer
             ]
         );
         $this->assertComplete($productComplete);
+        $this->assertFilledInAttributeForProduct($productComplete, ['sku', 'a_number_integer']);
 
         $productCompleteWithZero = $this->createProductWithStandardValues(
             $family,
@@ -55,6 +56,7 @@ class NumberAttributeTypeCompletenessIntegration extends AbstractCompletenessPer
             ]
         );
         $this->assertComplete($productCompleteWithZero);
+        $this->assertFilledInAttributeForProduct($productCompleteWithZero, ['sku', 'a_number_integer']);
     }
 
     public function testNotCompleteNumber()
@@ -83,9 +85,11 @@ class NumberAttributeTypeCompletenessIntegration extends AbstractCompletenessPer
         );
         $this->assertNotComplete($productDataNull);
         $this->assertMissingAttributeForProduct($productDataNull, ['a_number_integer']);
+        $this->assertFilledInAttributeForProduct($productDataNull, ['sku']);
 
         $productWithoutValue = $this->createProductWithStandardValues($family, 'product_without_values');
         $this->assertNotComplete($productWithoutValue);
         $this->assertMissingAttributeForProduct($productWithoutValue, ['a_number_integer']);
+        $this->assertFilledInAttributeForProduct($productWithoutValue, ['sku']);
     }
 }

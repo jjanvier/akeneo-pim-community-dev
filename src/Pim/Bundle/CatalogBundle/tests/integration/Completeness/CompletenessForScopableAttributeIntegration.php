@@ -45,7 +45,7 @@ class CompletenessForScopableAttributeIntegration extends AbstractCompletenessIn
             ]
         );
 
-        $this->assertComplete($product, 'ecommerce');
+        $this->assertComplete($product, 'ecommerce', ['sku', 'a_text']);
     }
 
     public function testNotCompleteScopable()
@@ -60,7 +60,7 @@ class CompletenessForScopableAttributeIntegration extends AbstractCompletenessIn
         );
 
         $productWithoutValues = $this->createProductWithStandardValues($family, 'product_witout_values');
-        $this->assertNotComplete($productWithoutValues, 'ecommerce', ['a_text']);
+        $this->assertNotComplete($productWithoutValues, 'ecommerce', ['a_text'], ['sku']);
 
         $productDataEmpty = $this->createProductWithStandardValues(
             $family,
@@ -77,16 +77,21 @@ class CompletenessForScopableAttributeIntegration extends AbstractCompletenessIn
                 ]
             ]
         );
-        $this->assertNotComplete($productDataEmpty, 'ecommerce', ['a_text']);
+        $this->assertNotComplete($productDataEmpty, 'ecommerce', ['a_text'], ['sku']);
     }
 
     /**
      * @param ProductInterface $product
      * @param string           $channelCode
-     * @param array            $expectedAttributeCodes
+     * @param string[]         $expectedMissingAttributeCodes
+     * @param string[]         $expectedFilledInAttributeCodes
      */
-    private function assertNotComplete(ProductInterface $product, $channelCode, array $expectedAttributeCodes)
-    {
+    private function assertNotComplete(
+        ProductInterface $product,
+        $channelCode,
+        array $expectedMissingAttributeCodes,
+        array $expectedFilledInAttributeCodes
+    ) {
         $this->assertCompletenessesCount($product, 1);
 
         $completeness = $this->getCurrentCompleteness($product);
@@ -98,14 +103,16 @@ class CompletenessForScopableAttributeIntegration extends AbstractCompletenessIn
         $this->assertEquals(50, $completeness->getRatio());
         $this->assertEquals(2, $completeness->getRequiredCount());
         $this->assertEquals(1, $completeness->getMissingCount());
-        $this->assertMissingAttributeCodes($completeness, $expectedAttributeCodes);
+        $this->assertMissingAttributeCodes($completeness, $expectedMissingAttributeCodes);
+        $this->assertFilledInAttributeCodes($completeness, $expectedFilledInAttributeCodes);
     }
 
     /**
      * @param ProductInterface $product
      * @param string           $channelCode
+     * @param string[]         $expectedFilledInAttributeCodes
      */
-    private function assertComplete(ProductInterface $product, $channelCode)
+    private function assertComplete(ProductInterface $product, $channelCode, array $expectedFilledInAttributeCodes)
     {
         $this->assertCompletenessesCount($product, 1);
 
@@ -119,5 +126,6 @@ class CompletenessForScopableAttributeIntegration extends AbstractCompletenessIn
         $this->assertEquals(2, $completeness->getRequiredCount());
         $this->assertEquals(0, $completeness->getMissingCount());
         $this->assertEquals(0, $completeness->getMissingAttributes()->count());
+        $this->assertFilledInAttributeCodes($completeness, $expectedFilledInAttributeCodes);
     }
 }

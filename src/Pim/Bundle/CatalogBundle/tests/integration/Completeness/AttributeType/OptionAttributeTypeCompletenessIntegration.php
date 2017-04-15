@@ -34,6 +34,7 @@ class OptionAttributeTypeCompletenessIntegration extends AbstractCompletenessPer
         );
 
         $this->assertComplete($productComplete);
+        $this->assertFilledInAttributeForProduct($productComplete, ['sku', 'a_simple_select']);
     }
 
     public function testNotCompleteOption()
@@ -58,6 +59,7 @@ class OptionAttributeTypeCompletenessIntegration extends AbstractCompletenessPer
 
         $this->assertNotComplete($productDataNull);
         $this->assertMissingAttributeForProduct($productDataNull, ['a_simple_select']);
+        $this->assertFilledInAttributeForProduct($productDataNull, ['sku']);
     }
 
     /**

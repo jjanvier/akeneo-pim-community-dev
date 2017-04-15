@@ -39,6 +39,7 @@ class ImageAttributeTypeCompletenessIntegration extends AbstractCompletenessPerA
         );
 
         $this->assertComplete($productComplete);
+        $this->assertFilledInAttributeForProduct($productComplete, ['sku', 'an_image']);
     }
 
     public function testNotCompleteImage()
@@ -67,9 +68,11 @@ class ImageAttributeTypeCompletenessIntegration extends AbstractCompletenessPerA
         );
         $this->assertNotComplete($productDataNull);
         $this->assertMissingAttributeForProduct($productDataNull, ['an_image']);
+        $this->assertFilledInAttributeForProduct($productDataNull, ['sku']);
 
         $productWithoutValues = $this->createProductWithStandardValues($family, 'product_without_values');
         $this->assertNotComplete($productWithoutValues);
         $this->assertMissingAttributeForProduct($productWithoutValues, ['an_image']);
+        $this->assertFilledInAttributeForProduct($productWithoutValues, ['sku']);
     }
 }
