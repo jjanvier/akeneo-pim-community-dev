@@ -3,6 +3,9 @@ Pim\Component\Catalog\Model\Product:
     table: pim_catalog_product
     changeTrackingPolicy: DEFERRED_EXPLICIT
     repositoryClass: Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductRepository
+    entityListeners:
+        Pim\Bundle\CatalogBundle\EventSubscriber\LoadProductValuesSubscriber:
+            postLoad: [postLoad]
     fields:
         id:
             type: integer
