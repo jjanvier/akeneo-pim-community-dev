@@ -122,6 +122,8 @@ class FixturesContext extends BaseFixturesContext
         $this->refresh($product);
         $this->buildProductHistory($product);
 
+        $this->getElasticsearchClient()->refreshIndex();
+
         return $product;
     }
 
@@ -2059,5 +2061,13 @@ class FixturesContext extends BaseFixturesContext
         sort($array1);
         sort($array2);
         assertEquals(join(', ', $array1), join(', ', $array2));
+    }
+
+    /**
+     * @return \Akeneo\Bundle\ElasticsearchBundle\Client
+     */
+    protected function getElasticsearchClient()
+    {
+        return $this->getContainer()->get('akeneo_elasticsearch.client');
     }
 }

@@ -116,6 +116,8 @@ class CatalogConfigurationContext extends RawMinkContext
             $referenceDataLoader = new ReferenceDataLoader();
             $referenceDataLoader->load($this->getEntityManager());
         }
+
+        $this->getElasticsearchClient()->refreshIndex();
     }
 
     /**
@@ -124,6 +126,14 @@ class CatalogConfigurationContext extends RawMinkContext
     protected function getFixtureJobLoader()
     {
         return $this->getContainer()->get('pim_installer.fixture_loader.job_loader');
+    }
+
+    /**
+     * @return \Akeneo\Bundle\ElasticsearchBundle\Client
+     */
+    protected function getElasticsearchClient()
+    {
+        return $this->getContainer()->get('akeneo_elasticsearch.client');
     }
 
     /**
