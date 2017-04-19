@@ -3,6 +3,7 @@
 namespace Context;
 
 use Akeneo\Bundle\BatchBundle\Command\BatchCommand;
+use Akeneo\Bundle\ElasticsearchBundle\Client;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Context\Loader\ReferenceDataLoader;
 use Doctrine\Common\DataFixtures\Event\Listener\ORMReferenceListener;
@@ -129,7 +130,7 @@ class CatalogConfigurationContext extends RawMinkContext
     }
 
     /**
-     * @return \Akeneo\Bundle\ElasticsearchBundle\Client
+     * @return Client
      */
     protected function getElasticsearchClient()
     {

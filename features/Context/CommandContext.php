@@ -32,6 +32,31 @@ class CommandContext extends PimContext
     }
 
     /**
+     * @Then /^I should get the following results for the given filters:$/
+     */
+    public function iShouldGetTheFollowingResultsForTheGivenFilters(TableNode $filters)
+    {
+        $application = new Application();
+        $application->add(new QueryProductCommand());
+
+        $command = $application->find('pim:product:query');
+        $command->setContainer($this->getMainContext()->getContainer());
+        $commandTester = new CommandTester($command);
+
+        foreach ($filters->getHash() as $filter) {
+            $commandTester->execute(
+                ['command' => $command->getName(), '--json-output' => true, 'json_filters' => $filter['filter']]
+            );
+
+            $expected = json_decode($filter['result']);
+            $actual   = json_decode($commandTester->getDisplay());
+            sort($expected);
+            sort($actual);
+            assertEquals($expected, $actual);
+        }
+    }
+
+    /**
      * @Then /^I should get the following products after apply the following updater to it:$/
      *
      * @param TableNode $updates

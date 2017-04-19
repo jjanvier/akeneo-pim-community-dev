@@ -4,6 +4,7 @@ namespace Context;
 
 use Acme\Bundle\AppBundle\Entity\Color;
 use Acme\Bundle\AppBundle\Entity\Fabric;
+use Akeneo\Bundle\ElasticsearchBundle\Client;
 use Akeneo\Component\Batch\Job\JobParameters;
 use Akeneo\Component\Batch\Model\JobExecution;
 use Akeneo\Component\Batch\Model\JobInstance;
@@ -2064,7 +2065,7 @@ class FixturesContext extends BaseFixturesContext
     }
 
     /**
-     * @return \Akeneo\Bundle\ElasticsearchBundle\Client
+     * @return Client
      */
     protected function getElasticsearchClient()
     {
