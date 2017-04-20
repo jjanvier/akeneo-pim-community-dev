@@ -8,7 +8,6 @@ use Pim\Component\Catalog\Factory\PriceFactory;
 use Pim\Component\Catalog\Factory\ProductValue\PriceCollectionProductValueFactory;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\PriceCollection;
-use Pim\Component\Catalog\Model\PriceCollectionInterface;
 use Pim\Component\Catalog\Model\ProductPriceInterface;
 use Pim\Component\Catalog\ProductValue\ScalarProductValue;
 use Prophecy\Argument;
@@ -17,8 +16,7 @@ class PriceCollectionProductValueFactorySpec extends ObjectBehavior
 {
     function let(PriceFactory $priceFactory)
     {
-        $this->beConstructedWith($priceFactory, ScalarProductValue::class, 'pim_catalog_price_collection',
-            $priceFactory);
+        $this->beConstructedWith($priceFactory, ScalarProductValue::class, 'pim_catalog_price_collection', $priceFactory);
     }
 
     function it_is_initializable()
@@ -272,25 +270,25 @@ class PriceCollectionProductValueFactorySpec extends ObjectBehavior
     public function getMatchers()
     {
         return [
-            'haveAttribute'        => function ($subject, $attributeCode) {
+            'haveAttribute' => function ($subject, $attributeCode) {
                 return $subject->getAttribute()->getCode() === $attributeCode;
             },
-            'beLocalizable'        => function ($subject) {
+            'beLocalizable' => function ($subject) {
                 return null !== $subject->getLocale();
             },
-            'haveLocale'           => function ($subject, $localeCode) {
+            'haveLocale'    => function ($subject, $localeCode) {
                 return $localeCode === $subject->getLocale();
             },
-            'beScopable'           => function ($subject) {
+            'beScopable'    => function ($subject) {
                 return null !== $subject->getScope();
             },
-            'haveChannel'          => function ($subject, $channelCode) {
+            'haveChannel'   => function ($subject, $channelCode) {
                 return $channelCode === $subject->getScope();
             },
-            'beEmpty'              => function ($subject) {
+            'beEmpty'       => function ($subject) {
                 return $subject->getData() instanceof PriceCollection && [] === $subject->getData()->toArray();
             },
-            'havePrices'           => function ($subject) {
+            'havePrices'    => function ($subject) {
                 return $subject->getData() instanceof PriceCollection && [] !== $subject->getData()->toArray();
             },
         ];
