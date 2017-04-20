@@ -2,7 +2,7 @@
 
 namespace spec\Pim\Component\Catalog\Family;
 
-use Pim\Component\Catalog\Family\Family;
+use Pim\Component\Catalog\Family\Template;
 use Pim\Component\Catalog\Family\AttributeSet;
 use Pim\Component\Catalog\Family\AttributeSetCollection;
 use PhpSpec\ObjectBehavior;
@@ -10,11 +10,11 @@ use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\FamilyInterface;
 use Prophecy\Argument;
 
-class FamilySpec extends ObjectBehavior
+class TemplateSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType(Family::class);
+        $this->shouldHaveType(Template::class);
     }
 
     /**
@@ -22,14 +22,14 @@ class FamilySpec extends ObjectBehavior
      * Should we use the word "simple"?
      * Should we use UUID ?
      */
-    function it_creates_simple_family(AttributeSetInterface $simpleSet)
+    function it_creates_simple_template(AttributeSetInterface $simpleSet)
     {
-        $this::createVariantFamily('tshirt', $simpleSet, ['en_US' => 'T-shirt'])->shouldReturn($this);
+        $this::createVariantTemplate('tshirt', $simpleSet, ['en_US' => 'T-shirt'])->shouldReturn($this);
     }
 
-    function it_creates_a_variant_family(AttributeSetInterface $model, AttributeSetInterface $color)
+    function it_creates_a_variant_template(AttributeSetInterface $model, AttributeSetInterface $color)
     {
-        $this::createSimpleFamily('tshirt', [$model, $color], ['en_US' => 'T-shirt'])->shouldReturn($this);
+        $this::createSimpleTemplate('tshirt', [$model, $color], ['en_US' => 'T-shirt'])->shouldReturn($this);
     }
 
     /**
@@ -43,45 +43,45 @@ class FamilySpec extends ObjectBehavior
         $model->getAttributes()->willReturn([$attribute]);
         $color->getAttributes()->willReturn([$attribute]);
 
-        $this->shouldThrow(\Exception::class)->during('createSimpleFamily', [[$model, $color]]);
+        $this->shouldThrow(\Exception::class)->during('createSimpleTemplate', [[$model, $color]]);
     }
 
-    function it_creates_a_family_without_translations(
+    function it_creates_a_template_without_translations(
         AttributeSetInterface $simpleSet,
         AttributeSetInterface $model,
         AttributeSetInterface $color
     ) {
-        $this::createVariantFamily('tshirt', $simpleSet)->shouldReturn($this);
-        $this::createSimpleFamily('tshirt', [$model, $color])->shouldReturn($this);
+        $this::createVariantTemplate('tshirt', $simpleSet)->shouldReturn($this);
+        $this::createSimpleTemplate('tshirt', [$model, $color])->shouldReturn($this);
     }
 
-    function it_is_a_family()
+    function it_is_a_template()
     {
-        $this->shouldImplement(FamilyInterface::class);
+        $this->shouldImplement(TemplateInterface::class);
     }
 
 
-    function it_is_a_simple_family(AttributeSetInterface $model, AttributeSetInterface $color)
+    function it_is_a_simple_template(AttributeSetInterface $model, AttributeSetInterface $color)
     {
-        $this::createVariantFamily('tshirt', [$model, $color]);
+        $this::createVariantTemplate('tshirt', [$model, $color]);
         $this->isVariant()->shouldReturn(true);
     }
 
-    function it_is_a_variant_family(AttributeSetInterface $simpleSet)
+    function it_is_a_variant_template(AttributeSetInterface $simpleSet)
     {
-        $this::createSimpleFamily('tshirt', $simpleSet);
+        $this::createSimpleTemplate('tshirt', $simpleSet);
         $this->isVariant()->shouldReturn(false);
     }
 
-    function its_attribute_sets_defines_attributes_used_to_build_product_label(
+    function its_attribute_sets_defines_attributes_used_as_axis(
         AttributeSetInterface $model,
         AttributeSetInterface $color,
         AttributeInterface $modelAttribute,
         AttributeInterface $colorAttribute
     ) {
-        $this::createVariantFamily('tshirt', [$model, $color]);
+        $this::createVariantTemplate('tshirt', [$model, $color]);
 
-        $model->getMainAttribute()->willReturn($modelAttribute);
+        $model->getAxis()->willReturn($modelAttribute);
         $color->getMainAttribute()->willReturn($colorAttribute);
 
         $this->getProductLabelAttributes()->shouldReturn([
@@ -90,7 +90,7 @@ class FamilySpec extends ObjectBehavior
     }
 
     /**
-     * Third parameter could be the family requirement.
+     * Third parameter could be the template requirement.
      */
     function it_adds_an_attribute_to_attribute_set(AttributeSetInterface $color, AttributeInterface $picture)
     {
@@ -98,7 +98,7 @@ class FamilySpec extends ObjectBehavior
     }
 
     /**
-     * No need to specify the attribute set because attribute are unique in a family
+     * No need to specify the attribute set because attribute are unique in a template
      */
     function it_remove_an_attribute_to_attribute_set(AttributeInterface $picture)
     {
@@ -107,7 +107,7 @@ class FamilySpec extends ObjectBehavior
 
 
     /**
-     * Third parameter could be the family requirement.
+     * Third parameter could be the template requirement.
      */
     function it_adds_an_requirement_to_attribute_set(AttributeSetInterface $color, AttributeInterface $picture)
     {
@@ -115,7 +115,7 @@ class FamilySpec extends ObjectBehavior
     }
 
     /**
-     * No need to specify the attribute set because attribute are unique in a family
+     * No need to specify the attribute set because attribute are unique in a template
      */
     function it_remove_an_requirement_to_attribute_set(AttributeInterface $picture)
     {
@@ -135,7 +135,7 @@ class FamilySpec extends ObjectBehavior
         $model->getAttributes()->willReturn([$modelName, $style, $description]);
         $color->getAttributes()->willReturn([$color, $material, $picture]);
 
-        $this::createVariantFamily('tshirt', [$model, $color]);
+        $this::createVariantTemplate('tshirt', [$model, $color]);
 
         $this->getAttributes()->willreturn([$modelName, $style, $description, $color, $material, $picture]);
     }
@@ -149,7 +149,7 @@ class FamilySpec extends ObjectBehavior
         $model->getRequiredAttributes()->willReturn([$modelName]);
         $color->getRequiredAttributes()->willReturn([$color]);
 
-        $this::createVariantFamily('tshirt', [$model, $color]);
+        $this::createVariantTemplate('tshirt', [$model, $color]);
 
         $this->getRequiredAttributes()->willreturn($modelName, $color);
     }
@@ -159,7 +159,7 @@ class FamilySpec extends ObjectBehavior
      */
     function it_has_a_code(AttributeSetInterface $simpleSet)
     {
-        $this::createVariantFamily('tshirt',  ['en_US' => 'T-shirt'], $simpleSet);
+        $this::createVariantTemplate('tshirt',  ['en_US' => 'T-shirt'], $simpleSet);
         $this->getCode()->shouldReturn('tshirt');
     }
 
@@ -168,7 +168,7 @@ class FamilySpec extends ObjectBehavior
      */
     function its_label_is_translatable(AttributeSet $simpleSet)
     {
-        $this::createVariantFamily('tshirt',  ['en_US' => 'T-shirt'], $simpleSet);
+        $this::createVariantTemplate('tshirt',  ['en_US' => 'T-shirt'], $simpleSet);
         $this->getLabel('en_US')->shouldReturn('T-shirt');
     }
 }
