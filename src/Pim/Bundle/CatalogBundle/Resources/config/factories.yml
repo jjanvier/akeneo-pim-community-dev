@@ -28,6 +28,16 @@ services:
             - '@pim_catalog.repository.attribute'
             - '%pim_catalog.entity.family.class%'
 
+    pim_catalog.factory.template:
+        class: '%akeneo_storage_utils.factory.simple.class%'
+        arguments:
+            - 'Pim\Bundle\CatalogBundle\Entity\Template'
+
+    pim_catalog.factory.attribute_set:
+        class: '%akeneo_storage_utils.factory.simple.class%'
+        arguments:
+            - 'Pim\Bundle\CatalogBundle\Entity\AttributeSet'
+
     pim_catalog.factory.channel:
         class: '%akeneo_storage_utils.factory.simple.class%'
         arguments:

@@ -66,6 +66,9 @@ class Family implements FamilyInterface
      */
     protected $updated;
 
+    /** @var ArrayCollection */
+    private $templates;
+
     /**
      * Constructor
      */
@@ -74,6 +77,7 @@ class Family implements FamilyInterface
         $this->attributes = new ArrayCollection();
         $this->translations = new ArrayCollection();
         $this->requirements = new ArrayCollection();
+        $this->templates = new ArrayCollection();
     }
 
     /**
@@ -435,5 +439,21 @@ class Family implements FamilyInterface
     public function getReference()
     {
         return $this->code;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
+    /**
+     * @param ArrayCollection $templates
+     */
+    public function setTemplates($templates)
+    {
+        $this->templates = $templates;
     }
 }

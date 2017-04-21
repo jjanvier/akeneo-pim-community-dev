@@ -1,0 +1,38 @@
+Pim\Bundle\CatalogBundle\Entity\AttributeSet:
+    type: entity
+    table: pim_catalog_attribute_set
+    changeTrackingPolicy: DEFERRED_EXPLICIT
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    manyToOne:
+        template:
+            targetEntity: Pim\Component\Catalog\Model\TemplateInterface
+            inversedBy: attributeSets
+            joinColumn:
+                name: template_id
+                referencedColumnName: id
+    manyToMany:
+        attributes:
+            targetEntity: Pim\Component\Catalog\Model\AttributeInterface
+            joinTable:
+                name: pim_catalog_attribute_set_attribute
+                joinColumns:
+                    attribute_set_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    attribute_id:
+                        referencedColumnName: id
+        axes:
+            targetEntity: Pim\Component\Catalog\Model\AttributeInterface
+            joinTable:
+                name: pim_catalog_axis_set_attribute
+                joinColumns:
+                    attribute_set_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    attribute_id:
+                        referencedColumnName: id

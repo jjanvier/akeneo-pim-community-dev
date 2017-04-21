@@ -7,8 +7,10 @@ use Akeneo\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Akeneo\Component\StorageUtils\Exception\UnknownPropertyException;
+use Akeneo\Component\StorageUtils\Factory\SimpleFactoryInterface;
 use Akeneo\Component\StorageUtils\Repository\IdentifiableObjectRepositoryInterface;
 use Akeneo\Component\StorageUtils\Updater\ObjectUpdaterInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\ClassUtils;
 use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Factory\AttributeRequirementFactory;
@@ -53,6 +55,12 @@ class FamilyUpdater implements ObjectUpdaterInterface
     /** @var TranslatableUpdater */
     protected $translatableUpdater;
 
+    /** @var SimpleFactoryInterface */
+    private $templateFactory;
+
+    /** @var ObjectUpdaterInterface */
+    private $templateUpdater;
+
     /**
      * @param IdentifiableObjectRepositoryInterface   $familyRepository
      * @param AttributeRepositoryInterface            $attributeRepository
@@ -60,6 +68,8 @@ class FamilyUpdater implements ObjectUpdaterInterface
      * @param AttributeRequirementFactory             $attrRequiFactory
      * @param AttributeRequirementRepositoryInterface $requirementRepo
      * @param TranslatableUpdater                     $translatableUpdater
+     * @param SimpleFactoryInterface                  $templateFactory
+     * @param ObjectUpdaterInterface                  $templateUpdater
      */
     public function __construct(
         IdentifiableObjectRepositoryInterface $familyRepository,
@@ -67,7 +77,9 @@ class FamilyUpdater implements ObjectUpdaterInterface
         ChannelRepositoryInterface $channelRepository,
         AttributeRequirementFactory $attrRequiFactory,
         AttributeRequirementRepositoryInterface $requirementRepo,
-        TranslatableUpdater $translatableUpdater
+        TranslatableUpdater $translatableUpdater,
+        SimpleFactoryInterface $templateFactory,
+        ObjectUpdaterInterface $templateUpdater
     ) {
         $this->accessor = PropertyAccess::createPropertyAccessor();
         $this->familyRepository = $familyRepository;
@@ -76,6 +88,8 @@ class FamilyUpdater implements ObjectUpdaterInterface
         $this->attrRequiFactory = $attrRequiFactory;
         $this->requirementRepo = $requirementRepo;
         $this->translatableUpdater = $translatableUpdater;
+        $this->templateFactory = $templateFactory;
+        $this->templateUpdater = $templateUpdater;
     }
 
     /**
@@ -113,6 +127,8 @@ class FamilyUpdater implements ObjectUpdaterInterface
             if (null !== $data && !is_scalar($data)) {
                 throw InvalidPropertyTypeException::scalarExpected($field, static::class, $data);
             }
+        } elseif (in_array($field, ['templates'])) {
+            // TODO-CM: validation...
         } elseif (in_array($field, ['attributes', 'labels'])) {
             $this->validateScalarArray($field, $data);
         } elseif ('attribute_requirements' === $field) {
@@ -201,6 +217,17 @@ class FamilyUpdater implements ObjectUpdaterInterface
                 break;
             case 'attribute_as_label':
                 $this->setAttributeAsLabel($family, $data);
+                break;
+            case 'templates':
+                $templates = new ArrayCollection();
+                foreach ($data as $templateData) {
+                    $template = $this->templateFactory->create();
+                    $template->setFamily($family);
+                    $this->templateUpdater->update($template, $templateData);
+                    $templates->add($template);
+                }
+
+                $family->setTemplates($templates);
                 break;
             default:
                 $this->setValue($family, $field, $data);

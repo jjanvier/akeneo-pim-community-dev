@@ -55,6 +55,15 @@ Pim\Bundle\CatalogBundle\Entity\Family:
                 - detach
                 - remove
                 - refresh
+        templates:
+            targetEntity: Pim\Component\Catalog\Model\TemplateInterface
+            mappedBy: family
+            orphanRemoval: true
+            cascade:
+               - persist
+               - detach
+               - remove
+               - refresh
     manyToOne:
         attributeAsLabel:
             targetEntity: Pim\Component\Catalog\Model\AttributeInterface

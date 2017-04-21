@@ -46,6 +46,8 @@ class ResolveDoctrineTargetModelPass extends AbstractResolveDoctrineTargetModelP
             'Pim\Component\Catalog\Model\GroupTranslationInterface'          => 'pim_catalog.entity.group_translation.class',
             'Pim\Component\Catalog\Model\GroupTypeTranslationInterface'      => 'pim_catalog.entity.group_type_translation.class',
             'Pim\Component\Catalog\Model\ChannelTranslationInterface'        => 'pim_catalog.entity.channel_translation.class',
+            'Pim\Component\Catalog\Model\TemplateInterface' => 'pim_catalog.entity.template.class',
+            'Pim\Component\Catalog\Model\AttributeSetInterface' => 'pim_catalog.entity.attribute_set.class',
         ];
     }
 }

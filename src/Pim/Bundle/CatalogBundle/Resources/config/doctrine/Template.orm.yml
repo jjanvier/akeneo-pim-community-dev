@@ -1,0 +1,32 @@
+Pim\Bundle\CatalogBundle\Entity\Template:
+    type: entity
+    table: pim_catalog_template
+    changeTrackingPolicy: DEFERRED_EXPLICIT
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        code:
+            type: string
+            length: 100
+            unique: true
+    manyToOne:
+        family:
+            targetEntity: Pim\Component\Catalog\Model\FamilyInterface
+            inversedBy: templates
+            joinColumn:
+                name: family_id
+                referencedColumnName: id
+                onDelete: CASCADE
+    oneToMany:
+        attributeSets:
+            targetEntity: Pim\Component\Catalog\Model\AttributeSetInterface
+            mappedBy: template
+            orphanRemoval: true
+            cascade:
+               - persist
+               - detach
+               - remove
+               - refresh
