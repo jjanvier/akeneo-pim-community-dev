@@ -1134,7 +1134,6 @@ class FixturesContext extends BaseFixturesContext
                 $attributeCode = $attribute->getCode();
                 $localeCode    = $infos['locale_code'];
                 $scopeCode     = $infos['scope_code'];
-                $priceCurrency = isset($infos['price_currency']) ? $infos['price_currency'] : null;
                 $productValue  = $product->getValue($attributeCode, $localeCode, $scopeCode);
 
                 if ('' === $value) {
@@ -1147,17 +1146,22 @@ class FixturesContext extends BaseFixturesContext
                     } else {
                         assertTrue(false !== strpos($productValue->getData()->getOriginalFilename(), $value));
                     }
-                } elseif ('prices' === $attribute->getBackendType() && null !== $priceCurrency) {
+                } elseif ('prices' === $attribute->getBackendType()) {
                     // $priceCurrency can be null if we want to test all the currencies at the same time
                     // in this case, it's a simple string comparison
                     // example: 180.00 EUR, 220.00 USD
+                    $found = false;
+                    foreach ($productValue->getData() as $price) {
+                        if ((string) $price === $value) {
+                            $found = true;
+                        }
+                    }
 
-                    $price = $productValue->getPrice($priceCurrency);
-                    assertEquals($value, $price->getData());
+                    assertTrue($found);
                 } elseif ('date' === $attribute->getBackendType()) {
                     assertEquals($value, $productValue->getData()->format('Y-m-d'));
                 } else {
-                    assertEquals($value, (string) $productValue);
+                    assertEquals($value, (string) $productValue->getData());
                 }
             }
 
