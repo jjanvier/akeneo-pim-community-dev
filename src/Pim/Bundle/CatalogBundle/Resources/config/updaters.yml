@@ -137,6 +137,19 @@ services:
             - '@pim_catalog.factory.attribute_requirement'
             - '@pim_catalog.repository.attribute_requirement'
             - '@pim_localization.updater.translatable'
+            - '@pim_catalog.factory.template'
+            - '@pim_catalog.updater.template'
+
+    pim_catalog.updater.template:
+        class: 'Pim\Component\Catalog\Updater\TemplateUpdater'
+        arguments:
+            - '@pim_catalog.factory.attribute_set'
+            - '@pim_catalog.updater.attribute_set'
+
+    pim_catalog.updater.attribute_set:
+        class: 'Pim\Component\Catalog\Updater\AttributeSetUpdater'
+        arguments:
+            - '@pim_catalog.repository.attribute'
 
     pim_catalog.updater.channel:
         class: '%pim_catalog.updater.channel.class%'
