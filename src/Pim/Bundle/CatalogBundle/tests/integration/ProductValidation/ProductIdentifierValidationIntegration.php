@@ -52,6 +52,25 @@ class ProductIdentifierValidationIntegration extends TestCase
         );
     }
 
+    public function testMaxCharactersValidation()
+    {
+        $attribute = $this->get('pim_catalog.repository.attribute')->findOneByCode('sku');
+        $attribute->setMaxCharacters(4);
+        $this->get('pim_catalog.saver.attribute')->save($attribute);
+
+        $correctProduct = $this->createProduct('1234');
+        $violations = $this->validateProduct($correctProduct);
+        $this->assertCount(0, $violations);
+
+        $wrongProduct = $this->createProduct('12345');
+        $violations = $this->validateProduct($wrongProduct);
+        $this->assertCount(1, $violations);
+        $this->assertSame(
+            $violations->get(0)->getMessage(),
+            'This value is too long. It should have 4 characters or less.'
+        );
+    }
+
     /**
      * {@inheritdoc}
      */

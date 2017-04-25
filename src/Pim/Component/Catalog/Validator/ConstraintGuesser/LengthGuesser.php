@@ -31,7 +31,8 @@ class LengthGuesser implements ConstraintGuesserInterface
             $attribute->getType(),
             [
                 AttributeTypes::TEXT,
-                AttributeTypes::TEXTAREA
+                AttributeTypes::TEXTAREA,
+                AttributeTypes::IDENTIFIER
             ]
         );
     }
