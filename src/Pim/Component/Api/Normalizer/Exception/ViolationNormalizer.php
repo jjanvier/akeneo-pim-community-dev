@@ -7,6 +7,7 @@ use Pim\Component\Api\Exception\ViolationHttpException;
 use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -29,7 +30,7 @@ class ViolationNormalizer implements NormalizerInterface
         $data = [
             'code'    => $exception->getStatusCode(),
             'message' => $exception->getMessage(),
-            'errors'  => $errors
+            'errors'  => $errors,
         ];
 
         return $data;
@@ -52,10 +53,12 @@ class ViolationNormalizer implements NormalizerInterface
     {
         $errors = [];
 
+        $violations = $this->filterLengthConstraintIdentifierViolations($violations);
+
         foreach ($violations as $violation) {
             $error = [
                 'property' => $this->getErrorField($violation),
-                'message'  => $violation->getMessage()
+                'message'  => $violation->getMessage(),
             ];
 
             if ($violation->getRoot() instanceof ProductInterface &&
@@ -68,7 +71,9 @@ class ViolationNormalizer implements NormalizerInterface
                 $error = $this->getProductValuesErrors($violation, $matches['attribute']);
             }
 
-            $errors[] = $error;
+            if (null !== $error) {
+                $errors[] = $error;
+            }
         }
 
         return $errors;
@@ -127,8 +132,8 @@ class ViolationNormalizer implements NormalizerInterface
 
         if (AttributeTypes::IDENTIFIER === $attributeType) {
             return [
-                'property'  => 'identifier',
-                'message'   => $violation->getMessage()
+                'property' => 'identifier',
+                'message'  => $violation->getMessage(),
             ];
         }
 
@@ -137,14 +142,64 @@ class ViolationNormalizer implements NormalizerInterface
             'message'   => $violation->getMessage(),
             'attribute' => $productValue->getAttribute()->getCode(),
             'locale'    => $productValue->getLocale(),
-            'scope'     => $productValue->getScope()
+            'scope'     => $productValue->getScope(),
         ];
 
         if (AttributeTypes::PRICE_COLLECTION === $attributeType &&
-            null !== $violation->getInvalidValue()->getCurrency()) {
+            null !== $violation->getInvalidValue()->getCurrency()
+        ) {
             $error['currency'] = $violation->getInvalidValue()->getCurrency();
         }
 
         return $error;
+    }
+
+    /**
+     * This function filters the constraints regarding the identifier size of the identifier.
+     *
+     * The product field "identifier" introduced during the single storage development (in addition to the "identifier"
+     * product value) added a new Length constraint on this property (see the product entity mapping in doctrine)
+     * which is breaking the API.
+     *
+     * This method aims to filter this new constraint and to normalize only the constraint regarding the product value
+     * (Because its Length max number is dynamic compared to the identifier property).
+     *
+     * TODO: To remove once the "identifier" product value is removed from the product value collection.
+     *
+     * @param ConstraintViolationListInterface $violations
+     *
+     * @return array
+     */
+    protected function filterLengthConstraintIdentifierViolations(ConstraintViolationListInterface $violations)
+    {
+        $filteredViolations = [];
+        $identifierViolations = [];
+
+        foreach ($violations as $violation) {
+            if ($violation->getRoot() instanceof ProductInterface &&
+                $violation->getConstraint() instanceof Length &&
+                1 === preg_match(
+                    '|^values\[(?P<attribute>[a-z0-9-_\<\>]+)|i',
+                    $violation->getPropertyPath(),
+                    $matches
+                )
+            ) {
+                $productValue = $violation->getRoot()->getValues()->getByKey($matches['attribute']);
+                $attributeType = $productValue->getAttribute()->getType();
+                if (AttributeTypes::IDENTIFIER === $attributeType) {
+                    $identifierViolations[] = $violation;
+                } else {
+                    $filteredViolations[] = $violation;
+                }
+            } else {
+                $filteredViolations[] = $violation;
+            }
+        }
+
+        if (0 !== count($identifierViolations)) {
+            $filteredViolations[] = end($identifierViolations);
+        }
+
+        return $filteredViolations;
     }
 }
