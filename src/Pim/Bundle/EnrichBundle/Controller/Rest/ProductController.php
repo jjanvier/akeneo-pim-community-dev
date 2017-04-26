@@ -138,15 +138,10 @@ class ProductController
         $product = $this->findProductOr404($id);
         $this->productBuilder->addMissingAssociations($product);
 
-        $normalizationContext = $this->userContext->toArray() + [
-            'filter_types'               => ['pim.internal_api.product_value.view'],
-            'disable_grouping_separator' => true
-        ];
-
         $normalizedProduct = $this->normalizer->normalize(
             $product,
             'internal_api',
-            $normalizationContext
+            $this->userContext->toArray()
         );
 
         return new JsonResponse($normalizedProduct);
@@ -168,15 +163,10 @@ class ProductController
         if (0 === $violations->count()) {
             $this->productSaver->save($product);
 
-            $normalizationContext = $this->userContext->toArray() + [
-                'filter_types'               => ['pim.internal_api.product_value.view'],
-                'disable_grouping_separator' => true
-            ];
-
             return new JsonResponse($this->normalizer->normalize(
                 $product,
                 'internal_api',
-                $normalizationContext
+                $this->userContext->toArray()
             ));
         }
 
@@ -218,15 +208,10 @@ class ProductController
         if (0 === $violations->count()) {
             $this->productSaver->save($product);
 
-            $normalizationContext = $this->userContext->toArray() + [
-                'filter_types'               => ['pim.internal_api.product_value.view'],
-                'disable_grouping_separator' => true
-            ];
-
             $normalizedProduct = $this->normalizer->normalize(
                 $product,
                 'internal_api',
-                $normalizationContext
+                $this->userContext->toArray()
             );
 
             return new JsonResponse($normalizedProduct);
@@ -305,9 +290,8 @@ class ProductController
     protected function findProductOr404($id)
     {
         $product = $this->productRepository->find($id);
-        $product = $this->objectFilter->filterObject($product, 'pim.internal_api.product.view') ? null : $product;
 
-        if (!$product) {
+        if (null === $product) {
             throw new NotFoundHttpException(
                 sprintf('Product with id %s could not be found.', $id)
             );

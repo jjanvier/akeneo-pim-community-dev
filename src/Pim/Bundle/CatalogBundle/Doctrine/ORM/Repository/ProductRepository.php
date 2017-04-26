@@ -151,7 +151,33 @@ class ProductRepository extends EntityRepository implements
      */
     public function findOneByIdentifier($identifier)
     {
-        return $this->findOneBy(['identifier' => $identifier]);
+        $pqb = $this->queryBuilderFactory->create();
+        $pqb->addFilter('identifier', Operators::EQUALS, $identifier);
+
+        $products = $pqb->execute();
+
+        if (!empty($products)) {
+            return $products->current();
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function find($id)
+    {
+        $pqb = $this->queryBuilderFactory->create();
+        $pqb->addFilter('id', Operators::EQUALS, $id);
+
+        $products = $pqb->execute();
+
+        if (!empty($products)) {
+            return $products->current();
+        }
+
+        return null;
     }
 
     /**
