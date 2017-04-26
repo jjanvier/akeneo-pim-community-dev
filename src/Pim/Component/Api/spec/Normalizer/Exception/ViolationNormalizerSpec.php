@@ -83,7 +83,6 @@ class ViolationNormalizerSpec extends ObjectBehavior
     function it_normalizes_an_exception_with_error_on_product_identifier_when_too_long(
         ViolationHttpException $exception,
         ConstraintViolationList $constraintViolations,
-        ConstraintViolation $violationIdentifier,
         ConstraintViolation $violationProductValue,
         ProductInterface $product,
         \ArrayIterator $iterator,
@@ -102,12 +101,6 @@ class ViolationNormalizerSpec extends ObjectBehavior
         $product->getValues()->willReturn($productValues);
         $productValues->getByKey('sku')->willReturn($sku);
 
-        $violationIdentifier->getRoot()->willReturn($product);
-        $violationIdentifier->getMessage()->willReturn('Field identifier is too long (255)');
-        $violationIdentifier->getPropertyPath()->willReturn('identifier');
-        $violationIdentifier->getConstraint()->willReturn($lengthConstraint);
-        $violationIdentifier->getMessageTemplate()->willReturn('This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.');
-
         $violationProductValue->getRoot()->willReturn($product);
         $violationProductValue->getMessage()->willReturn('Product value sku is too long (10)');
         $violationProductValue->getPropertyPath()->willReturn('values[sku].varchar');
@@ -115,20 +108,20 @@ class ViolationNormalizerSpec extends ObjectBehavior
         $violationProductValue->getMessageTemplate()->willReturn('This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.');
 
         $constraintViolations->getIterator()->willReturn($iterator);
-        $iterator->rewind()->willReturn($violationIdentifier);
-        $valueCount = 2;
+        $iterator->rewind()->willReturn($violationProductValue);
+        $valueCount = 1;
         $iterator->valid()->will(
             function () use (&$valueCount) {
                 return $valueCount-- > 0;
             }
         );
-        $iterator->current()->willReturn($violationIdentifier, $violationProductValue);
+        $iterator->current()->willReturn($violationProductValue);
         $iterator->next()->shouldBeCalled();
 
         $exception->getViolations()->willReturn($constraintViolations);
         $exception->getStatusCode()->willReturn(Response::HTTP_UNPROCESSABLE_ENTITY);
 
-        $violationIdentifier->getConstraint()->willReturn($lengthConstraint);
+        $violationProductValue->getConstraint()->willReturn($lengthConstraint);
 
         $this->normalize($exception)->shouldReturn([
             'code'    => Response::HTTP_UNPROCESSABLE_ENTITY,

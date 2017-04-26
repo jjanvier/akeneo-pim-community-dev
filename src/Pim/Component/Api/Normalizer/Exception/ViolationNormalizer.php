@@ -44,6 +44,15 @@ class ViolationNormalizer implements NormalizerInterface
     }
 
     /**
+     * The product field "identifier" introduced during the single storage development (in addition to the "identifier"
+     * product value) added a new Length constraint on this property (see the product entity mapping in doctrine)
+     * which is breaking the API.
+     *
+     * This method does not normalize the "identifier" property to normalize only the constraint regarding the product
+     * value (Because its Length max number is dynamic compared to the identifier property).
+     *
+     * TODO: TIP-722 - to revert once the identifier product value is dropped.
+     *
      * @param ConstraintViolationListInterface $violations
      *
      * @return array
@@ -51,14 +60,15 @@ class ViolationNormalizer implements NormalizerInterface
     protected function normalizeViolations(ConstraintViolationListInterface $violations)
     {
         $errors = [];
-
-        $violations = $this->filterDuplicatedConstraintViolations($violations);
+        $existingViolation = [];
 
         foreach ($violations as $violation) {
             $error = [
                 'property' => $this->getErrorField($violation),
                 'message'  => $violation->getMessage()
             ];
+
+            $propertyPath = $violation->getPropertyPath();
 
             if ($violation->getRoot() instanceof ProductInterface &&
                 1 === preg_match(
@@ -68,9 +78,19 @@ class ViolationNormalizer implements NormalizerInterface
                 )
             ) {
                 $error = $this->getProductValuesErrors($violation, $matches['attribute']);
+
+                $productValue = $violation->getRoot()->getValues()->getByKey($matches['attribute']);
+                $attributeType = $productValue->getAttribute()->getType();
+
+                $propertyPath = AttributeTypes::IDENTIFIER === $attributeType ? 'identifier' : $violation->getPropertyPath();
             }
 
-            $errors[] = $error;
+            $key = $propertyPath.$violation->getMessageTemplate();
+            if (!array_key_exists($key, $existingViolation)) {
+                $errors[] = $error;
+            }
+
+            $existingViolation[$key] = true;
         }
 
         return $errors;
@@ -117,6 +137,8 @@ class ViolationNormalizer implements NormalizerInterface
      *    "message": "..."
      * ]
      *
+     * TODO: TIP-722 To remove once the "identifier" product value is removed from the product value collection.
+     *
      * @param ConstraintViolationInterface $violation
      * @param string                       $productValueKey
      *
@@ -148,53 +170,5 @@ class ViolationNormalizer implements NormalizerInterface
         }
 
         return $error;
-    }
-
-    /**
-     * This function filters the constraints regarding the identifier size of the identifier.
-     *
-     * The product field "identifier" introduced during the single storage development (in addition to the "identifier"
-     * product value) added a new Length constraint on this property (see the product entity mapping in doctrine)
-     * which is breaking the API.
-     *
-     * This method aims to filter this new constraint and to normalize only the constraint regarding the product value
-     * (Because its Length max number is dynamic compared to the identifier property).
-     *
-     * TODO: To remove once the "identifier" product value is removed from the product value collection.
-     *
-     * @param ConstraintViolationListInterface $violations
-     *
-     * @return array
-     */
-    protected function filterDuplicatedConstraintViolations(ConstraintViolationListInterface $violations)
-    {
-        $filteredViolations = [];
-        $filteredConstraintViolations = [];
-
-        foreach ($violations as $violation) {
-            $propertyPath = $violation->getPropertyPath();
-
-            if ($violation->getRoot() instanceof ProductInterface &&
-                1 === preg_match(
-                    '|^values\[(?P<attribute>[a-z0-9-_\<\>]+)|i',
-                    $violation->getPropertyPath(),
-                    $matches
-                )
-            ) {
-                $productValue = $violation->getRoot()->getValues()->getByKey($matches['attribute']);
-                $attributeType = $productValue->getAttribute()->getType();
-                $propertyPath = AttributeTypes::IDENTIFIER === $attributeType ? 'identifier' : $violation->getPropertyPath();
-            }
-
-            $key = $propertyPath . $violation->getMessageTemplate();
-            if (null !== $key && array_key_exists($key, $filteredConstraintViolations)) {
-                $filteredViolations[$filteredConstraintViolations[$key]] = $violation;
-            } else {
-                $filteredViolations[] = $violation;
-                $filteredConstraintViolations[$key] = count($filteredViolations) - 1;
-            }
-        }
-
-        return $filteredViolations;
     }
 }
