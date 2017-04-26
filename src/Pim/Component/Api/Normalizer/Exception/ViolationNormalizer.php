@@ -7,7 +7,6 @@ use Pim\Component\Api\Exception\ViolationHttpException;
 use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -30,7 +29,7 @@ class ViolationNormalizer implements NormalizerInterface
         $data = [
             'code'    => $exception->getStatusCode(),
             'message' => $exception->getMessage(),
-            'errors'  => $errors,
+            'errors'  => $errors
         ];
 
         return $data;
@@ -53,12 +52,12 @@ class ViolationNormalizer implements NormalizerInterface
     {
         $errors = [];
 
-        $violations = $this->filterLengthConstraintIdentifierViolations($violations);
+        $violations = $this->filterDuplicatedConstraintViolations($violations);
 
         foreach ($violations as $violation) {
             $error = [
                 'property' => $this->getErrorField($violation),
-                'message'  => $violation->getMessage(),
+                'message'  => $violation->getMessage()
             ];
 
             if ($violation->getRoot() instanceof ProductInterface &&
@@ -71,9 +70,7 @@ class ViolationNormalizer implements NormalizerInterface
                 $error = $this->getProductValuesErrors($violation, $matches['attribute']);
             }
 
-            if (null !== $error) {
-                $errors[] = $error;
-            }
+            $errors[] = $error;
         }
 
         return $errors;
@@ -132,8 +129,8 @@ class ViolationNormalizer implements NormalizerInterface
 
         if (AttributeTypes::IDENTIFIER === $attributeType) {
             return [
-                'property' => 'identifier',
-                'message'  => $violation->getMessage(),
+                'property'  => 'identifier',
+                'message'   => $violation->getMessage()
             ];
         }
 
@@ -142,12 +139,11 @@ class ViolationNormalizer implements NormalizerInterface
             'message'   => $violation->getMessage(),
             'attribute' => $productValue->getAttribute()->getCode(),
             'locale'    => $productValue->getLocale(),
-            'scope'     => $productValue->getScope(),
+            'scope'     => $productValue->getScope()
         ];
 
         if (AttributeTypes::PRICE_COLLECTION === $attributeType &&
-            null !== $violation->getInvalidValue()->getCurrency()
-        ) {
+            null !== $violation->getInvalidValue()->getCurrency()) {
             $error['currency'] = $violation->getInvalidValue()->getCurrency();
         }
 
@@ -170,14 +166,15 @@ class ViolationNormalizer implements NormalizerInterface
      *
      * @return array
      */
-    protected function filterLengthConstraintIdentifierViolations(ConstraintViolationListInterface $violations)
+    protected function filterDuplicatedConstraintViolations(ConstraintViolationListInterface $violations)
     {
         $filteredViolations = [];
-        $identifierViolations = [];
+        $filteredConstraintViolations = [];
 
         foreach ($violations as $violation) {
+            $propertyPath = $violation->getPropertyPath();
+
             if ($violation->getRoot() instanceof ProductInterface &&
-                $violation->getConstraint() instanceof Length &&
                 1 === preg_match(
                     '|^values\[(?P<attribute>[a-z0-9-_\<\>]+)|i',
                     $violation->getPropertyPath(),
@@ -186,18 +183,16 @@ class ViolationNormalizer implements NormalizerInterface
             ) {
                 $productValue = $violation->getRoot()->getValues()->getByKey($matches['attribute']);
                 $attributeType = $productValue->getAttribute()->getType();
-                if (AttributeTypes::IDENTIFIER === $attributeType) {
-                    $identifierViolations[] = $violation;
-                } else {
-                    $filteredViolations[] = $violation;
-                }
+                $propertyPath = AttributeTypes::IDENTIFIER === $attributeType ? 'identifier' : $violation->getPropertyPath();
+            }
+
+            $key = $propertyPath . $violation->getMessageTemplate();
+            if (null !== $key && array_key_exists($key, $filteredConstraintViolations)) {
+                $filteredViolations[$filteredConstraintViolations[$key]] = $violation;
             } else {
                 $filteredViolations[] = $violation;
+                $filteredConstraintViolations[$key] = count($filteredViolations) - 1;
             }
-        }
-
-        if (0 !== count($identifierViolations)) {
-            $filteredViolations[] = end($identifierViolations);
         }
 
         return $filteredViolations;

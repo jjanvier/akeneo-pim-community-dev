@@ -91,6 +91,21 @@ class ProductIdentifierValidationIntegration extends TestCase
         );
     }
 
+    public function testNotBlankValidation()
+    {
+        $correctProduct = $this->createProduct('sku-001');
+        $violations = $this->validateProduct($correctProduct);
+        $this->assertCount(0, $violations);
+
+        $wrongProduct = $this->createProduct('');
+        $violations = $this->validateProduct($wrongProduct);
+        $this->assertCount(1, $violations);
+        $this->assertSame(
+            $violations->get(0)->getMessage(),
+            'This value should not be blank.'
+        );
+    }
+
     /**
      * {@inheritdoc}
      */

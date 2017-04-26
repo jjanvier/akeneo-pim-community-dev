@@ -53,6 +53,7 @@ class ViolationNormalizerSpec extends ObjectBehavior
         $violation->getRoot()->willReturn($product);
         $violation->getMessage()->willReturn('Not Blank');
         $violation->getPropertyPath()->willReturn('values[sku].varchar');
+        $violation->getMessageTemplate()->willReturn(null);
 
         $constraintViolations->getIterator()->willReturn($iterator);
         $iterator->rewind()->willReturn($violation);
@@ -89,7 +90,7 @@ class ViolationNormalizerSpec extends ObjectBehavior
         ProductValueCollectionInterface $productValues,
         ProductValueInterface $sku,
         AttributeInterface $attribute,
-        Length $lengthConstraint
+        Constraint $lengthConstraint
     ) {
         $attribute->getType()->willReturn('pim_catalog_identifier');
         $attribute->getCode()->willReturn('sku');
@@ -103,13 +104,15 @@ class ViolationNormalizerSpec extends ObjectBehavior
 
         $violationIdentifier->getRoot()->willReturn($product);
         $violationIdentifier->getMessage()->willReturn('Field identifier is too long (255)');
-        $violationIdentifier->getPropertyPath()->willReturn('values[sku].varchar');
+        $violationIdentifier->getPropertyPath()->willReturn('identifier');
         $violationIdentifier->getConstraint()->willReturn($lengthConstraint);
+        $violationIdentifier->getMessageTemplate()->willReturn('This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.');
 
         $violationProductValue->getRoot()->willReturn($product);
         $violationProductValue->getMessage()->willReturn('Product value sku is too long (10)');
         $violationProductValue->getPropertyPath()->willReturn('values[sku].varchar');
         $violationProductValue->getConstraint()->willReturn($lengthConstraint);
+        $violationProductValue->getMessageTemplate()->willReturn('This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.');
 
         $constraintViolations->getIterator()->willReturn($iterator);
         $iterator->rewind()->willReturn($violationIdentifier);
@@ -139,6 +142,68 @@ class ViolationNormalizerSpec extends ObjectBehavior
         ]);
     }
 
+    function it_normalizes_an_exception_with_error_on_product_identifier_when_regexp(
+        ViolationHttpException $exception,
+        ConstraintViolationList $constraintViolations,
+        ConstraintViolation $violationIdentifier,
+        ConstraintViolation $violationProductValue,
+        ProductInterface $product,
+        \ArrayIterator $iterator,
+        ProductValueCollectionInterface $productValues,
+        ProductValueInterface $sku,
+        AttributeInterface $attribute,
+        Constraint $regexpConstraint
+    ) {
+        $attribute->getType()->willReturn('pim_catalog_identifier');
+        $attribute->getCode()->willReturn('sku');
+        $attribute->getMaxCharacters()->willReturn(10);
+
+        $sku->getAttribute()->willReturn($attribute);
+        $sku->getLocale()->willReturn(null);
+        $sku->getScope()->willReturn(null);
+        $product->getValues()->willReturn($productValues);
+        $productValues->getByKey('sku')->willReturn($sku);
+
+        $violationIdentifier->getRoot()->willReturn($product);
+        $violationIdentifier->getMessage()->willReturn('This value is not valid.');
+        $violationIdentifier->getPropertyPath()->willReturn('identifier');
+        $violationIdentifier->getConstraint()->willReturn($regexpConstraint);
+        $violationIdentifier->getMessageTemplate()->willReturn(null);
+
+        $violationProductValue->getRoot()->willReturn($product);
+        $violationProductValue->getMessage()->willReturn('This value is not valid.');
+        $violationProductValue->getPropertyPath()->willReturn('values[sku].varchar');
+        $violationProductValue->getConstraint()->willReturn($regexpConstraint);
+        $violationProductValue->getMessageTemplate()->willReturn(null);
+
+        $constraintViolations->getIterator()->willReturn($iterator);
+        $iterator->rewind()->willReturn($violationIdentifier);
+        $valueCount = 2;
+        $iterator->valid()->will(
+            function () use (&$valueCount) {
+                return $valueCount-- > 0;
+            }
+        );
+        $iterator->current()->willReturn($violationIdentifier, $violationProductValue);
+        $iterator->next()->shouldBeCalled();
+
+        $exception->getViolations()->willReturn($constraintViolations);
+        $exception->getStatusCode()->willReturn(Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        $violationIdentifier->getConstraint()->willReturn($regexpConstraint);
+
+        $this->normalize($exception)->shouldReturn([
+            'code'    => Response::HTTP_UNPROCESSABLE_ENTITY,
+            'message' => '',
+            'errors'  => [
+                [
+                    'property' => 'identifier',
+                    'message'  => 'This value is not valid.',
+                ],
+            ],
+        ]);
+    }
+
     function it_normalizes_an_exception_with_error_on_attribute_localizable_and_scopable(
         ViolationHttpException $exception,
         ConstraintViolationList $constraintViolations,
@@ -161,6 +226,7 @@ class ViolationNormalizerSpec extends ObjectBehavior
         $violation->getRoot()->willReturn($product);
         $violation->getMessage()->willReturn('Not Blank');
         $violation->getPropertyPath()->willReturn('values[description-en_US-ecommerce].varchar');
+        $violation->getMessageTemplate()->willReturn(null);
 
         $constraintViolations->getIterator()->willReturn($iterator);
         $iterator->rewind()->willReturn($violation);
@@ -204,6 +270,7 @@ class ViolationNormalizerSpec extends ObjectBehavior
         $violation->getRoot()->willReturn($attribute);
         $violation->getMessage()->willReturn('The locale "ab_CD" does not exist.');
         $violation->getPropertyPath()->willReturn('translations[0].locale');
+        $violation->getMessageTemplate()->willReturn(null);
 
         $constraintViolations->getIterator()->willReturn($iterator);
         $iterator->rewind()->willReturn($violation);
