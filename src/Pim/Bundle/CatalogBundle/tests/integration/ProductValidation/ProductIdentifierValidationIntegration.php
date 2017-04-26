@@ -71,6 +71,26 @@ class ProductIdentifierValidationIntegration extends TestCase
         );
     }
 
+    public function testRegexValidation()
+    {
+        $attribute = $this->get('pim_catalog.repository.attribute')->findOneByCode('sku');
+        $attribute->setValidationRule('regexp');
+        $attribute->setValidationRegexp('/^sku-\d*$/');
+        $this->get('pim_catalog.saver.attribute')->save($attribute);
+
+        $correctProduct = $this->createProduct('sku-001');
+        $violations = $this->validateProduct($correctProduct);
+        $this->assertCount(0, $violations);
+
+        $wrongProduct = $this->createProduct('001');
+        $violations = $this->validateProduct($wrongProduct);
+        $this->assertCount(1, $violations);
+        $this->assertSame(
+            $violations->get(0)->getMessage(),
+            'This value is not valid.'
+        );
+    }
+
     /**
      * {@inheritdoc}
      */
