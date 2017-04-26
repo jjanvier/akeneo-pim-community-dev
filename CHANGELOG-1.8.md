@@ -7,6 +7,8 @@
 ## Technical improvements
 
 - TIP-711: Rework job execution reporting page with the new PEF architecture
+- TIP-724: Refactoring of the 'Settings/Association types' index screen using 'pim/common/grid'
+- TIP-725: Generalization of the refactoring made in the TIP-724 for all screen containing a simple grid 
 
 ## BC breaks
 
@@ -106,3 +108,7 @@
 - Add method `findCodesByIdentifiers` in `Pim\Component\Catalog\Repository\AttributeOptionRepositoryInterface`
 - Add method `findCodesByIdentifiers` in `Pim\Component\ReferenceData\Repository\ReferenceDataRepositoryInterface`
 - Remove class `Pim\Bundle\DataGridBundle\EventListener\AddParametersToVariantProductGridListener`
+
+## Requirements
+
+- GITHUB-5937: Remove the need to have mcrypt installed
