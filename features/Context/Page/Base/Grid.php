@@ -672,7 +672,7 @@ class Grid extends Index
 
         $this->spin(function () use ($manageFilters, $filterName) {
             $loadingWrapper = $this->getElement('Grid container')->find('css', '#loading-wrapper');
-            if ((null !== $loadingWrapper) && $loadingWrapper->isVisible()) {
+            if (null !== $loadingWrapper && $loadingWrapper->isVisible()) {
                 return false;
             }
 
