@@ -33,15 +33,18 @@ class DeleteProductsMassActionHandler extends DeleteMassActionHandler
         $datasource = $datagrid->getDatasource();
         $datasource->setHydrator($this->hydrator);
 
-        // hydrator uses index by id
-        $objectIds = $datasource->getResults();
+        $productsToRemove = $datasource->getResults();
+        $ProductsId = [];
+        foreach ($productsToRemove['data'] as $objectId) {
+            $ProductsId[] = $objectId->getValue('id');
+        }
 
         try {
-            $this->eventDispatcher->dispatch(ProductEvents::PRE_MASS_REMOVE, new GenericEvent($objectIds));
+            $this->eventDispatcher->dispatch(ProductEvents::PRE_MASS_REMOVE, new GenericEvent($productsToRemove));
 
-            $countRemoved = $datasource->getMassActionRepository()->deleteFromIds($objectIds);
+            $countRemoved = $datasource->getMassActionRepository()->deleteFromIds($ProductsId);
 
-            $this->eventDispatcher->dispatch(ProductEvents::POST_MASS_REMOVE, new GenericEvent($objectIds));
+            $this->eventDispatcher->dispatch(ProductEvents::POST_MASS_REMOVE, new GenericEvent($productsToRemove));
         } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
 
@@ -49,7 +52,7 @@ class DeleteProductsMassActionHandler extends DeleteMassActionHandler
         }
 
         // dispatch post handler event
-        $massActionEvent = new MassActionEvent($datagrid, $massAction, $objectIds);
+        $massActionEvent = new MassActionEvent($datagrid, $massAction, $productsToRemove);
         $this->eventDispatcher->dispatch(MassActionEvents::MASS_DELETE_POST_HANDLER, $massActionEvent);
 
         return $this->getResponse($massAction, $countRemoved);
