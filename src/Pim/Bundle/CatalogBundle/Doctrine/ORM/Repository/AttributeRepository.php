@@ -43,36 +43,6 @@ class AttributeRepository extends EntityRepository implements
     }
 
     /**
-     * Find attributes with related attribute groups QB
-     *
-     * @param array $attributeIds
-     * @param array $criterias
-     *
-     * @return QueryBuilder
-     */
-    protected function findWithGroupsQB(array $attributeIds = [], array $criterias = [])
-    {
-        $qb = $this->createQueryBuilder('a');
-        $qb
-            ->addSelect('atrans', 'g', 'gtrans')
-            ->leftJoin('a.translations', 'atrans')
-            ->leftJoin('a.group', 'g')
-            ->leftJoin('g.translations', 'gtrans');
-
-        if (!empty($attributeIds)) {
-            $qb->andWhere($qb->expr()->in('a.id', $attributeIds));
-        }
-
-        if (isset($criterias['conditions'])) {
-            foreach ($criterias['conditions'] as $criteria => $value) {
-                $qb->andWhere($qb->expr()->eq(sprintf('a.%s', $criteria), $value));
-            }
-        }
-
-        return $qb;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function findUniqueAttributeCodes()
