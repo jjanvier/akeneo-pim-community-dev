@@ -6,6 +6,7 @@ use Akeneo\Bundle\StorageUtilsBundle\DependencyInjection\AkeneoStorageUtilsExten
 use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\DataGridBundle\Datagrid\Common\DatagridConfiguration;
 use Oro\Bundle\DataGridBundle\Datagrid\RequestParameters;
+use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\Product\ProductAttributeRepository;
 use Pim\Bundle\DataGridBundle\Datagrid\Configuration\ConfiguratorInterface;
 use Pim\Bundle\UserBundle\Context\UserContext;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
@@ -77,7 +78,7 @@ class ContextConfigurator implements ConfiguratorInterface
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
-        AttributeRepositoryInterface $attributeRepository,
+        ProductAttributeRepository $attributeRepository,
         RequestParameters $requestParams,
         UserContext $userContext,
         ObjectManager $objectManager,

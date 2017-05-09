@@ -20,4 +20,4 @@ services:
     pim_enrich.form.subscriber.add_variant_group_axes:
         class: '%pim_enrich.form.subscriber.add_variant_group_axes.class%'
         arguments:
-            - '%pim_catalog.entity.attribute.class%'
+            - 'Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\Product\ProductAttributeRepository'

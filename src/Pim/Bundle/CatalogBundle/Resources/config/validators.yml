@@ -124,7 +124,7 @@ services:
     pim_catalog.validator.constraint.variant_group_values:
         class: '%pim_catalog.validator.constraint.variant_group_values.class%'
         arguments:
-            - '@pim_catalog.repository.attribute'
+            - '@pim_catalog.repository.product.product_attribute'
         tags:
             - { name: validator.constraint_validator, alias: pim_variant_group_values_validator }
 

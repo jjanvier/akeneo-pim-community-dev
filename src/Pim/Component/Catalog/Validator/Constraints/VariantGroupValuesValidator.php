@@ -2,6 +2,7 @@
 
 namespace Pim\Component\Catalog\Validator\Constraints;
 
+use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\Product\ProductAttributeRepository;
 use Pim\Component\Catalog\Model\GroupInterface;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Symfony\Component\Validator\Constraint;
@@ -16,13 +17,12 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class VariantGroupValuesValidator extends ConstraintValidator
 {
-    /** @var AttributeRepositoryInterface */
     protected $attributeRepository;
 
     /**
      * @param AttributeRepositoryInterface $attributeRepository
      */
-    public function __construct(AttributeRepositoryInterface $attributeRepository)
+    public function __construct(ProductAttributeRepository $attributeRepository)
     {
         $this->attributeRepository = $attributeRepository;
     }
