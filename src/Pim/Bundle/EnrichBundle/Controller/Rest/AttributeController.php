@@ -114,10 +114,6 @@ class AttributeController
     public function getAction($identifier)
     {
         $attribute = $this->attributeRepository->findOneByIdentifier($identifier);
-
-        $attribute = $this->attributeFilter
-            ->filterObject($attribute, 'pim.internal_api.attribute.view') ? null : $attribute;
-
         if (null === $attribute) {
             throw new NotFoundHttpException(sprintf('Attribute with code "%s" not found', $identifier));
         }

@@ -117,10 +117,7 @@ class FamilyNormalizer implements NormalizerInterface
      */
     protected function normalizeAttributes($codes)
     {
-        $attributes = $this->collectionFilter->filterCollection(
-            $this->attributeRepository->findBy(['code' => $codes]),
-            'pim.internal_api.attribute.view'
-        );
+        $attributes = $this->attributeRepository->findBy(['code' => $codes]);
 
         $normalizedAttributes = [];
         foreach ($attributes as $attribute) {
@@ -150,10 +147,7 @@ class FamilyNormalizer implements NormalizerInterface
         $result = [];
 
         foreach ($requirements as $channel => $attributeCodes) {
-            $filteredAttributes = $this->collectionFilter->filterCollection(
-                $this->attributeRepository->findBy(['code' => $attributeCodes]),
-                'pim.internal_api.attribute.view'
-            );
+            $filteredAttributes = $this->attributeRepository->findBy(['code' => $attributeCodes]);
 
             $result[$channel] = array_map(function ($attribute) {
                 return $attribute->getCode();
