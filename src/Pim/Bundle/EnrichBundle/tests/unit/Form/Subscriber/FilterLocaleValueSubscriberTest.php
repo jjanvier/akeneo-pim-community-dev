@@ -1,6 +1,6 @@
 <?php
 
-namespace Pim\Bundle\EnrichBundle\Tests\Unit\Form\Subscriber;
+namespace Pim\Bundle\EnrichBundle\tests\unit\Form\Subscriber;
 
 use Pim\Bundle\EnrichBundle\Form\Subscriber\FilterLocaleValueSubscriber;
 

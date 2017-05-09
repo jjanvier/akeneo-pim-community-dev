@@ -27,6 +27,8 @@ services:
 
     pim_catalog.normalizer.indexing.product.properties:
         class: '%pim_catalog.normalizer.indexing.product.properties.class%'
+        arguments:
+            - '@pim_catalog.repository.association'
         tags:
             - { name: pim_serializer.normalizer, priority: 40 }
 

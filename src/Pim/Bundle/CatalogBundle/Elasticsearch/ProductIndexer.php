@@ -48,6 +48,8 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface
         $normalizedProduct = $this->normalizer->normalize($product, 'indexing');
         $this->validateProductNormalization($normalizedProduct);
         $this->indexer->index($this->indexType, $normalizedProduct['id'], $normalizedProduct);
+
+        $this->indexAssociatedProducts([$product]);
     }
 
     /**
@@ -64,6 +66,49 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface
         }
 
         $this->indexer->bulkIndexes($this->indexType, $normalizedProducts, 'id');
+
+        if (!isset($options['associated_products_already_indexed']) ||
+            false === $options['associated_products_already_indexed']
+        ) {
+            $this->indexAssociatedProducts($products);
+        }
+    }
+
+    /**
+     * Index associated products.
+     *
+     * In ORM, the association is carried by the owner product. As a result,
+     * when new associations are created, only owner products are saved in MySQL
+     * then indexed in Elasticsearch.
+     *
+     * Problem is, the "is_associated" notion is to be carried by the associated
+     * products, so they have to be re-indexed. The "associated_products_already_indexed"
+     * option ensure we don't fall in an infinite indexation loop, preventing the
+     * associated products of the associated products (and so on) to be indexed too.
+     *
+     * See {@see Pim\Component\Catalog\Normalizer\Indexing\Product\PropertiesNormalizer}
+     * to understand how the Elasticsearch "is_associated" field is created.
+     *
+     * @param ProductInterface[] $products
+     */
+    private function indexAssociatedProducts(array $products)
+    {
+        $associatedProducts = [];
+        foreach ($products as $product) {
+            foreach ($product->getAssociations() as $association) {
+                foreach ($association->getProducts() as $associatedProduct) {
+                    if (!in_array($associatedProduct, $associatedProducts) &&
+                        !in_array($associatedProduct, $products)
+                    ) {
+                        $associatedProducts[] = $associatedProduct;
+                    }
+                }
+            }
+        }
+
+        if (!empty($associatedProducts)) {
+            $this->indexAll($associatedProducts, ['associated_products_already_indexed' => true]);
+        }
     }
 
     /**
@@ -72,12 +117,11 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface
     private function validateProduct($product)
     {
         if (!$product instanceof ProductInterface) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Only products "Pim\Component\Catalog\Model\ProductInterface" can be indexed in the search engine, "%s" provided.',
-                    ClassUtils::getClass($product)
-                )
-            );
+            throw new \InvalidArgumentException(sprintf(
+                'Only products "%s" can be indexed in the search engine, "%s" provided.',
+                ProductInterface::class,
+                ClassUtils::getClass($product)
+            ));
         }
     }
 

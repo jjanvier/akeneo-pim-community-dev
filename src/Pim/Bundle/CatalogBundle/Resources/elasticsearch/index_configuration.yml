@@ -15,8 +15,6 @@ mappings:
                 type: 'keyword'
             variant_group:
                 type: 'keyword'
-            is_associated:
-                type: 'boolean'
             created:
                 type: 'date'
             updated:
@@ -52,10 +50,10 @@ mappings:
                         normalizer: 'varchar_normalizer'
             -
                 completeness:
-                     path_match: 'completeness.*'
-                     match_mapping_type: 'long'
-                     mapping:
-                         type: 'integer'
+                    path_match: 'completeness.*'
+                    match_mapping_type: 'long'
+                    mapping:
+                        type: 'integer'
             -
                 decimal:
                     path_match: 'values.*-decimal.*'
@@ -176,6 +174,13 @@ mappings:
                     match_mapping_type: 'boolean'
                     mapping:
                         type: 'boolean'
+            -
+                is_associated:
+                    path_match: 'is_associated.*.*'
+                    match_mapping_type: 'boolean'
+                    mapping:
+                        type: 'boolean'
+
 settings:
     analysis:
         normalizer:
