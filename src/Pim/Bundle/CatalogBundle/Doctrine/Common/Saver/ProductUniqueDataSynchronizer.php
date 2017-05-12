@@ -38,6 +38,9 @@ class ProductUniqueDataSynchronizer
     public function synchronize(ProductInterface $product)
     {
         $uniqueDataCollection = $product->getUniqueData();
+        if (null === $uniqueDataCollection) {
+            return;
+        }
 
         foreach ($product->getValues()->getUniqueValues() as $value) {
             $attribute = $value->getAttribute();
