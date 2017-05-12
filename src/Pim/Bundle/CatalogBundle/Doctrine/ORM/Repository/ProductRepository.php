@@ -156,7 +156,7 @@ class ProductRepository extends EntityRepository implements
 
         $products = $pqb->execute();
 
-        if (!empty($products)) {
+        if ($products->count() > 0) {
             return $products->current();
         }
 
@@ -173,7 +173,7 @@ class ProductRepository extends EntityRepository implements
 
         $products = $pqb->execute();
 
-        if (!empty($products)) {
+        if ($products->count() > 0) {
             return $products->current();
         }
 
