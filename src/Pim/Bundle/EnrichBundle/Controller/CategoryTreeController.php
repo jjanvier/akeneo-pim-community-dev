@@ -9,6 +9,7 @@ use Akeneo\Component\StorageUtils\Remover\RemoverInterface;
 use Akeneo\Component\StorageUtils\Saver\SaverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oro\Bundle\SecurityBundle\SecurityFacade;
+use Pim\Bundle\EnrichBundle\Doctrine\ORM\Repository\CategoryTreeRepositoryInterface;
 use Pim\Bundle\EnrichBundle\Event\CategoryEvents;
 use Pim\Bundle\EnrichBundle\Flash\Message;
 use Pim\Bundle\UserBundle\Context\UserContext;
@@ -74,7 +75,7 @@ class CategoryTreeController extends Controller
         SaverInterface $categorySaver,
         RemoverInterface $categoryRemover,
         SimpleFactoryInterface $categoryFactory,
-        CategoryRepositoryInterface $categoryRepository,
+        CategoryTreeRepositoryInterface $categoryRepository,
         SecurityFacade $securityFacade,
         array $rawConfiguration
     ) {

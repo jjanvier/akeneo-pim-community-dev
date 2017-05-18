@@ -5,47 +5,50 @@ namespace Pim\Bundle\EnrichBundle\Doctrine\ORM\Repository;
 use Akeneo\Component\Classification\Model\CategoryInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\UnexpectedResultException;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Pim\Bundle\EnrichBundle\Doctrine\ORM\Repository\QueryBuilder\CategoryTreeQueryBuilder;
 
 /**
  * @author    Marie Bochu <marie.bochu@akeneo.com>
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class CategoryTreeRepository extends NestedTreeRepository
+class CategoryTreeRepository implements CategoryTreeRepositoryInterface
 {
+    protected $qb;
+
     /**
-     * @param EntityManager $em
-     * @param string        $class
+     * @param CategoryTreeQueryBuilder $qb
      */
-    public function __construct(EntityManager $em, $class)
+    public function __construct($qb)
     {
-        parent::__construct($em, $em->getClassMetadata($class));
+        $this->qb = $qb;
+    }
+
+    /**
+     * @param $id
+     *
+     * @return mixed|null
+     */
+    public function find($id)
+    {
+        try {
+            return $this->qb->find($id)->getQuery()->getSingleResult();
+        } catch (UnexpectedResultException $e) {
+            return null;
+        }
     }
 
     /**
      * {@inheritdoc}
-     *
-     * used in category manager
-     * and product controller to list categories. need permissions
      */
     public function getFilledTree(CategoryInterface $root, Collection $categories)
     {
-        $parentsIds = [];
-        foreach ($categories as $category) {
-            $categoryParentsIds = [];
-            $path = $this->getPath($category);
+        $qb = $this->qb->getFilledTreeQB($root, $categories);
+        $nodes = $qb->getQuery()->getResult();
 
-            if ($path[0]->getId() === $root->getId()) {
-                foreach ($path as $pathItem) {
-                    $categoryParentsIds[] = $pathItem->getId();
-                }
-            }
-            $parentsIds = array_merge($parentsIds, $categoryParentsIds);
-        }
-        $parentsIds = array_unique($parentsIds);
-
-        return $this->getTreeFromParents($parentsIds);
+        return $this->buildTreeNode($nodes);
     }
 
     /**
@@ -53,68 +56,20 @@ class CategoryTreeRepository extends NestedTreeRepository
      */
     public function getChildrenByParentId($parentId)
     {
-        $parent = $this->find($parentId);
-
-        return $this->getChildren($parent, true);
+        return $this->qb->getChildrenQBByParentId($parentId)->getQuery()->getResult();
     }
 
     /**
      * {@inheritdoc}
-     */
-    public function getChildrenGrantedByParentId(CategoryInterface $parent, array $grantedCategoryIds = [])
-    {
-        return $this->getChildrenQueryBuilder($parent, true)
-            ->andWhere('node.id IN (:ids)')
-            ->setParameter('ids', $grantedCategoryIds)
-            ->getQuery()
-            ->getResult();
-    }
-    /**
-     * {@inheritdoc}
-     *
-     * tree. need permissions
      */
     public function getChildrenTreeByParentId($parentId, $selectNodeId = false, array $grantedCategoryIds = [])
     {
-        $children = [];
-
-        if ($selectNodeId === false) {
-            $parent = $this->find($parentId);
-            $children = $this->childrenHierarchy($parent);
-        } else {
-            $selectNode = $this->find($selectNodeId);
-            if ($selectNode != null) {
-                $meta = $this->getClassMetadata();
-                $config = $this->listener->getConfiguration($this->_em, $meta->name);
-
-                $selectPath = $this->getPath($selectNode);
-                $parent = $this->find($parentId);
-                $qb = $this->getNodesHierarchyQueryBuilder($parent);
-
-                // Remove the node itself from his ancestor
-                array_pop($selectPath);
-
-                $ancestorsIds = [];
-
-                foreach ($selectPath as $ancestor) {
-                    $ancestorsIds[] = $ancestor->getId();
-                }
-
-                $qb->andWhere(
-                    $qb->expr()->in('node.' . $config['parent'], $ancestorsIds)
-                );
-
-                if (!empty($grantedCategoryIds)) {
-                    $qb->andWhere('node.id IN (:ids)')
-                        ->setParameter('ids', $grantedCategoryIds);
-                }
-
-                $nodes = $qb->getQuery()->getResult();
-                $children = $this->buildTreeNode($nodes);
-            }
+        $qb = $this->qb->getChildrenTreeQBByParentId($parentId, $selectNodeId);
+        if (null === $qb) {
+            return null;
         }
 
-        return $children;
+        return $this->buildTreeNode($qb->getQuery()->getResult());
     }
 
     /**
@@ -122,22 +77,7 @@ class CategoryTreeRepository extends NestedTreeRepository
      */
     public function getTrees()
     {
-        return $this->getChildren(null, true, 'created', 'DESC');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGrantedTrees(array $grantedCategoryIds = [])
-    {
-        $qb = $this->getChildrenQueryBuilder(null, true, 'created', 'DESC');
-        $result = $qb
-            ->andWhere('node.id IN (:ids)')
-            ->setParameter('ids', $grantedCategoryIds)
-            ->getQuery()
-            ->getResult();
-
-        return $result;
+        return $this->qb->getTrees()->getQuery()->getResult();
     }
 
     /**
@@ -155,39 +95,12 @@ class CategoryTreeRepository extends NestedTreeRepository
 
     /**
      * {@inheritdoc}
-     *
-     * should be a protected
-     */
-    protected function getTreeFromParents(array $parentsIds)
-    {
-        if (count($parentsIds) === 0) {
-            return [];
-        }
-
-        $meta = $this->getClassMetadata();
-        $config = $this->listener->getConfiguration($this->_em, $meta->name);
-
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('node')
-            ->from($config['useObjectClass'], 'node')
-            ->where('node.id IN (:parentsIds) OR node.parent IN (:parentsIds)')
-            ->orderBy('node.left');
-
-        $qb->setParameter('parentsIds', $parentsIds);
-
-        $nodes = $qb->getQuery()->getResult();
-
-        return $this->buildTreeNode($nodes);
-    }
-
-    /**
-     * {@inheritdoc}
      */
     protected function buildTreeNode(array $nodes)
     {
         $vectorMap = [];
         $tree = [];
-        $childrenIndex = $this->repoUtils->getChildrenIndex();
+        $childrenIndex = $this->qb->getRepoUtils()->getChildrenIndex();
 
         foreach ($nodes as $node) {
             if (!isset($vectorMap[$node->getId()])) {

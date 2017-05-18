@@ -22,6 +22,9 @@ parameters:
     pim_enrich.repository.job_tracker.class:             Pim\Bundle\EnrichBundle\Doctrine\ORM\Repository\JobTrackerRepository
     pim_enrich.repository.category_tree.class:           Pim\Bundle\EnrichBundle\Doctrine\ORM\Repository\CategoryTreeRepository
 
+    # Query builder
+    pim_enrich.repository.query_builder.category_tree.class: Pim\Bundle\EnrichBundle\Doctrine\ORM\Repository\QueryBuilder\CategoryTreeQueryBuilder
+
 services:
     pim_enrich.repository.sequential_edit:
         class: '%pim_enrich.repository.sequential_edit.class%'
@@ -143,6 +146,12 @@ services:
 
     pim_enrich.repository.category_tree:
         class: '%pim_enrich.repository.category_tree.class%'
+        arguments:
+            - '@pim_enrich.repository.query_builder.category_tree'
+
+    # Query builders
+    pim_enrich.repository.query_builder.category_tree:
+        class: '%pim_enrich.repository.query_builder.category_tree.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
             - '%pim_catalog.entity.category.class%'

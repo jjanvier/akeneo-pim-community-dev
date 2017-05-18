@@ -68,7 +68,7 @@ services:
             - '@pim_catalog.saver.category'
             - '@pim_catalog.remover.category'
             - '@pim_catalog.factory.category'
-            - '@pim_catalog.repository.category'
+            - '@pim_enrich.repository.category_tree'
             - '@oro_security.security_facade'
             - { related_entity: product, form_type: pim_category, acl: pim_enrich_product, route: pim_enrich }
         calls:
