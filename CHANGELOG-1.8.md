@@ -132,6 +132,7 @@
 - Remove services `pim_datagrid.datasource.result_record.hydrator.product` and `pim_datagrid.datasource.result_record.hydrator.associated_product`
     and parameters `pim_datagrid.datasource.result_record.hydrator.product.class` and `pim_datagrid.datasource.result_record.hydrator.associated_product.class`
 - Remove all standard denormalizers classes `Pim\Component\Catalog\Denormalizer\Standard\*` and services `pim_catalog.denormalizer.standard.*`
+- Remove useless class `Pim\Bundle\CatalogBundle\Doctrine\Common\Filter\CategoryFilter`
 
 ## Requirements
 
