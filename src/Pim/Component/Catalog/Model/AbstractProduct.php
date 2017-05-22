@@ -361,10 +361,7 @@ abstract class AbstractProduct implements ProductInterface
     {
         if ($this->family) {
             if ($attributeAsLabel = $this->family->getAttributeAsLabel()) {
-                if ($locale) {
-                    $this->setLocale($locale);
-                }
-                if ($value = $this->getValue($attributeAsLabel->getCode())) {
+                if ($value = $this->getValue($attributeAsLabel->getCode(), $locale)) {
                     $data = $value->getData();
                     if (!empty($data)) {
                         return (string) $data;
