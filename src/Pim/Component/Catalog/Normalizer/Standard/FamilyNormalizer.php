@@ -77,10 +77,7 @@ class FamilyNormalizer implements NormalizerInterface
      */
     protected function normalizeAttributes(FamilyInterface $family)
     {
-        $attributes = $this->collectionFilter->filterCollection(
-            $this->attributeRepository->findAttributesByFamily($family),
-            'pim.internal_api.attribute.view'
-        );
+        $attributes = $this->attributeRepository->findAttributesByFamily($family);
 
         $normalizedAttributes = [];
         foreach ($attributes as $attribute) {

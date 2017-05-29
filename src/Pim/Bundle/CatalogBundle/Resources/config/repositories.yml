@@ -14,6 +14,9 @@ parameters:
     pim_catalog.repository.product_template.class:      Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductTemplateRepository
     pim_catalog.repository.product_unique_data.class:   Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductUniqueDataRepository
 
+    pim_catalog.repository.product.product_attribute.class: Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\Product\ProductAttributeRepository
+    pim_catalog.repository.product.product_locale.class: Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\Product\ProductLocaleRepository
+
 services:
     # Base repositories
     pim_catalog.repository.association_type:
@@ -157,3 +160,15 @@ services:
         class: '%akeneo_storage_utils.repository.base_cached_object.class%'
         arguments:
             - '@pim_catalog.repository.locale'
+
+    pim_catalog.repository.product.product_attribute:
+        class: '%pim_catalog.repository.product.product_attribute.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '%pim_catalog.entity.attribute.class%'
+
+    pim_catalog.repository.product.product_locale:
+        class: '%pim_catalog.repository.product.product_locale.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '%pim_catalog.entity.locale.class%'

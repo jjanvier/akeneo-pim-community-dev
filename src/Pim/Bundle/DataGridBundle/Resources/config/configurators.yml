@@ -11,7 +11,7 @@ services:
         class: '%pim_datagrid.datagrid.configuration.product.context_configurator.class%'
         arguments:
             - '@pim_catalog.repository.product'
-            - '@pim_catalog.repository.attribute'
+            - '@pim_catalog.repository.product.product_attribute'
             - '@oro_datagrid.datagrid.request_params'
             - '@pim_user.context.user'
             - '@pim_catalog.object_manager.product'

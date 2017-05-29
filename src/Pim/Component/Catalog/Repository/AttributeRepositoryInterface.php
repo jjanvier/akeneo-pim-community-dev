@@ -30,50 +30,11 @@ interface AttributeRepositoryInterface extends
     public function findAllInDefaultGroup();
 
     /**
-     * Find all unique attribute codes
-     *
-     * @return string[]
-     */
-    public function findUniqueAttributeCodes();
-
-    /**
      * Find media attribute codes
      *
      * @return string[]
      */
     public function findMediaAttributeCodes();
-
-    /**
-     * Find all attributes of type axis
-     * An axis define a variation of a variant group
-     * Axes are attributes with simple select option, not localizable and not scopable
-     *
-     * @return QueryBuilder
-     */
-    public function findAllAxesQB();
-
-    /**
-     * Get attribute as array indexed by code
-     *
-     * @param bool   $withLabel translated label should be joined
-     * @param string $locale    the locale code of the label
-     * @param array  $ids       the attribute ids
-     *
-     * @return array
-     */
-    public function getAttributesAsArray($withLabel = false, $locale = null, array $ids = []);
-
-    /**
-     * Get ids of attributes usable in grid
-     *
-     * TODO: should be extracted in an enrich bundle repository
-     *
-     * @param array $codes
-     * @param array $groupIds
-     *
-     * @return array
-     */
-    public function getAttributeIdsUseableInGrid($codes = null, $groupIds = null);
 
     /**
      * Get the identifier attribute
@@ -132,13 +93,4 @@ interface AttributeRepositoryInterface extends
      * @return int
      */
     public function countAll();
-
-    /**
-     * Find axis label for a locale
-     *
-     * @param string $locale
-     *
-     * @return array
-     */
-    public function findAvailableAxes($locale);
 }

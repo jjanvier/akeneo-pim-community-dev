@@ -5,6 +5,7 @@ namespace Pim\Bundle\UserBundle\Context;
 use Akeneo\Component\Classification\Model\CategoryInterface;
 use Akeneo\Component\Classification\Repository\CategoryRepositoryInterface;
 use Pim\Bundle\CatalogBundle\Builder\ChoicesBuilderInterface;
+use Pim\Bundle\EnrichBundle\Doctrine\ORM\Repository\CategoryTreeRepositoryInterface;
 use Pim\Bundle\UserBundle\Entity\UserInterface;
 use Pim\Component\Catalog\Model\ChannelInterface;
 use Pim\Component\Catalog\Model\LocaleInterface;
@@ -66,7 +67,7 @@ class UserContext
         TokenStorageInterface $tokenStorage,
         LocaleRepositoryInterface $localeRepository,
         ChannelRepositoryInterface $channelRepository,
-        CategoryRepositoryInterface $categoryRepository,
+        CategoryTreeRepositoryInterface $categoryRepository,
         RequestStack $requestStack,
         ChoicesBuilderInterface $choicesBuilder,
         $defaultLocale

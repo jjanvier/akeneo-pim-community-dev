@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\EnrichBundle\Form\Subscriber;
 
+use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\Product\ProductAttributeRepository;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\GroupInterface;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
@@ -91,7 +92,7 @@ class AddVariantGroupAxesSubscriber implements EventSubscriberInterface
             'disabled'  => true,
             'read_only' => true,
             // only define a qb with the axes we want to avoid useless lazy loading on attribute translations
-            'query_builder' => function (AttributeRepositoryInterface $repository) use ($axesIds) {
+            'query_builder' => function (ProductAttributeRepository $repository) use ($axesIds) {
                 $qb = $repository->findAllAxesQB();
                 $qb->andWhere('a.id IN (:ids)');
                 $qb->setParameter('ids', $axesIds);
@@ -109,7 +110,7 @@ class AddVariantGroupAxesSubscriber implements EventSubscriberInterface
     protected function getFormOptionsForCreation()
     {
         $options = [
-            'query_builder' => function (AttributeRepositoryInterface $repository) {
+            'query_builder' => function (ProductAttributeRepository $repository) {
                 return $repository->findAllAxesQB();
             },
         ];

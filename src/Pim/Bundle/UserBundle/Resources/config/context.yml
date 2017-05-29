@@ -8,7 +8,7 @@ services:
             - '@security.token_storage'
             - '@pim_catalog.repository.locale'
             - '@pim_catalog.repository.channel'
-            - '@pim_catalog.repository.category'
+            - '@pim_enrich.repository.category_tree'
             - '@request_stack'
             - '@pim_catalog.builder.choices'
             - '%locale%'
