@@ -32,7 +32,7 @@ class UniqueValueGuesserSpec extends ObjectBehavior
     public function it_guesses_unique_value(AttributeInterface $attribute)
     {
         $attribute->getBackendType()
-            ->willReturn(AttributeTypes::BACKEND_TYPE_VARCHAR);
+            ->willReturn(AttributeTypes::BACKEND_TYPE_TEXT);
         $attribute->isUnique()->willReturn(true);
         $textConstraints = $this->guessConstraints($attribute);
 
@@ -45,7 +45,7 @@ class UniqueValueGuesserSpec extends ObjectBehavior
     public function it_does_not_guess_unique_value(AttributeInterface $attribute)
     {
         $attribute->getBackendType()
-            ->willReturn(AttributeTypes::BACKEND_TYPE_VARCHAR);
+            ->willReturn(AttributeTypes::BACKEND_TYPE_TEXT);
 
         $attribute->isUnique()->willReturn(false);
 
@@ -68,8 +68,8 @@ class UniqueValueGuesserSpec extends ObjectBehavior
             'option' => [AttributeTypes::BACKEND_TYPE_OPTION, false],
             'options' => [AttributeTypes::BACKEND_TYPE_OPTIONS, false],
             'price' => [AttributeTypes::BACKEND_TYPE_PRICE, false],
-            'text' => [AttributeTypes::BACKEND_TYPE_TEXT, false],
-            'varchar' => [AttributeTypes::BACKEND_TYPE_VARCHAR, true],
+            'text' => [AttributeTypes::BACKEND_TYPE_TEXTAREA, false],
+            'varchar' => [AttributeTypes::BACKEND_TYPE_TEXT, true],
         ];
     }
 }

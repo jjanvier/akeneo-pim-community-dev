@@ -32,7 +32,7 @@ mappings:
                         normalizer: 'family_normalizer'
             -
                 text_area:
-                    path_match: 'values.*-text.*'
+                    path_match: 'values.*-textarea.*'
                     match_mapping_type: 'string'
                     mapping:
                         fields:
@@ -43,7 +43,7 @@ mappings:
                         analyzer: 'text_analyzer'
             -
                 text:
-                    path_match: 'values.*-varchar.*'
+                    path_match: 'values.*-text.*'
                     match_mapping_type: 'string'
                     mapping:
                         type: 'keyword'

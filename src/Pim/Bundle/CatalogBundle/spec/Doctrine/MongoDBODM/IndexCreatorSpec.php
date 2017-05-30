@@ -513,8 +513,8 @@ class IndexCreatorSpec extends ObjectBehavior
         $attributeRepository
             ->findBy(['useableAsGridFilter' => true], ['created' => 'ASC'], 64)
             ->willReturn([$name, $description]);
-        $name->getBackendType()->willReturn(AttributeTypes::BACKEND_TYPE_VARCHAR);
-        $description->getBackendType()->willReturn(AttributeTypes::BACKEND_TYPE_TEXT);
+        $name->getBackendType()->willReturn(AttributeTypes::BACKEND_TYPE_TEXT);
+        $description->getBackendType()->willReturn(AttributeTypes::BACKEND_TYPE_TEXTAREA);
 
         $namingUtility->getAttributeNormFields($name)->willReturn(['normalizedData.name']);
         $namingUtility->getAttributeNormFields($description)->willReturn(['normalizedData.description']);

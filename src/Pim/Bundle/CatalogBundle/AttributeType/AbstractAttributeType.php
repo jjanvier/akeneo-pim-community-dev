@@ -20,7 +20,7 @@ abstract class AbstractAttributeType implements AttributeTypeInterface
      *
      * @var string
      */
-    protected $backendType = AttributeTypes::BACKEND_TYPE_VARCHAR;
+    protected $backendType = AttributeTypes::BACKEND_TYPE_TEXT;
 
     /**
      * Form type alias, "text" by default
