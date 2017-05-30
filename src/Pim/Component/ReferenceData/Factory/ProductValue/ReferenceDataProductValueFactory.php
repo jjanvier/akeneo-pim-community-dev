@@ -2,8 +2,8 @@
 
 namespace Pim\Component\ReferenceData\Factory\ProductValue;
 
-use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
+use Pim\Component\Catalog\Exception\InvalidOptionException;
 use Pim\Component\Catalog\Factory\ProductValue\ProductValueFactoryInterface;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\ReferenceData\Model\ReferenceDataInterface;
@@ -100,7 +100,7 @@ class ReferenceDataProductValueFactory implements ProductValueFactoryInterface
      * @param ReferenceDataRepositoryInterface $repository
      * @param string                           $referenceDataCode
      *
-     * @throws InvalidPropertyException
+     * @throws InvalidOptionException
      * @return ReferenceDataInterface
      */
     protected function getReferenceData(
@@ -111,10 +111,10 @@ class ReferenceDataProductValueFactory implements ProductValueFactoryInterface
         $referenceData = $repository->findOneBy(['code' => $referenceDataCode]);
 
         if (null === $referenceData) {
-            throw InvalidPropertyException::validEntityCodeExpected(
+            throw InvalidOptionException::validEntityCodeExpected(
                 $attribute->getCode(),
                 'reference data code',
-                sprintf('The code of the reference data "%s" does not exist', $attribute->getReferenceDataName()),
+                sprintf('The reference data "%s" does not exist', $attribute->getReferenceDataName()),
                 static::class,
                 $referenceDataCode
             );

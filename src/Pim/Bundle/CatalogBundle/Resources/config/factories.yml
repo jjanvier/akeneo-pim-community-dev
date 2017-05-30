@@ -208,6 +208,7 @@ services:
         public: false
         arguments:
             - '@pim_catalog.repository.attribute_option'
+            - '@logger'
             - '%pim_catalog.entity.product_value.options.class%'
             - 'pim_catalog_multiselect'
         tags:

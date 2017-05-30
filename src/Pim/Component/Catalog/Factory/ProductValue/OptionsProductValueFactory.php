@@ -7,6 +7,7 @@ use Pim\Component\Catalog\Exception\InvalidOptionException;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\AttributeOptionInterface;
 use Pim\Component\Catalog\Repository\AttributeOptionRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Factory that creates options (multi-select) product values.
@@ -22,6 +23,9 @@ class OptionsProductValueFactory implements ProductValueFactoryInterface
     /** @var AttributeOptionRepositoryInterface */
     protected $attrOptionRepository;
 
+    /** @var LoggerInterface */
+    protected $logger;
+
     /** @var string */
     protected $productValueClass;
 
@@ -30,15 +34,18 @@ class OptionsProductValueFactory implements ProductValueFactoryInterface
 
     /**
      * @param AttributeOptionRepositoryInterface $attrOptionRepository
-     * @param string $productValueClass
-     * @param $supportedAttributeType
+     * @param LoggerInterface                    $logger
+     * @param string                             $productValueClass
+     * @param string                             $supportedAttributeType
      */
     public function __construct(
         AttributeOptionRepositoryInterface $attrOptionRepository,
+        LoggerInterface $logger,
         $productValueClass,
         $supportedAttributeType
     ) {
         $this->attrOptionRepository = $attrOptionRepository;
+        $this->logger = $logger;
         $this->productValueClass = $productValueClass;
         $this->supportedAttributeType = $supportedAttributeType;
     }
@@ -112,6 +119,7 @@ class OptionsProductValueFactory implements ProductValueFactoryInterface
      * @param AttributeInterface $attribute
      * @param string[]           $data
      *
+     * @throws InvalidOptionException
      * @return array
      */
     protected function getOptions(AttributeInterface $attribute, array $data)
@@ -124,6 +132,16 @@ class OptionsProductValueFactory implements ProductValueFactoryInterface
             }
         }
 
+        if (empty($options) && !empty($data)) {
+            throw InvalidOptionException::validEntityCodeExpected(
+                $attribute->getCode(),
+                'code',
+                'The options do not exist',
+                static::class,
+                implode(',', $data)
+            );
+        }
+
         return $options;
     }
 
@@ -133,7 +151,6 @@ class OptionsProductValueFactory implements ProductValueFactoryInterface
      * @param AttributeInterface $attribute
      * @param string             $optionCode
      *
-     * @throws InvalidOptionException
      * @return AttributeOptionInterface|null
      */
     protected function getOption(AttributeInterface $attribute, $optionCode)
@@ -142,12 +159,12 @@ class OptionsProductValueFactory implements ProductValueFactoryInterface
         $option = $this->attrOptionRepository->findOneByIdentifier($identifier);
 
         if (null === $option) {
-            throw InvalidOptionException::validEntityCodeExpected(
-                $attribute->getCode(),
-                'code',
-                'The option does not exist',
-                static::class,
-                $optionCode
+            $this->logger->warning(
+                sprintf(
+                    'Tried to load a product value for the attribute "%s" with an option "%s" that does not exist.',
+                    $attribute->getCode(),
+                    $optionCode
+                )
             );
         }
 

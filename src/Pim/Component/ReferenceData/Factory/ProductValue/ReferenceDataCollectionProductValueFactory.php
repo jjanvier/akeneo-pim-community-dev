@@ -2,13 +2,14 @@
 
 namespace Pim\Component\ReferenceData\Factory\ProductValue;
 
-use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use Pim\Component\Catalog\Factory\ProductValue\ProductValueFactoryInterface;
 use Pim\Component\Catalog\Model\AttributeInterface;
+use Pim\Component\ReferenceData\Exception\InvalidReferenceDataException;
 use Pim\Component\ReferenceData\Model\ReferenceDataInterface;
 use Pim\Component\ReferenceData\Repository\ReferenceDataRepositoryInterface;
 use Pim\Component\ReferenceData\Repository\ReferenceDataRepositoryResolverInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Factory that creates simple-select and multi-select product values.
@@ -24,6 +25,9 @@ class ReferenceDataCollectionProductValueFactory implements ProductValueFactoryI
     /** @var ReferenceDataRepositoryResolverInterface */
     protected $repositoryResolver;
 
+    /** @var LoggerInterface */
+    protected $logger;
+
     /** @var string */
     protected $productValueClass;
 
@@ -32,15 +36,18 @@ class ReferenceDataCollectionProductValueFactory implements ProductValueFactoryI
 
     /**
      * @param ReferenceDataRepositoryResolverInterface $repositoryResolver
+     * @param LoggerInterface                          $logger
      * @param string                                   $productValueClass
      * @param string                                   $supportedAttributeType
      */
     public function __construct(
         ReferenceDataRepositoryResolverInterface $repositoryResolver,
+        LoggerInterface $logger,
         $productValueClass,
         $supportedAttributeType
     ) {
         $this->repositoryResolver = $repositoryResolver;
+        $this->logger = $logger;
         $this->productValueClass = $productValueClass;
         $this->supportedAttributeType = $supportedAttributeType;
     }
@@ -114,6 +121,7 @@ class ReferenceDataCollectionProductValueFactory implements ProductValueFactoryI
      * @param AttributeInterface $attribute
      * @param array              $referenceDataCodes
      *
+     * @throws InvalidReferenceDataException
      * @return array
      */
     protected function getReferenceDataCollection(AttributeInterface $attribute, array $referenceDataCodes)
@@ -123,7 +131,19 @@ class ReferenceDataCollectionProductValueFactory implements ProductValueFactoryI
         $repository = $this->repositoryResolver->resolve($attribute->getReferenceDataName());
 
         foreach ($referenceDataCodes as $referenceDataCode) {
-            $collection[] = $this->getReferenceData($attribute, $repository, $referenceDataCode);
+            if (null !== $referenceData = $this->getReferenceData($attribute, $repository, $referenceDataCode)) {
+                $collection[] = $referenceData;
+            }
+        }
+
+        if (empty($collection) && !empty($referenceDataCodes)) {
+            throw InvalidReferenceDataException::validEntityCodeExpected(
+                $attribute->getCode(),
+                'reference data code',
+                sprintf('The reference data "%s" do not exist', $attribute->getReferenceDataName()),
+                static::class,
+                implode(',', $referenceDataCodes)
+            );
         }
 
         return $collection;
@@ -136,7 +156,6 @@ class ReferenceDataCollectionProductValueFactory implements ProductValueFactoryI
      * @param ReferenceDataRepositoryInterface $repository
      * @param string                           $referenceDataCode
      *
-     * @throws InvalidPropertyException
      * @return ReferenceDataInterface
      */
     protected function getReferenceData(
@@ -147,12 +166,13 @@ class ReferenceDataCollectionProductValueFactory implements ProductValueFactoryI
         $referenceData = $repository->findOneBy(['code' => $referenceDataCode]);
 
         if (null === $referenceData) {
-            throw InvalidPropertyException::validEntityCodeExpected(
-                $attribute->getCode(),
-                'reference data code',
-                sprintf('The code of the reference data "%s" does not exist', $attribute->getReferenceDataName()),
-                static::class,
-                $referenceDataCode
+            $this->logger->warning(
+                sprintf(
+                    'Tried to load a product value for the attribute "%s" '.
+                    'with a reference data "%s" that does not exist.',
+                    $attribute->getCode(),
+                    $referenceDataCode
+                )
             );
         }
 

@@ -2,22 +2,27 @@
 
 namespace spec\Pim\Component\Catalog\Factory\ProductValue;
 
-use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
-use Doctrine\Common\Collections\ArrayCollection;
 use PhpSpec\ObjectBehavior;
+use Pim\Component\Catalog\Exception\InvalidOptionException;
 use Pim\Component\Catalog\Factory\ProductValue\OptionsProductValueFactory;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\AttributeOptionInterface;
 use Pim\Component\Catalog\ProductValue\ScalarProductValue;
 use Pim\Component\Catalog\Repository\AttributeOptionRepositoryInterface;
 use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 
 class OptionsProductValueFactorySpec extends ObjectBehavior
 {
-    function let(AttributeOptionRepositoryInterface $attributeOptionRepository)
+    function let(AttributeOptionRepositoryInterface $attributeOptionRepository, LoggerInterface $logger)
     {
-        $this->beConstructedWith($attributeOptionRepository, ScalarProductValue::class, 'pim_catalog_multiselect');
+        $this->beConstructedWith(
+            $attributeOptionRepository,
+            $logger,
+            ScalarProductValue::class,
+            'pim_catalog_multiselect'
+        );
     }
 
     function it_is_initializable()
@@ -202,6 +207,7 @@ class OptionsProductValueFactorySpec extends ObjectBehavior
 
     function it_throws_an_exception_if_option_does_not_exist(
         $attributeOptionRepository,
+        $logger,
         AttributeInterface $attribute
     ) {
         $attribute->isScopable()->willReturn(true);
@@ -213,10 +219,14 @@ class OptionsProductValueFactorySpec extends ObjectBehavior
 
         $attributeOptionRepository->findOneByIdentifier('multi_select_attribute.foobar')->willReturn(null);
 
-        $exception = InvalidPropertyException::validEntityCodeExpected(
+        $logger
+            ->warning('Tried to load a product value for the attribute "multi_select_attribute" with an option "foobar" that does not exist.')
+            ->shouldBeCalled();
+
+        $exception = InvalidOptionException::validEntityCodeExpected(
             'multi_select_attribute',
             'code',
-            'The option does not exist',
+            'The options do not exist',
             OptionsProductValueFactory::class,
             'foobar'
         );
@@ -224,6 +234,42 @@ class OptionsProductValueFactorySpec extends ObjectBehavior
         $this
             ->shouldThrow($exception)
             ->during('create', [$attribute, 'ecommerce', 'en_US', ['foobar']]);
+    }
+
+    function it_logs_a_warning_if_one_option_does_not_exist(
+        $attributeOptionRepository,
+        $logger,
+        AttributeInterface $attribute,
+        AttributeOptionInterface $option1
+    ) {
+        $attribute->isScopable()->willReturn(true);
+        $attribute->isLocalizable()->willReturn(true);
+        $attribute->getCode()->willReturn('multi_select_attribute');
+        $attribute->getType()->willReturn('pim_catalog_multiselect');
+        $attribute->getBackendType()->willReturn('options');
+        $attribute->isBackendTypeReferenceData()->willReturn(false);
+
+        $attributeOptionRepository->findOneByIdentifier('multi_select_attribute.foo')->willReturn($option1);
+        $attributeOptionRepository->findOneByIdentifier('multi_select_attribute.bar') ->willReturn(null);
+
+        $logger
+            ->warning('Tried to load a product value for the attribute "multi_select_attribute" with an option "bar" that does not exist.')
+            ->shouldBeCalled();
+
+        $productValue = $this->create(
+            $attribute,
+            'ecommerce',
+            'en_US',
+            ['foo', 'bar']
+        );
+
+        $productValue->shouldReturnAnInstanceOf(ScalarProductValue::class);
+        $productValue->shouldHaveAttribute('multi_select_attribute');
+        $productValue->shouldBeLocalizable();
+        $productValue->shouldHaveLocale('en_US');
+        $productValue->shouldBeScopable();
+        $productValue->shouldHaveChannel('ecommerce');
+        $productValue->shouldHaveTheOptions([$option1]);
     }
 
     public function getMatchers()

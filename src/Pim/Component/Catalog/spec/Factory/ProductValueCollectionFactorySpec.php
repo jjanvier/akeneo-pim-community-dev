@@ -11,6 +11,7 @@ use Pim\Component\Catalog\Factory\ProductValueFactory;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\ProductValueCollection;
 use Pim\Component\Catalog\Model\ProductValueInterface;
+use Pim\Component\ReferenceData\Exception\InvalidReferenceDataException;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 
@@ -135,18 +136,52 @@ class ProductValueCollectionFactorySpec extends ObjectBehavior
             InvalidOptionException::validEntityCodeExpected(
                 'color',
                 'code',
-                'The option does not exist',
+                'The options do not exist',
                 static::class,
                 'red'
             )
         );
-        
+
         $logger->warning('Tried to load a product value with the option "color.red" that does not exist.');
 
         $actualValues = $this->createFromStorageFormat([
             'color' => [
                 '<all_channels>' => [
                     '<all_locales>' => 'red'
+                ],
+            ],
+        ]);
+
+        $actualValues->shouldReturnAnInstanceOf(ProductValueCollection::class);
+        $actualValues->shouldHaveCount(0);
+    }
+
+    function it_skips_unknown_reference_data_when_creating_a_values_collection_from_the_storage_format(
+        $valueFactory,
+        $attributeRepository,
+        $logger,
+        AttributeInterface $fabric
+    ) {
+        $fabric->getCode()->willReturn('fabric');
+        $fabric->isUnique()->willReturn(false);
+
+        $attributeRepository->findOneByIdentifier('fabric')->willReturn($fabric);
+        $valueFactory->create($fabric, null, null, 'silk')->willThrow(
+            InvalidReferenceDataException::validEntityCodeExpected(
+                'fabric',
+                'code',
+                'The reference data do not exist',
+                static::class,
+                'silk'
+            )
+        );
+
+        $logger->warning('Tried to load a product value for the attribute "fabric" with a reference data "silk" that does not exist.');
+
+        $actualValues = $this->createFromStorageFormat([
+            'fabric' => [
+                '<all_channels>' => [
+                    '<all_locales>' => 'silk'
                 ],
             ],
         ]);

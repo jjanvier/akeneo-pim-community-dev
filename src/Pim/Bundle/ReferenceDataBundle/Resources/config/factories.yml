@@ -18,6 +18,7 @@ services:
         public: false
         arguments:
             - '@pim_reference_data.repository_resolver'
+            - '@logger'
             - '%pim_reference_data.product_value.reference_data_collection.class%'
             - 'pim_reference_data_multiselect'
         tags:

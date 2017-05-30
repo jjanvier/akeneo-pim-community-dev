@@ -18,6 +18,7 @@ $cBusinessDeps = [
     'Symfony\Component\Security\Core', // for the moment, let's discuss about that later
 ];
 $cUtilsDeps    = [
+    'Psr\Log',
     'Symfony\Component\OptionsResolver',
     'Symfony\Component\PropertyAccess',
     'Symfony\Component\Filesystem',

@@ -3,9 +3,9 @@
 namespace spec\Pim\Component\ReferenceData\Factory\ProductValue;
 
 use Acme\Bundle\AppBundle\Entity\Color;
-use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use PhpSpec\ObjectBehavior;
+use Pim\Component\Catalog\Exception\InvalidOptionException;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\ReferenceData\Factory\ProductValue\ReferenceDataProductValueFactory;
 use Pim\Component\ReferenceData\ProductValue\ReferenceDataProductValue;
@@ -194,10 +194,10 @@ class ReferenceDataProductValueFactorySpec extends ObjectBehavior
         $repositoryResolver->resolve('color')->willReturn($referenceDataRepository);
         $referenceDataRepository->findOneBy(['code' => 'foobar'])->willReturn(null);
 
-        $exception = InvalidPropertyException::validEntityCodeExpected(
+        $exception = InvalidOptionException::validEntityCodeExpected(
             'reference_data_simple_select_attribute',
             'reference data code',
-            'The code of the reference data "color" does not exist',
+            'The reference data "color" does not exist',
             ReferenceDataProductValueFactory::class,
             'foobar'
         );

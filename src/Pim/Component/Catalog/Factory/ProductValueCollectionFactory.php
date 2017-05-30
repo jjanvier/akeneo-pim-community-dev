@@ -7,6 +7,7 @@ use Pim\Component\Catalog\Exception\InvalidAttributeException;
 use Pim\Component\Catalog\Exception\InvalidOptionException;
 use Pim\Component\Catalog\Model\ProductValueCollection;
 use Pim\Component\Catalog\Model\ProductValueCollectionInterface;
+use Pim\Component\ReferenceData\Exception\InvalidReferenceDataException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -76,7 +77,15 @@ class ProductValueCollectionFactory
                         } catch (InvalidOptionException $e) {
                             $this->logger->warning(
                                 sprintf(
-                                    'Tried to load a product value with the option "%s" that does not exist.',
+                                    'Tried to load a product value with an option "%s" that does not exist.',
+                                    $e->getPropertyValue()
+                                )
+                            );
+                        } catch (InvalidReferenceDataException $e) {
+                            $this->logger->warning(
+                                sprintf(
+                                    'Tried to load a product value for the attribute "%s" with a reference data "%s" that does not exist.',
+                                    $attribute->getCode(),
                                     $e->getPropertyValue()
                                 )
                             );
