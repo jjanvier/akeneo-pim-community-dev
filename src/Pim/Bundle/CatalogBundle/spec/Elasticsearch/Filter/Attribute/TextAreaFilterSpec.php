@@ -54,14 +54,14 @@ class TextAreaFilterSpec extends ObjectBehavior
 
     function it_adds_a_filter_with_operator_equals(
         $attributeValidatorHelper,
-        AttributeInterface $name,
+        AttributeInterface $description,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('description');
-        $name->getBackendType()->willReturn('textarea');
+        $description->getCode()->willReturn('description');
+        $description->getBackendType()->willReturn('textarea');
 
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
-        $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
+        $attributeValidatorHelper->validateLocale($description, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($description, 'ecommerce')->shouldBeCalled();
 
         $sqb->addFilter(
             [
@@ -72,19 +72,19 @@ class TextAreaFilterSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
-        $this->addAttributeFilter($name, Operators::EQUALS, 'Sony', 'en_US', 'ecommerce', []);
+        $this->addAttributeFilter($description, Operators::EQUALS, 'Sony', 'en_US', 'ecommerce', []);
     }
 
     function it_adds_a_filter_with_operator_not_equal(
         $attributeValidatorHelper,
-        AttributeInterface $name,
+        AttributeInterface $description,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('description');
-        $name->getBackendType()->willReturn('textarea');
+        $description->getCode()->willReturn('description');
+        $description->getBackendType()->willReturn('textarea');
 
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
-        $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
+        $attributeValidatorHelper->validateLocale($description, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($description, 'ecommerce')->shouldBeCalled();
 
         $sqb->addMustNot(
             [
@@ -101,19 +101,19 @@ class TextAreaFilterSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
-        $this->addAttributeFilter($name, Operators::NOT_EQUAL, 'Sony', 'en_US', 'ecommerce', []);
+        $this->addAttributeFilter($description, Operators::NOT_EQUAL, 'Sony', 'en_US', 'ecommerce', []);
     }
 
     function it_adds_a_filter_with_operator_empty(
         $attributeValidatorHelper,
-        AttributeInterface $name,
+        AttributeInterface $description,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('description');
-        $name->getBackendType()->willReturn('textarea');
+        $description->getCode()->willReturn('description');
+        $description->getBackendType()->willReturn('textarea');
 
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
-        $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
+        $attributeValidatorHelper->validateLocale($description, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($description, 'ecommerce')->shouldBeCalled();
 
         $sqb->addMustNot(
             [
@@ -124,19 +124,19 @@ class TextAreaFilterSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
-        $this->addAttributeFilter($name, Operators::IS_EMPTY, null, 'en_US', 'ecommerce', []);
+        $this->addAttributeFilter($description, Operators::IS_EMPTY, null, 'en_US', 'ecommerce', []);
     }
 
     function it_adds_a_filter_with_operator_is_not_empty(
         $attributeValidatorHelper,
-        AttributeInterface $name,
+        AttributeInterface $description,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('description');
-        $name->getBackendType()->willReturn('textarea');
+        $description->getCode()->willReturn('description');
+        $description->getBackendType()->willReturn('textarea');
 
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
-        $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
+        $attributeValidatorHelper->validateLocale($description, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($description, 'ecommerce')->shouldBeCalled();
 
         $sqb->addFilter(
             [
@@ -147,19 +147,19 @@ class TextAreaFilterSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
-        $this->addAttributeFilter($name, Operators::IS_NOT_EMPTY, null, 'en_US', 'ecommerce', []);
+        $this->addAttributeFilter($description, Operators::IS_NOT_EMPTY, null, 'en_US', 'ecommerce', []);
     }
 
     function it_adds_a_filter_with_operator_contains(
         $attributeValidatorHelper,
-        AttributeInterface $name,
+        AttributeInterface $description,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('description');
-        $name->getBackendType()->willReturn('textarea');
+        $description->getCode()->willReturn('description');
+        $description->getBackendType()->willReturn('textarea');
 
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
-        $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
+        $attributeValidatorHelper->validateLocale($description, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($description, 'ecommerce')->shouldBeCalled();
 
         $sqb->addFilter(
             [
@@ -171,19 +171,19 @@ class TextAreaFilterSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
-        $this->addAttributeFilter($name, Operators::CONTAINS, 'sony', 'en_US', 'ecommerce', []);
+        $this->addAttributeFilter($description, Operators::CONTAINS, 'sony', 'en_US', 'ecommerce', []);
     }
 
     function it_adds_a_filter_with_operator_does_not_contain(
         $attributeValidatorHelper,
-        AttributeInterface $name,
+        AttributeInterface $description,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('description');
-        $name->getBackendType()->willReturn('textarea');
+        $description->getCode()->willReturn('description');
+        $description->getBackendType()->willReturn('textarea');
 
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
-        $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
+        $attributeValidatorHelper->validateLocale($description, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($description, 'ecommerce')->shouldBeCalled();
 
         $sqb->addMustNot(
             [
@@ -202,19 +202,19 @@ class TextAreaFilterSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
-        $this->addAttributeFilter($name, Operators::DOES_NOT_CONTAIN, 'sony', 'en_US', 'ecommerce', []);
+        $this->addAttributeFilter($description, Operators::DOES_NOT_CONTAIN, 'sony', 'en_US', 'ecommerce', []);
     }
 
     function it_adds_a_filter_with_operator_starts_with(
         $attributeValidatorHelper,
-        AttributeInterface $name,
+        AttributeInterface $description,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('description');
-        $name->getBackendType()->willReturn('textarea');
+        $description->getCode()->willReturn('description');
+        $description->getBackendType()->willReturn('textarea');
 
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
-        $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
+        $attributeValidatorHelper->validateLocale($description, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($description, 'ecommerce')->shouldBeCalled();
 
         $sqb->addFilter(
             [
@@ -226,27 +226,27 @@ class TextAreaFilterSpec extends ObjectBehavior
         )->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
-        $this->addAttributeFilter($name, Operators::STARTS_WITH, 'sony', 'en_US', 'ecommerce', []);
+        $this->addAttributeFilter($description, Operators::STARTS_WITH, 'sony', 'en_US', 'ecommerce', []);
     }
 
-    function it_throws_an_exception_when_the_search_query_builder_is_not_initialized(AttributeInterface $name)
+    function it_throws_an_exception_when_the_search_query_builder_is_not_initialized(AttributeInterface $description)
     {
         $this->shouldThrow(
             new \LogicException('The search query builder is not initialized in the filter.')
-        )->during('addAttributeFilter', [$name, Operators::CONTAINS, 'Sony', 'en_US', 'ecommerce', []]);
+        )->during('addAttributeFilter', [$description, Operators::CONTAINS, 'Sony', 'en_US', 'ecommerce', []]);
 
     }
 
     function it_throws_an_exception_when_the_given_value_is_not_a_string(
         $attributeValidatorHelper,
-        AttributeInterface $name,
+        AttributeInterface $description,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('description');
-        $name->getBackendType()->willReturn('textarea');
+        $description->getCode()->willReturn('description');
+        $description->getBackendType()->willReturn('textarea');
 
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
-        $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
+        $attributeValidatorHelper->validateLocale($description, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($description, 'ecommerce')->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
 
@@ -256,19 +256,19 @@ class TextAreaFilterSpec extends ObjectBehavior
                 TextAreaFilter::class,
                 123
             )
-        )->during('addAttributeFilter', [$name, Operators::CONTAINS, 123, 'en_US', 'ecommerce', []]);
+        )->during('addAttributeFilter', [$description, Operators::CONTAINS, 123, 'en_US', 'ecommerce', []]);
     }
 
     function it_throws_an_exception_when_it_filters_on_an_unsupported_operator(
         $attributeValidatorHelper,
-        AttributeInterface $name,
+        AttributeInterface $description,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('description');
-        $name->getBackendType()->willReturn('textarea');
+        $description->getCode()->willReturn('description');
+        $description->getBackendType()->willReturn('textarea');
 
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
-        $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
+        $attributeValidatorHelper->validateLocale($description, 'en_US')->shouldBeCalled();
+        $attributeValidatorHelper->validateScope($description, 'ecommerce')->shouldBeCalled();
 
         $this->setQueryBuilder($sqb);
 
@@ -277,21 +277,21 @@ class TextAreaFilterSpec extends ObjectBehavior
                 'IN CHILDREN',
                 TextAreaFilter::class
             )
-        )->during('addAttributeFilter', [$name, Operators::IN_CHILDREN_LIST, 'Sony', 'en_US', 'ecommerce', []]);
+        )->during('addAttributeFilter', [$description, Operators::IN_CHILDREN_LIST, 'Sony', 'en_US', 'ecommerce', []]);
     }
 
     function it_throws_an_exception_when_an_exception_is_thrown_by_the_attribute_validator_on_locale_validation(
         $attributeValidatorHelper,
-        AttributeInterface $name,
+        AttributeInterface $description,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('description');
-        $name->getBackendType()->willReturn('textarea');
-        $name->isLocaleSpecific()->willReturn(true);
-        $name->getAvailableLocaleCodes('fr_FR');
+        $description->getCode()->willReturn('description');
+        $description->getBackendType()->willReturn('textarea');
+        $description->isLocaleSpecific()->willReturn(true);
+        $description->getAvailableLocaleCodes('fr_FR');
 
         $e = new \LogicException('Attribute "description" expects a locale, none given.');
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->willThrow($e);
+        $attributeValidatorHelper->validateLocale($description, 'en_US')->willThrow($e);
 
         $this->setQueryBuilder($sqb);
 
@@ -301,20 +301,20 @@ class TextAreaFilterSpec extends ObjectBehavior
                 TextAreaFilter::class,
                 $e
             )
-        )->during('addAttributeFilter', [$name, Operators::CONTAINS, 'Sony', 'en_US', 'ecommerce', []]);
+        )->during('addAttributeFilter', [$description, Operators::CONTAINS, 'Sony', 'en_US', 'ecommerce', []]);
     }
 
     function it_throws_an_exception_when_an_exception_is_thrown_by_the_attribute_validator_on_scope_validation(
         $attributeValidatorHelper,
-        AttributeInterface $name,
+        AttributeInterface $description,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('description');
-        $name->getBackendType()->willReturn('textarea');
-        $name->isScopable()->willReturn(false);
+        $description->getCode()->willReturn('description');
+        $description->getBackendType()->willReturn('textarea');
+        $description->isScopable()->willReturn(false);
 
         $e = new \LogicException('Attribute "description" does not expect a scope, "ecommerce" given.');
-        $attributeValidatorHelper->validateLocale($name, 'en_US')->willThrow($e);
+        $attributeValidatorHelper->validateLocale($description, 'en_US')->willThrow($e);
 
         $this->setQueryBuilder($sqb);
 
@@ -324,6 +324,6 @@ class TextAreaFilterSpec extends ObjectBehavior
                 TextAreaFilter::class,
                 $e
             )
-        )->during('addAttributeFilter', [$name, Operators::CONTAINS, 'Sony', 'en_US', 'ecommerce', []]);
+        )->during('addAttributeFilter', [$description, Operators::CONTAINS, 'Sony', 'en_US', 'ecommerce', []]);
     }
 }
