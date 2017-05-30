@@ -25,8 +25,7 @@ class UniqueValueGuesser implements ConstraintGuesserInterface
             AttributeTypes::BACKEND_TYPE_TEXT,
             AttributeTypes::BACKEND_TYPE_DATE,
             AttributeTypes::BACKEND_TYPE_DATETIME,
-            AttributeTypes::BACKEND_TYPE_DECIMAL,
-            AttributeTypes::BACKEND_TYPE_INTEGER
+            AttributeTypes::BACKEND_TYPE_DECIMAL
         ];
 
         return in_array($attribute->getBackendType(), $availableTypes);

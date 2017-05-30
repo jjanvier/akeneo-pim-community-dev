@@ -62,7 +62,6 @@ class UniqueValueGuesserSpec extends ObjectBehavior
             'datetime'   => [AttributeTypes::BACKEND_TYPE_DATETIME, true],
             'decimal'    => [AttributeTypes::BACKEND_TYPE_DECIMAL, true],
             'entity'     => [AttributeTypes::BACKEND_TYPE_ENTITY, false],
-            'integer'    => [AttributeTypes::BACKEND_TYPE_INTEGER, true],
             'media'      => [AttributeTypes::BACKEND_TYPE_MEDIA, false],
             'metric'     => [AttributeTypes::BACKEND_TYPE_METRIC, false],
             'option'     => [AttributeTypes::BACKEND_TYPE_OPTION, false],
