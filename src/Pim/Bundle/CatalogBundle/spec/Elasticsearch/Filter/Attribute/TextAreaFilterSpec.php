@@ -57,8 +57,8 @@ class TextAreaFilterSpec extends ObjectBehavior
         AttributeInterface $name,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
+        $name->getCode()->willReturn('description');
+        $name->getBackendType()->willReturn('textarea');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
@@ -66,7 +66,7 @@ class TextAreaFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'term' => [
-                    'values.name-varchar.ecommerce.en_US.preprocessed' => 'Sony',
+                    'values.description-textarea.ecommerce.en_US.preprocessed' => 'Sony',
                 ],
             ]
         )->shouldBeCalled();
@@ -80,8 +80,8 @@ class TextAreaFilterSpec extends ObjectBehavior
         AttributeInterface $name,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
+        $name->getCode()->willReturn('description');
+        $name->getBackendType()->willReturn('textarea');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
@@ -89,14 +89,14 @@ class TextAreaFilterSpec extends ObjectBehavior
         $sqb->addMustNot(
             [
                 'term' => [
-                    'values.name-varchar.ecommerce.en_US.preprocessed' => 'Sony',
+                    'values.description-textarea.ecommerce.en_US.preprocessed' => 'Sony',
                 ],
             ]
         )->shouldBeCalled();
 
         $sqb->addFilter(
             [
-                'exists' => ['field' => 'values.name-varchar.ecommerce.en_US.preprocessed'],
+                'exists' => ['field' => 'values.description-textarea.ecommerce.en_US.preprocessed'],
             ]
         )->shouldBeCalled();
 
@@ -109,8 +109,8 @@ class TextAreaFilterSpec extends ObjectBehavior
         AttributeInterface $name,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
+        $name->getCode()->willReturn('description');
+        $name->getBackendType()->willReturn('textarea');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
@@ -118,7 +118,7 @@ class TextAreaFilterSpec extends ObjectBehavior
         $sqb->addMustNot(
             [
                 'exists' => [
-                    'field' => 'values.name-varchar.ecommerce.en_US',
+                    'field' => 'values.description-textarea.ecommerce.en_US',
                 ],
             ]
         )->shouldBeCalled();
@@ -132,8 +132,8 @@ class TextAreaFilterSpec extends ObjectBehavior
         AttributeInterface $name,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
+        $name->getCode()->willReturn('description');
+        $name->getBackendType()->willReturn('textarea');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
@@ -141,7 +141,7 @@ class TextAreaFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'exists' => [
-                    'field' => 'values.name-varchar.ecommerce.en_US',
+                    'field' => 'values.description-textarea.ecommerce.en_US',
                 ],
             ]
         )->shouldBeCalled();
@@ -155,8 +155,8 @@ class TextAreaFilterSpec extends ObjectBehavior
         AttributeInterface $name,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
+        $name->getCode()->willReturn('description');
+        $name->getBackendType()->willReturn('textarea');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
@@ -164,7 +164,7 @@ class TextAreaFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'query_string' => [
-                    'default_field' => 'values.name-varchar.ecommerce.en_US.preprocessed',
+                    'default_field' => 'values.description-textarea.ecommerce.en_US.preprocessed',
                     'query'         => '*sony*',
                 ],
             ]
@@ -179,8 +179,8 @@ class TextAreaFilterSpec extends ObjectBehavior
         AttributeInterface $name,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
+        $name->getCode()->willReturn('description');
+        $name->getBackendType()->willReturn('textarea');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
@@ -188,7 +188,7 @@ class TextAreaFilterSpec extends ObjectBehavior
         $sqb->addMustNot(
             [
                 'query_string' => [
-                    'default_field' => 'values.name-varchar.ecommerce.en_US.preprocessed',
+                    'default_field' => 'values.description-textarea.ecommerce.en_US.preprocessed',
                     'query'         => '*sony*',
                 ],
             ]
@@ -196,7 +196,7 @@ class TextAreaFilterSpec extends ObjectBehavior
 
         $sqb->addFilter([
                 'exists' => [
-                    'field' => 'values.name-varchar.ecommerce.en_US.preprocessed',
+                    'field' => 'values.description-textarea.ecommerce.en_US.preprocessed',
                 ],
             ]
         )->shouldBeCalled();
@@ -210,8 +210,8 @@ class TextAreaFilterSpec extends ObjectBehavior
         AttributeInterface $name,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
+        $name->getCode()->willReturn('description');
+        $name->getBackendType()->willReturn('textarea');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
@@ -219,7 +219,7 @@ class TextAreaFilterSpec extends ObjectBehavior
         $sqb->addFilter(
             [
                 'query_string' => [
-                    'default_field' => 'values.name-varchar.ecommerce.en_US.preprocessed',
+                    'default_field' => 'values.description-textarea.ecommerce.en_US.preprocessed',
                     'query'         => 'sony*',
                 ],
             ]
@@ -242,8 +242,8 @@ class TextAreaFilterSpec extends ObjectBehavior
         AttributeInterface $name,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
+        $name->getCode()->willReturn('description');
+        $name->getBackendType()->willReturn('textarea');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
@@ -252,7 +252,7 @@ class TextAreaFilterSpec extends ObjectBehavior
 
         $this->shouldThrow(
             InvalidPropertyTypeException::stringExpected(
-                'name',
+                'description',
                 TextAreaFilter::class,
                 123
             )
@@ -264,8 +264,8 @@ class TextAreaFilterSpec extends ObjectBehavior
         AttributeInterface $name,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
+        $name->getCode()->willReturn('description');
+        $name->getBackendType()->willReturn('textarea');
 
         $attributeValidatorHelper->validateLocale($name, 'en_US')->shouldBeCalled();
         $attributeValidatorHelper->validateScope($name, 'ecommerce')->shouldBeCalled();
@@ -285,19 +285,19 @@ class TextAreaFilterSpec extends ObjectBehavior
         AttributeInterface $name,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
+        $name->getCode()->willReturn('description');
+        $name->getBackendType()->willReturn('textarea');
         $name->isLocaleSpecific()->willReturn(true);
         $name->getAvailableLocaleCodes('fr_FR');
 
-        $e = new \LogicException('Attribute "name" expects a locale, none given.');
+        $e = new \LogicException('Attribute "description" expects a locale, none given.');
         $attributeValidatorHelper->validateLocale($name, 'en_US')->willThrow($e);
 
         $this->setQueryBuilder($sqb);
 
         $this->shouldThrow(
             InvalidPropertyException::expectedFromPreviousException(
-                'name',
+                'description',
                 TextAreaFilter::class,
                 $e
             )
@@ -309,18 +309,18 @@ class TextAreaFilterSpec extends ObjectBehavior
         AttributeInterface $name,
         SearchQueryBuilder $sqb
     ) {
-        $name->getCode()->willReturn('name');
-        $name->getBackendType()->willReturn('varchar');
+        $name->getCode()->willReturn('description');
+        $name->getBackendType()->willReturn('textarea');
         $name->isScopable()->willReturn(false);
 
-        $e = new \LogicException('Attribute "name" does not expect a scope, "ecommerce" given.');
+        $e = new \LogicException('Attribute "description" does not expect a scope, "ecommerce" given.');
         $attributeValidatorHelper->validateLocale($name, 'en_US')->willThrow($e);
 
         $this->setQueryBuilder($sqb);
 
         $this->shouldThrow(
             InvalidPropertyException::expectedFromPreviousException(
-                'name',
+                'description',
                 TextAreaFilter::class,
                 $e
             )

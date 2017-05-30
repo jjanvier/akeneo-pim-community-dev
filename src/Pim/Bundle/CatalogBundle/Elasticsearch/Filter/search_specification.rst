@@ -44,7 +44,7 @@ List of attributes and their mapping to Akeneo
 =================================   ==========================
 Akeneo attribute type               Elasticsearch field suffix
 =================================   ==========================
- pim_catalog_identifier              -varchar
+ pim_catalog_identifier              -text
  pim_catalog_text                    -text
  pim_catalog_textarea                -textarea
  pim_catalog_metric                  -metric

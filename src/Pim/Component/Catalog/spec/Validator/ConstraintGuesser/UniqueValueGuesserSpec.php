@@ -56,20 +56,20 @@ class UniqueValueGuesserSpec extends ObjectBehavior
     private function dataProviderForSupportedAttributes()
     {
         return [
-            'boolean' => [AttributeTypes::BACKEND_TYPE_BOOLEAN, false],
+            'boolean'    => [AttributeTypes::BACKEND_TYPE_BOOLEAN, false],
             'collection' => [AttributeTypes::BACKEND_TYPE_COLLECTION, false],
-            'date' => [AttributeTypes::BACKEND_TYPE_DATE, true],
-            'datetime' => [AttributeTypes::BACKEND_TYPE_DATETIME, true],
-            'decimal' => [AttributeTypes::BACKEND_TYPE_DECIMAL, true],
-            'entity' => [AttributeTypes::BACKEND_TYPE_ENTITY, false],
-            'integer' => [AttributeTypes::BACKEND_TYPE_INTEGER, true],
-            'media' => [AttributeTypes::BACKEND_TYPE_MEDIA, false],
-            'metric' => [AttributeTypes::BACKEND_TYPE_METRIC, false],
-            'option' => [AttributeTypes::BACKEND_TYPE_OPTION, false],
-            'options' => [AttributeTypes::BACKEND_TYPE_OPTIONS, false],
-            'price' => [AttributeTypes::BACKEND_TYPE_PRICE, false],
-            'text' => [AttributeTypes::BACKEND_TYPE_TEXTAREA, false],
-            'varchar' => [AttributeTypes::BACKEND_TYPE_TEXT, true],
+            'date'       => [AttributeTypes::BACKEND_TYPE_DATE, true],
+            'datetime'   => [AttributeTypes::BACKEND_TYPE_DATETIME, true],
+            'decimal'    => [AttributeTypes::BACKEND_TYPE_DECIMAL, true],
+            'entity'     => [AttributeTypes::BACKEND_TYPE_ENTITY, false],
+            'integer'    => [AttributeTypes::BACKEND_TYPE_INTEGER, true],
+            'media'      => [AttributeTypes::BACKEND_TYPE_MEDIA, false],
+            'metric'     => [AttributeTypes::BACKEND_TYPE_METRIC, false],
+            'option'     => [AttributeTypes::BACKEND_TYPE_OPTION, false],
+            'options'    => [AttributeTypes::BACKEND_TYPE_OPTIONS, false],
+            'price'      => [AttributeTypes::BACKEND_TYPE_PRICE, false],
+            'textarea'   => [AttributeTypes::BACKEND_TYPE_TEXTAREA, false],
+            'text'       => [AttributeTypes::BACKEND_TYPE_TEXT, true],
         ];
     }
 }

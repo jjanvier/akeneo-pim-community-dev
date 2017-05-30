@@ -35,7 +35,7 @@ class AssociationRepository extends EntityRepository implements
             ->innerJoin('v.attribute', 'at')
             ->innerJoin('pass.associationType', 'assType')
             ->where('at.type=:identifier_type')
-            ->andWhere('v.varchar=:product_code')
+            ->andWhere('v.text=:product_code')
             ->andWhere('assType.code=:association_code')
             ->setParameter('identifier_type', AttributeTypes::IDENTIFIER)
             ->setParameter('product_code', $productCode)
