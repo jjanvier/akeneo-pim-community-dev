@@ -31,7 +31,7 @@ mappings:
                         type: 'keyword'
                         normalizer: 'family_normalizer'
             -
-                text_area:
+                textarea:
                     path_match: 'values.*-textarea.*'
                     match_mapping_type: 'string'
                     mapping:
