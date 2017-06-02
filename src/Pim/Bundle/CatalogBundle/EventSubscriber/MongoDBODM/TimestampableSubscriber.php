@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  *
  * for more information see @jira PIM-6038
  *
- * @author    Samir Boulil <samir.boulil@gmail.com>
+ * @author    Samir Boulil <samir.boulil@akeneo.com>
  * @copyright 2013 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
