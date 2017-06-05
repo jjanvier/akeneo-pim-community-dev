@@ -7,11 +7,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class StorageDataCollectorSpec extends ObjectBehavior
 {
-    function let(RequestStack $requestStack)
-    {
-        $this->beConstructedWith($requestStack);
-    }
-
     function it_is_initializable()
     {
         $this->shouldHaveType('Pim\Bundle\AnalyticsBundle\DataCollector\StorageDataCollector');

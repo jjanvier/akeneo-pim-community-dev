@@ -62,3 +62,9 @@ services:
             - '%kernel.bundles%'
         tags:
             - { name: pim_analytics.data_collector, type: system_info_report }
+
+    pim_analytics.data_collector.storage:
+        class: '%pim_analytics.data_collector.storage.class%'
+        tags:
+            - { name: pim_analytics.data_collector, type: system_info_report }
+            - { name: pim_analytics.data_collector, type: system_info_report }
