@@ -6,6 +6,7 @@ use Akeneo\Component\Classification\Model\CategoryInterface as BaseCategoryInter
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Pim\Component\Catalog\AttributeTypes;
+use Pim\Component\TemplateAttribute\TemplateAttribute;
 
 /**
  * Abstract product
@@ -81,6 +82,8 @@ abstract class AbstractProduct implements ProductInterface
 
     /** @var ArrayCollection */
     protected $uniqueData;
+
+    protected $templateAttribute;
 
     /**
      * Constructor
@@ -690,5 +693,15 @@ abstract class AbstractProduct implements ProductInterface
         $this->uniqueData->add($uniqueData);
 
         return $this;
+    }
+
+    public function setTemplateAttribute(TemplateAttribute $templateAttribute)
+    {
+        $this->templateAttribute = $templateAttribute;
+    }
+
+    public function getTemplateAttribute()
+    {
+        return $this->templateAttribute;
     }
 }

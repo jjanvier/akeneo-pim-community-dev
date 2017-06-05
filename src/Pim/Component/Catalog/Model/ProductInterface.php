@@ -8,6 +8,7 @@ use Akeneo\Component\Versioning\Model\VersionableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Pim\Bundle\CommentBundle\Model\CommentSubjectInterface;
+use Pim\Component\TemplateAttribute\TemplateAttribute;
 
 /**
  * Product interface
@@ -352,4 +353,11 @@ interface ProductInterface extends
      * @return ProductInterface
      */
     public function addUniqueData(ProductUniqueDataInterface $uniqueData);
+
+    public function setTemplateAttribute(TemplateAttribute $templateAttribute);
+
+    /**
+     * @return TemplateAttribute
+     */
+    public function getTemplateAttribute();
 }
