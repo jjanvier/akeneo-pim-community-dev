@@ -6,6 +6,7 @@ use Akeneo\Component\Classification\Model\CategoryInterface as BaseCategoryInter
 use Doctrine\Common\Collections\ArrayCollection;
 use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Exception\MissingIdentifierException;
+use Pim\Component\TemplateAttribute\TemplateAttribute;
 
 /**
  * Abstract product
@@ -77,6 +78,8 @@ abstract class AbstractProduct implements ProductInterface
 
     /** @var array */
     protected $normalizedData;
+
+    protected $templateAttribute;
 
     /**
      * Constructor
@@ -776,5 +779,15 @@ abstract class AbstractProduct implements ProductInterface
     public function setNormalizedData($normalizedData)
     {
         $this->normalizedData = $normalizedData;
+    }
+
+    public function setTemplateAttribute(TemplateAttribute $templateAttribute)
+    {
+        $this->templateAttribute = $templateAttribute;
+    }
+
+    public function getTemplateAttribute()
+    {
+        return $this->templateAttribute;
     }
 }

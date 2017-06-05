@@ -8,6 +8,7 @@ use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Pim\Component\Catalog\Model\ProductPriceInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
+use Pim\Component\TemplateAttribute\TemplateAttribute;
 
 /**
  * Product builder interface
@@ -24,11 +25,11 @@ interface ProductBuilderInterface
      *  - sets family if provided
      *
      * @param string $identifier
-     * @param string $familyCode
+     * @param TemplateAttribute $templateAttribute
      *
      * @return ProductInterface
      */
-    public function createProduct($identifier = null, $familyCode = null);
+    public function createProduct($identifier = null, TemplateAttribute $templateAttribute);
 
     /**
      * Add empty values for family and product-specific attributes for relevant scopes and locales
