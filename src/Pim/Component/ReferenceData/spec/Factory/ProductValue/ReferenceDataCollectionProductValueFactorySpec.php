@@ -3,15 +3,16 @@
 namespace spec\Pim\Component\ReferenceData\Factory\ProductValue;
 
 use Acme\Bundle\AppBundle\Entity\Fabric;
-use Akeneo\Component\StorageUtils\Exception\InvalidPropertyException;
 use Akeneo\Component\StorageUtils\Exception\InvalidPropertyTypeException;
 use PhpSpec\ObjectBehavior;
 use Pim\Component\Catalog\Model\AttributeInterface;
+use Pim\Component\ReferenceData\Exception\InvalidReferenceDataException;
 use Pim\Component\ReferenceData\Factory\ProductValue\ReferenceDataCollectionProductValueFactory;
 use Pim\Component\ReferenceData\ProductValue\ReferenceDataCollectionProductValue;
 use Pim\Component\ReferenceData\Repository\ReferenceDataRepositoryInterface;
 use Pim\Component\ReferenceData\Repository\ReferenceDataRepositoryResolverInterface;
 use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 
 /**
  * @author    Damien Carcel (damien.carcel@akeneo.com)
@@ -20,9 +21,14 @@ use Prophecy\Argument;
  */
 class ReferenceDataCollectionProductValueFactorySpec extends ObjectBehavior
 {
-    function let(ReferenceDataRepositoryResolverInterface $repositoryResolver)
+    function let(ReferenceDataRepositoryResolverInterface $repositoryResolver, LoggerInterface $logger)
     {
-        $this->beConstructedWith($repositoryResolver, ReferenceDataCollectionProductValue::class, 'pim_reference_data_catalog_multiselect');
+        $this->beConstructedWith(
+            $repositoryResolver,
+            $logger,
+            ReferenceDataCollectionProductValue::class,
+            'pim_reference_data_catalog_multiselect'
+        );
     }
 
     function it_is_initializable()
@@ -208,6 +214,7 @@ class ReferenceDataCollectionProductValueFactorySpec extends ObjectBehavior
 
     function it_throws_an_exception_when_provided_data_is_not_an_existing_reference_data_code(
         $repositoryResolver,
+        $logger,
         ReferenceDataRepositoryInterface $referenceDataRepository,
         AttributeInterface $attribute
     ) {
@@ -222,15 +229,61 @@ class ReferenceDataCollectionProductValueFactorySpec extends ObjectBehavior
         $repositoryResolver->resolve('fabrics')->willReturn($referenceDataRepository);
         $referenceDataRepository->findOneBy(['code' => 'foobar'])->willReturn(null);
 
-        $exception = InvalidPropertyException::validEntityCodeExpected(
+        $logger
+            ->warning('Tried to load a product value for the attribute "reference_data_multi_select_attribute" with a reference data "foobar" that does not exist.')
+            ->shouldBeCalled();
+
+        $exception = InvalidReferenceDataException::validEntityCodeExpected(
             'reference_data_multi_select_attribute',
             'reference data code',
-            'The code of the reference data "fabrics" does not exist',
+            'The reference data "fabrics" do not exist',
             ReferenceDataCollectionProductValueFactory::class,
             'foobar'
         );
 
         $this->shouldThrow($exception)->during('create', [$attribute, null, null, ['foobar']]);
+    }
+
+    function it_logs_a_warning_when_all_provided_data_are_not_existing_reference_data_codes(
+        $repositoryResolver,
+        $logger,
+        Fabric $silk,
+        ReferenceDataRepositoryInterface $referenceDataRepository,
+        AttributeInterface $attribute
+    ) {
+        $attribute->isScopable()->willReturn(true);
+        $attribute->isLocalizable()->willReturn(true);
+        $attribute->getCode()->willReturn('reference_data_multi_select_attribute');
+        $attribute->getType()->willReturn('pim_reference_data_catalog_multiselect');
+        $attribute->getBackendType()->willReturn('reference_data_options');
+        $attribute->isBackendTypeReferenceData()->willReturn(true);
+        $attribute->getReferenceDataName()->willReturn('fabrics');
+
+        $repositoryResolver->resolve('fabrics')->willReturn($referenceDataRepository);
+        $referenceDataRepository->findOneBy(['code' => 'silk'])->willReturn($silk);
+        $referenceDataRepository->findOneBy(['code' => 'cotton'])->willReturn(null);
+
+        $logger
+            ->warning('Tried to load a product value for the attribute "reference_data_multi_select_attribute" with a reference data "cotton" that does not exist.')
+            ->shouldBeCalled();
+        $logger
+            ->warning('Tried to load a product value for the attribute "reference_data_multi_select_attribute" with a reference data "silk" that does not exist.')
+            ->shouldNotBeCalled();
+
+        $productValue = $this->create(
+            $attribute,
+            'ecommerce',
+            'en_US',
+            ['silk', 'cotton']
+        );
+
+        $productValue->shouldReturnAnInstanceOf(ReferenceDataCollectionProductValue::class);
+        $productValue->shouldHaveAttribute('reference_data_multi_select_attribute');
+        $productValue->shouldBeLocalizable();
+        $productValue->shouldHaveLocale('en_US');
+        $productValue->shouldBeScopable();
+        $productValue->shouldHaveChannel('ecommerce');
+        $productValue->shouldHaveReferenceData([$silk]);
     }
 
     public function getMatchers()
