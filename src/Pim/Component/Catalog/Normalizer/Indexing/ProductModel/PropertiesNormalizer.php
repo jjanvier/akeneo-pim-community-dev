@@ -20,6 +20,7 @@ class PropertiesNormalizer extends SerializerAwareNormalizer implements Normaliz
 
         $data = [];
 
+        $data['id'] = $product->getId();
         $data[StandardPropertiesNormalizer::FIELD_IDENTIFIER] = $product->getIdentifier();
         $data[StandardPropertiesNormalizer::FIELD_FAMILY] = null !== $product->getFamily()
             ? $product->getFamily()->getCode() : null;

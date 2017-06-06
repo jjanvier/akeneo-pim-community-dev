@@ -57,7 +57,7 @@ class FlexibleValuesBuilder implements FlexibleValuesBuilderInterface
 
         // TODO: TIP-722: This is a temporary fix, Product identifier should be used only as a field
         if (AttributeTypes::IDENTIFIER === $attribute->getType() && null !== $data) {
-            $values->setIdentifier($data);
+            $values->setIdentifier($valuesValue);
         }
 
         return $valuesValue;

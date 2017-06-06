@@ -95,7 +95,7 @@ class ProductController
      * @param ConverterInterface           $productValueConverter
      */
     public function __construct(
-        ProductRepositoryInterface $productRepository,
+        $productRepository,
         AttributeRepositoryInterface $attributeRepository,
         ObjectUpdaterInterface $productUpdater,
         SaverInterface $productSaver,
@@ -136,7 +136,7 @@ class ProductController
     public function getAction($id)
     {
         $product = $this->findProductOr404($id);
-        $this->productBuilder->addMissingAssociations($product);
+//        $this->productBuilder->addMissingAssociations($product);
 
         $normalizationContext = $this->userContext->toArray() + [
             'filter_types'               => ['pim.internal_api.product_value.view'],

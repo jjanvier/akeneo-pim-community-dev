@@ -120,7 +120,7 @@ services:
             - '@security.token_storage'
             - '@form.factory'
             - '@translator'
-            - '@pim_catalog.repository.product'
+            - '@pim_catalog.repository.product_model'
             - '@pim_catalog.repository.category'
             - '@pim_user.context.user'
             - '@oro_security.security_facade'
@@ -364,7 +364,7 @@ services:
     pim_enrich.controller.rest.product:
         class: '%pim_enrich.controller.rest.product.class%'
         arguments:
-            - '@pim_catalog.repository.product'
+            - '@pim_catalog.repository.product_model'
             - '@pim_catalog.repository.attribute'
             - '@pim_catalog.updater.product'
             - '@pim_catalog.saver.product'

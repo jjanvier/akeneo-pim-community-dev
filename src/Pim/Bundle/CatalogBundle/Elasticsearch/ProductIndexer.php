@@ -88,7 +88,9 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface, RemoverI
      */
     public function remove($productId, array $options = [])
     {
-        $this->indexer->delete($this->indexType, $productId);
+        // TODO: WARNING, HERE WE HARDCORE PRODUCT MODEL INDEX TYPE, TOFIX
+//        $this->indexer->delete($this->indexType, $productId);
+        $this->indexer->delete($this->productModelIndexType, $productId);
     }
 
     /**
@@ -96,7 +98,9 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface, RemoverI
      */
     public function removeAll(array $productIds, array $options = [])
     {
-        $this->indexer->bulkDelete($this->indexType, $productIds);
+        // TODO: WARNING, HERE WE HARDCORE PRODUCT MODEL INDEX TYPE, TOFIX
+//        $this->indexer->bulkDelete($this->indexType, $productIds);
+        $this->indexer->bulkDelete($this->productModelIndexType, $productIds);
     }
 
     /**
