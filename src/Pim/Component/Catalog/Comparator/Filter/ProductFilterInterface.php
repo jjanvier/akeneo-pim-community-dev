@@ -21,5 +21,5 @@ interface ProductFilterInterface
      *
      * @return array
      */
-    public function filter(ProductInterface $product, array $newValues);
+    public function filter($product, array $newValues);
 }

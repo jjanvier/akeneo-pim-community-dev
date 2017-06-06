@@ -94,7 +94,7 @@ class ProductEditDataFilter implements CollectionFilterInterface
      *
      * @return bool
      */
-    protected function isAllowed(ProductInterface $product, $type)
+    protected function isAllowed($product, $type)
     {
         $isAllowed = true;
 
@@ -130,7 +130,7 @@ class ProductEditDataFilter implements CollectionFilterInterface
      *
      * @return bool
      */
-    protected function isAllowedToUpdateFamily(ProductInterface $product)
+    protected function isAllowedToUpdateFamily($product)
     {
         return $this->checkAclForType('family');
     }
@@ -142,7 +142,7 @@ class ProductEditDataFilter implements CollectionFilterInterface
      *
      * @return bool
      */
-    protected function isAllowedToClassify(ProductInterface $product)
+    protected function isAllowedToClassify($product)
     {
         return $this->checkAclForType('categories');
     }
@@ -154,7 +154,7 @@ class ProductEditDataFilter implements CollectionFilterInterface
      *
      * @return bool
      */
-    protected function isAllowedToUpdateStatus(ProductInterface $product)
+    protected function isAllowedToUpdateStatus($product)
     {
         return $this->checkAclForType('enabled');
     }
@@ -166,7 +166,7 @@ class ProductEditDataFilter implements CollectionFilterInterface
      *
      * @return bool
      */
-    protected function isAllowedToUpdateAssociations(ProductInterface $product)
+    protected function isAllowedToUpdateAssociations($product)
     {
         return $this->checkAclForType('associations');
     }
@@ -178,7 +178,7 @@ class ProductEditDataFilter implements CollectionFilterInterface
      *
      * @return bool
      */
-    protected function isAllowedToUpdateValues(ProductInterface $product)
+    protected function isAllowedToUpdateValues($product)
     {
         return $this->checkAclForType('values');
     }

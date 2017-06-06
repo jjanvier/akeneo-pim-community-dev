@@ -378,6 +378,8 @@ services:
             - '@pim_catalog.localization.localizer.converter'
             - '@pim_catalog.comparator.filter.product'
             - '@pim_enrich.converter.enrich_to_standard.product_value'
+            - '@pim_catalog.updater.flexible_values'
+            - '@pim_catalog.saver.product_model'
 
     pim_enrich.controller.rest.product_category:
         class: '%pim_enrich.controller.rest.product_category.class%'
