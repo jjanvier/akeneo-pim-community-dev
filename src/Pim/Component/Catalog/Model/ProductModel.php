@@ -2,6 +2,7 @@
 
 namespace Pim\Component\Catalog\Model;
 
+use Akeneo\Component\Classification\Model\CategoryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -43,7 +44,7 @@ class ProductModel implements ProductModelInterface
 
     /** @var int */
     private $root;
-    
+
     /**
      * Constructor
      */
@@ -290,5 +291,43 @@ class ProductModel implements ProductModelInterface
         }
 
         return $this->getParentValuesByRecursion($parentModel, $values);
+    }
+
+    /**
+     * @return ArrayCollection of CategoryInterface
+     */
+    public function getCategories()
+    {
+        // TODO: Implement getCategories() method.
+    }
+
+    /**
+     * @param CategoryInterface $category
+     *
+     * @return mixed
+     */
+    public function removeCategory(CategoryInterface $category)
+    {
+        // TODO: Implement removeCategory() method.
+    }
+
+    /**
+     * @param CategoryInterface $category
+     *
+     * @return mixed
+     */
+    public function addCategory(CategoryInterface $category)
+    {
+        // TODO: Implement addCategory() method.
+    }
+
+    /**
+     * Get a string with categories linked to the entity
+     *
+     * @return array
+     */
+    public function getCategoryCodes()
+    {
+        // TODO: Implement getCategoryCodes() method.
     }
 }
