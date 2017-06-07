@@ -67,9 +67,9 @@ class MetricConverterSpec extends ObjectBehavior
 
         $converter->setFamily('Surface')->shouldNotBeCalled();
 
-        $productBuilder->addOrReplaceProductValue(Argument::cetera())->shouldBeCalledTimes(1);
+        $productBuilder->addOrReplaceValue(Argument::cetera())->shouldBeCalledTimes(1);
         $productBuilder
-            ->addOrReplaceProductValue($product, $weight, null, null, ['amount' => 1000, 'unit' => 'GRAM'])
+            ->addOrReplaceValue($product, $weight, null, null, ['amount' => 1000, 'unit' => 'GRAM'])
             ->shouldBeCalled();
 
         $this->convert($product, $channel);
@@ -98,7 +98,7 @@ class MetricConverterSpec extends ObjectBehavior
 
         $converter->setFamily('Weight')->shouldNotBeCalled();
         $converter->convert('KILOGRAM', 'GRAM', 1)->shouldNotBeCalled();
-        $productBuilder->addOrReplaceProductValue(Argument::cetera())->shouldNotBeCalled();
+        $productBuilder->addOrReplaceValue(Argument::cetera())->shouldNotBeCalled();
 
         $this->convert($product, $channel);
     }

@@ -13,6 +13,7 @@ use Pim\Component\Catalog\Completeness\CompletenessCalculatorInterface;
 use Pim\Component\Catalog\Localization\Localizer\AttributeConverterInterface;
 use Pim\Component\Catalog\Manager\CompletenessManager;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Model\ProductModelInterface;
 use Pim\Component\Catalog\Repository\ChannelRepositoryInterface;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 use Pim\Component\Enrich\Converter\ConverterInterface;
@@ -158,7 +159,7 @@ class ProductNormalizer implements NormalizerInterface
             'updated'           => $updated,
             'model_type'        => 'product',
             'structure_version' => $this->structureVersionProvider->getStructureVersion(),
-            'completenesses'    => $this->getNormalizedCompletenesses($product)
+//            'completenesses'    => $this->getNormalizedCompletenesses($product)
         ] + $this->getLabels($product) + $this->getAssociationMeta($product);
 
         return $normalizedProduct;
@@ -169,7 +170,7 @@ class ProductNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof ProductInterface && in_array($format, $this->supportedFormat);
+        return ($data instanceof ProductInterface || $data instanceof ProductModelInterface) && in_array($format, $this->supportedFormat);
     }
 
     /**
@@ -177,9 +178,13 @@ class ProductNormalizer implements NormalizerInterface
      *
      * @return array
      */
-    protected function getLabels(ProductInterface $product)
+    protected function getLabels($product)
     {
         $labels = [];
+
+        if ($product instanceof ProductModelInterface) {
+            return ['label' => $labels];
+        }
 
         foreach ($this->localeRepository->getActivatedLocaleCodes() as $localeCode) {
             $labels[$localeCode] = $product->getLabel($localeCode);
@@ -193,9 +198,14 @@ class ProductNormalizer implements NormalizerInterface
      *
      * @return array
      */
-    protected function getAssociationMeta(ProductInterface $product)
+    protected function getAssociationMeta($product)
     {
         $meta = [];
+
+        if ($product instanceof ProductModelInterface) {
+            return ['associations' => $meta];
+        }
+
         $associations = $product->getAssociations();
 
         foreach ($associations as $association) {

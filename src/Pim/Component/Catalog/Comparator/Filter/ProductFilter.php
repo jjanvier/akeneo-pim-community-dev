@@ -50,7 +50,7 @@ class ProductFilter implements ProductFilterInterface
     /**
      * {@inheritdoc}
      */
-    public function filter(ProductInterface $product, array $newProduct)
+    public function filter($product, array $newProduct)
     {
         $originalValues = $this->getOriginalProduct($product);
 
@@ -161,7 +161,7 @@ class ProductFilter implements ProductFilterInterface
      *
      * @return array
      */
-    protected function getOriginalProduct(ProductInterface $product)
+    protected function getOriginalProduct($product)
     {
         $originalProduct = $this->normalizer->normalize($product, 'standard');
 

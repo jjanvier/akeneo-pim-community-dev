@@ -28,6 +28,13 @@ services:
         arguments:
             - '@pim_catalog.factory.product_unique_data'
 
+    pim_catalog.saver.product_model:
+        class: '%pim_catalog.saver.base.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+            - '%pim_catalog.entity.product_model.class%'
+
     pim_catalog.saver.group:
         class: '%pim_catalog.saver.group.class%'
         arguments:

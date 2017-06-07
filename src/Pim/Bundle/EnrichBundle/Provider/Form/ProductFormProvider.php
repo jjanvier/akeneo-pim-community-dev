@@ -3,6 +3,7 @@
 namespace Pim\Bundle\EnrichBundle\Provider\Form;
 
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Model\ProductModelInterface;
 
 /**
  * Form provider for product
@@ -26,6 +27,6 @@ class ProductFormProvider implements FormProviderInterface
      */
     public function supports($element)
     {
-        return $element instanceof ProductInterface;
+        return ($element instanceof ProductInterface || $element instanceof ProductModelInterface);
     }
 }
