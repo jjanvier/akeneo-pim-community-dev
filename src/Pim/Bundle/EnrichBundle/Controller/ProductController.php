@@ -96,7 +96,7 @@ class ProductController
         TokenStorageInterface $tokenStorage,
         FormFactoryInterface $formFactory,
         TranslatorInterface $translator,
-        ProductRepositoryInterface $productRepository,
+        $productRepository,
         CategoryRepositoryInterface $categoryRepository,
         UserContext $userContext,
         SecurityFacade $securityFacade,
