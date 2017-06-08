@@ -32,6 +32,10 @@ class FromSizeCursor extends AbstractCursor implements CursorInterface
 
     /** @var int */
     protected $fetchedItemsCount;
+    /**
+     * @var CursorableRepositoryInterface
+     */
+    private $productModelRepository;
 
     /**
      * @param Client                        $esClient
@@ -45,6 +49,7 @@ class FromSizeCursor extends AbstractCursor implements CursorInterface
     public function __construct(
         Client $esClient,
         CursorableRepositoryInterface $repository,
+        CursorableRepositoryInterface $productModelRepository,
         array $esQuery,
         $indexType,
         $pageSize,
@@ -53,6 +58,7 @@ class FromSizeCursor extends AbstractCursor implements CursorInterface
     ) {
         $this->esClient = $esClient;
         $this->repository = $repository;
+        $this->productModelRepository = $productModelRepository;
         $this->esQuery = $esQuery;
         $this->indexType = $indexType;
         $this->pageSize = $pageSize;
@@ -97,12 +103,16 @@ class FromSizeCursor extends AbstractCursor implements CursorInterface
         $esQuery['sort'] = $sort;
         $esQuery['from'] = $this->from;
 
-        $response = $this->esClient->search($this->indexType, $esQuery);
+        $indices = 'pim_catalog_product,pim_catalog_product_model';
+        $response = $this->esClient->search($indices, $esQuery);
         $this->count = $response['hits']['total'];
 
         $identifiers = [];
         foreach ($response['hits']['hits'] as $hit) {
-            $identifiers[] = $hit['_source']['identifier'];
+            $identifiers[] = [
+                'identifier' => $hit['_source']['identifier'],
+                'index' => $hit['_index'],
+            ];
         }
 
         return $identifiers;

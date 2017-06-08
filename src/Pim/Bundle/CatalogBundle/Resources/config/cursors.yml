@@ -31,3 +31,5 @@ services:
             - '%akeneo_elasticsearch.cursor.from_size_cursor.class%'
             - '%pim_catalog.factory.product_cursor.page_size%'
             - 'pim_catalog_product'
+            - '@pim_catalog.repository.product'
+            - '@pim_catalog.repository.product_model'

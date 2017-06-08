@@ -38,6 +38,10 @@ Pim\Component\Catalog\Model\ProductModel:
             column: rgt
             gedmo:
                 - treeRight
+        created:
+            type: datetime
+        updated:
+            type: datetime
     oneToMany:
         childrenModels:
             targetEntity: Pim\Component\Catalog\Model\ProductModelInterface

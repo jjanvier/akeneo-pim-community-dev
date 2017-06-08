@@ -7,6 +7,7 @@ use Akeneo\Component\StorageUtils\Cursor\CursorFactoryInterface;
 use Akeneo\Component\StorageUtils\Exception\InvalidObjectException;
 use Akeneo\Component\StorageUtils\Repository\CursorableRepositoryInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -33,14 +34,24 @@ class FromSizeCursorFactory implements CursorFactoryInterface
 
     /** @var string */
     protected $indexType;
+    /**
+     * @var EntityRepository
+     */
+    private $productRepository;
+    /**
+     * @var EntityRepository
+     */
+    private $productModelRepository;
 
     /**
-     * @param Client        $searchEngine
-     * @param ObjectManager $om
-     * @param string        $entityClassName
-     * @param string        $cursorClassName
-     * @param int           $pageSize
-     * @param string        $indexType
+     * @param Client                        $searchEngine
+     * @param ObjectManager                 $om
+     * @param string                        $entityClassName
+     * @param string                        $cursorClassName
+     * @param int                           $pageSize
+     * @param string                        $indexType
+     * @param CursorableRepositoryInterface $productRepository
+     * @param CursorableRepositoryInterface $productModelRepository
      */
     public function __construct(
         Client $searchEngine,
@@ -48,7 +59,9 @@ class FromSizeCursorFactory implements CursorFactoryInterface
         $entityClassName,
         $cursorClassName,
         $pageSize,
-        $indexType
+        $indexType,
+        CursorableRepositoryInterface $productRepository,
+        CursorableRepositoryInterface $productModelRepository
     ) {
         $this->searchEngine = $searchEngine;
         $this->om = $om;
@@ -56,6 +69,8 @@ class FromSizeCursorFactory implements CursorFactoryInterface
         $this->cursorClassName = $cursorClassName;
         $this->pageSize = $pageSize;
         $this->indexType = $indexType;
+        $this->productRepository = $productRepository;
+        $this->productModelRepository = $productModelRepository;
     }
 
     /**
@@ -65,14 +80,15 @@ class FromSizeCursorFactory implements CursorFactoryInterface
     {
         $options = $this->resolveOptions($options);
 
-        $repository = $this->om->getRepository($this->entityClassName);
-        if (!$repository instanceof CursorableRepositoryInterface) {
-            throw InvalidObjectException::objectExpected($this->entityClassName, CursorableRepositoryInterface::class);
-        }
+//        $repository = $this->om->getRepository($this->entityClassName);
+//        if (!$repository instanceof CursorableRepositoryInterface) {
+//            throw InvalidObjectException::objectExpected($this->entityClassName, CursorableRepositoryInterface::class);
+//        }
 
         return new $this->cursorClassName(
             $this->searchEngine,
-            $repository,
+            $this->productRepository,
+            $this->productModelRepository,
             $queryBuilder,
             $this->indexType,
             $options['page_size'],

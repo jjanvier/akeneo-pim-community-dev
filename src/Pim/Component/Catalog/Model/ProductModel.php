@@ -6,6 +6,7 @@ use Akeneo\Component\Classification\CategoryAwareInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Akeneo\Component\Classification\Model\CategoryInterface as BaseCategoryInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class ProductModel implements ProductModelInterface
 {
@@ -45,6 +46,28 @@ class ProductModel implements ProductModelInterface
 
     /** @var int */
     private $root;
+
+    /** @var \Datetime $created */
+    protected $created;
+
+    /**
+     * @param \Datetime $created
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @param \Datetime $updated
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+    }
+
+    /** @var \Datetime $updated */
+    protected $updated;
 
     private $categories;
 

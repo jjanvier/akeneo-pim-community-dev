@@ -117,6 +117,9 @@ function createModel($identifier, array $data, $parent = null)
 
     $productModel = new ProductModel();
     $productModel->setIdentifier($identifier);
+    $productModel->setCreated(new DateTime());
+    $productModel->setUpdated(new DateTime());
+
     $updater->update($productModel, $data);
     if (null !== $parent) {
         $productModel->setModel($parent);
