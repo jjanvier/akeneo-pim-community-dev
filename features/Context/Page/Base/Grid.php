@@ -734,9 +734,11 @@ class Grid extends Index
             $this->clickFiltersList();
         }
 
-        $manageFilters
-            ->find('css', 'input')
-            ->setValue($text);
+        $searchFilter = $this->spin(function () use ($manageFilters) {
+            return $manageFilters->find('css', 'input');
+        }, 'Cannot find the search filter input in the manager filters dropdown.');
+
+        $searchFilter->setValue($text);
     }
 
     /**
