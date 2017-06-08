@@ -5,10 +5,7 @@ namespace Pim\Component\Catalog\Model;
 use Akeneo\Component\Classification\CategoryAwareInterface;
 use Doctrine\Common\Collections\Collection;
 
-interface ProductModelInterface extends
-    FlexibleValuesInterface,
-    CanHaveProductModelInterface,
-    CategoryAwareInterface
+interface ProductModelInterface extends FlexibleValuesInterface, CanHaveProductModelInterface, CategoryAwareInterface
 {
     /**
      * Get the ID of the model

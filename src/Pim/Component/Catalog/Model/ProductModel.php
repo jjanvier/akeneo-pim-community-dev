@@ -2,9 +2,10 @@
 
 namespace Pim\Component\Catalog\Model;
 
-use Akeneo\Component\Classification\Model\CategoryInterface;
+use Akeneo\Component\Classification\CategoryAwareInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Akeneo\Component\Classification\Model\CategoryInterface as BaseCategoryInterface;
 
 class ProductModel implements ProductModelInterface
 {
@@ -44,6 +45,8 @@ class ProductModel implements ProductModelInterface
 
     /** @var int */
     private $root;
+
+    private $categories;
 
     /**
      * Constructor
@@ -294,40 +297,47 @@ class ProductModel implements ProductModelInterface
     }
 
     /**
-     * @return ArrayCollection of CategoryInterface
+     * {@inheritdoc}
      */
     public function getCategories()
     {
-        // TODO: Implement getCategories() method.
+        return $this->categories;
     }
 
     /**
-     * @param CategoryInterface $category
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function removeCategory(CategoryInterface $category)
+    public function addCategory(BaseCategoryInterface $category)
     {
-        // TODO: Implement removeCategory() method.
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
     }
 
     /**
-     * @param CategoryInterface $category
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function addCategory(CategoryInterface $category)
+    public function removeCategory(BaseCategoryInterface $category)
     {
-        // TODO: Implement addCategory() method.
+        $this->categories->removeElement($category);
+
+        return $this;
     }
 
     /**
-     * Get a string with categories linked to the entity
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getCategoryCodes()
     {
-        // TODO: Implement getCategoryCodes() method.
+        $codes = [];
+        foreach ($this->getCategories() as $category) {
+            $codes[] = $category->getCode();
+        }
+        sort($codes);
+
+        return $codes;
     }
+
 }
