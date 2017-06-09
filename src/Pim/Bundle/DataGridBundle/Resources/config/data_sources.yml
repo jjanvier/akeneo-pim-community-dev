@@ -119,7 +119,8 @@ services:
         arguments:
             - '@pim_catalog.object_manager.product'
             - '@pim_catalog.query.product_query_builder_from_size_factory'
-            - '@pim_datagrid.normalizer.product'
+#            - '@pim_datagrid.normalizer.product'
+            - '@pim_serializer'
         calls:
             - [ setMassActionRepository, ['@pim_catalog.repository.product_mass_action'] ]
         tags:
