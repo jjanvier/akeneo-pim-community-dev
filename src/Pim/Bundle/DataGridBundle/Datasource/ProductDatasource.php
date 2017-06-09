@@ -8,6 +8,7 @@ use Pim\Bundle\DataGridBundle\Extension\Pager\PagerExtension;
 use Pim\Component\Catalog\Query\ProductQueryBuilderFactoryInterface;
 use Pim\Component\Catalog\Query\ProductQueryBuilderInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Product datasource, execute elasticsearch query
@@ -56,6 +57,10 @@ class ProductDatasource extends Datasource
             'current_group_id'    => $this->getConfiguration('current_group_id', false),
         ];
         $rows = ['totalRecords' => $productCursor->count(), 'data' => []];
+
+
+        // 1. create model normalizer (format datagrid) V
+        // 2. use normalizer registry
 
         foreach ($productCursor as $product) {
             $normalizedProduct = array_merge(

@@ -77,6 +77,14 @@ class ProductController
 
     /** @var ConverterInterface */
     protected $productValueConverter;
+    /**
+     * @var ObjectUpdaterInterface
+     */
+    private $productModelUpdater;
+    /**
+     * @var SaverInterface
+     */
+    private $productModelSaver;
 
     /**
      * @param ProductRepositoryInterface   $productRepository
@@ -95,7 +103,7 @@ class ProductController
      * @param ConverterInterface           $productValueConverter
      */
     public function __construct(
-        ProductRepositoryInterface $productRepository,
+        $productRepository,
         AttributeRepositoryInterface $attributeRepository,
         ObjectUpdaterInterface $productUpdater,
         SaverInterface $productSaver,
@@ -108,7 +116,9 @@ class ProductController
         ProductBuilderInterface $productBuilder,
         AttributeConverterInterface $localizedConverter,
         ProductFilterInterface $emptyValuesFilter,
-        ConverterInterface $productValueConverter
+        ConverterInterface $productValueConverter,
+        ObjectUpdaterInterface $productModelUpdater,
+        SaverInterface $productModelSaver
     ) {
         $this->productRepository = $productRepository;
         $this->attributeRepository = $attributeRepository;
@@ -124,6 +134,8 @@ class ProductController
         $this->localizedConverter = $localizedConverter;
         $this->emptyValuesFilter = $emptyValuesFilter;
         $this->productValueConverter = $productValueConverter;
+        $this->productModelUpdater = $productModelUpdater;
+        $this->productModelSaver = $productModelSaver;
     }
 
     /**
@@ -136,7 +148,7 @@ class ProductController
     public function getAction($id)
     {
         $product = $this->findProductOr404($id);
-        $this->productBuilder->addMissingAssociations($product);
+//        $this->productBuilder->addMissingAssociations($product);
 
         $normalizationContext = $this->userContext->toArray() + [
             'filter_types'               => ['pim.internal_api.product_value.view'],
@@ -216,7 +228,8 @@ class ProductController
         $violations->addAll($this->localizedConverter->getViolations());
 
         if (0 === $violations->count()) {
-            $this->productSaver->save($product);
+//            $this->productSaver->save($product);
+            $this->productModelSaver->save($product);
 
             $normalizationContext = $this->userContext->toArray() + [
                 'filter_types'               => ['pim.internal_api.product_value.view'],
@@ -344,7 +357,7 @@ class ProductController
      * @param ProductInterface $product
      * @param array            $data
      */
-    protected function updateProduct(ProductInterface $product, array $data)
+    protected function updateProduct($product, array $data)
     {
         $values = $this->productValueConverter->convert($data['values']);
 
@@ -352,14 +365,22 @@ class ProductController
             'locale' => $this->userContext->getUiLocale()->getCode()
         ]);
 
-        $dataFiltered = $this->emptyValuesFilter->filter($product, ['values' => $values]);
+//        $dataFiltered = $this->emptyValuesFilter->filter($product, ['values' => $values]);
+//
+//        if (!empty($dataFiltered)) {
+//            $data = array_replace($data, $dataFiltered);
+//        } else {
+//            $data['values'] = [];
+//        }
 
-        if (!empty($dataFiltered)) {
-            $data = array_replace($data, $dataFiltered);
-        } else {
-            $data['values'] = [];
+        $data['values'] = $values;
+        foreach ($data['values'] as $k => $value) {
+            $data['values'][$k] = current($data['values'][$k]);
         }
 
-        $this->productUpdater->update($product, $data);
+        unset($data['identifier']);
+        unset($data['associations']);
+//        $this->productUpdater->update($product, $data);
+        $this->productModelUpdater->update($product, $values);
     }
 }

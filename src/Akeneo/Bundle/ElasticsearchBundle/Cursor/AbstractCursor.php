@@ -98,11 +98,34 @@ abstract class AbstractCursor implements CursorInterface
             return [];
         }
 
-        $hydratedItems = $this->repository->getItemsFromIdentifiers($identifiers);
+        $productIdentifiers = array_column(array_filter($identifiers, function ($data) {
+           if (!isset($data['index']))
+           {
+               return true;
+           }
+
+           return $data['index'] === 'pim_catalog_product';
+        }), 'identifier');
+
+        $productModelIdentifiers = array_column(array_filter($identifiers, function ($data) {
+            if (!isset($data['index']))
+            {
+                return true;
+            }
+
+            return $data['index'] === 'pim_catalog_product_model';
+        }), 'identifier');
+
+        $hydratedItems = $this->repository->getItemsFromIdentifiers($productIdentifiers);
+
+        if (!empty($productModelIdentifiers)) {
+            $productModels = $this->productModelRepository->getItemsFromIdentifiers($productModelIdentifiers);
+            $hydratedItems = array_merge($hydratedItems, $productModels);
+        }
 
         $orderedItems = [];
 
-        foreach ($identifiers as $identifier) {
+        foreach (array_column($identifiers, 'identifier') as $identifier) {
             foreach ($hydratedItems as $hydratedItem) {
                 if ($identifier === $hydratedItem->getIdentifier()) {
                     $orderedItems[] = $hydratedItem;

@@ -121,7 +121,7 @@ class MediaAttributeCopier extends AbstractAttributeCopier
                 $file->setOriginalFilename($fromValue->getData()->getOriginalFilename());
             }
 
-            $this->productBuilder->addOrReplaceProductValue(
+            $this->productBuilder->addOrReplaceValue(
                 $toProduct,
                 $toAttribute,
                 $toLocale,

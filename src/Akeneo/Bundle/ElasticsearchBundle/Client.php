@@ -57,7 +57,7 @@ class Client
     public function index($indexType, $id, array $body, Refresh $refresh = null)
     {
         $params = [
-            'index' => $this->indexName,
+            'index' => $indexType,
             'type' => $indexType,
             'id' => $id,
             'body' => $body,
@@ -91,7 +91,7 @@ class Client
 
             $params['body'][] = [
                 'index' => [
-                    '_index' => $this->indexName,
+                    '_index' => $indexType,
                     '_type' => $indexType,
                     '_id' => $document[$keyAsId],
                 ],
@@ -116,7 +116,7 @@ class Client
     public function get($indexType, $id)
     {
         $params = [
-            'index' => $this->indexName,
+            'index' => $indexType,
             'type' => $indexType,
             'id' => $id,
         ];
@@ -133,7 +133,7 @@ class Client
     public function search($indexType, array $body)
     {
         $params = [
-            'index' => $this->indexName,
+            'index' => $indexType,
             'type' => $indexType,
             'body' => $body,
         ];
@@ -150,7 +150,7 @@ class Client
     public function delete($indexType, $id)
     {
         $params = [
-            'index' => $this->indexName,
+            'index' => $indexType,
             'type' => $indexType,
             'id' => $id,
         ];
@@ -171,7 +171,7 @@ class Client
         foreach ($documentIds as $identifier) {
             $params['body'][] = [
                 'delete' => [
-                    '_index' => $this->indexName,
+                    '_index' => $indexType,
                     '_type' => $indexType,
                     '_id' => $identifier,
                 ],

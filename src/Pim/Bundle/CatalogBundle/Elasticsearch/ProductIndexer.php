@@ -10,6 +10,7 @@ use Akeneo\Component\StorageUtils\Remover\BulkRemoverInterface;
 use Akeneo\Component\StorageUtils\Remover\RemoverInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Model\ProductModelInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -28,18 +29,23 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface, RemoverI
     protected $indexer;
 
     /** @var string */
-    protected $indexType;
+    protected $productIndexType;
+
+    /** @var */
+    private $productModelIndexType;
 
     /**
      * @param NormalizerInterface $normalizer
      * @param Client              $indexer
-     * @param string              $indexType
+     * @param string              $productIndexType
+     * @param                     $productModelIndexType
      */
-    public function __construct(NormalizerInterface $normalizer, Client $indexer, $indexType)
+    public function __construct(NormalizerInterface $normalizer, Client $indexer, $productIndexType, $productModelIndexType)
     {
         $this->normalizer = $normalizer;
         $this->indexer = $indexer;
-        $this->indexType = $indexType;
+        $this->productIndexType = $productIndexType;
+        $this->productModelIndexType = $productModelIndexType;
     }
 
     /**
@@ -48,9 +54,11 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface, RemoverI
     public function index($product, array $options = [])
     {
         $this->validateProduct($product);
+        $indexType = $product instanceof ProductInterface ? $this->productIndexType : $this->productModelIndexType;
+
         $normalizedProduct = $this->normalizer->normalize($product, 'indexing');
         $this->validateProductNormalization($normalizedProduct);
-        $this->indexer->index($this->indexType, $normalizedProduct['id'], $normalizedProduct);
+        $this->indexer->index($indexType, $normalizedProduct['id'], $normalizedProduct);
     }
 
     /**
@@ -63,6 +71,8 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface, RemoverI
         }
 
         $normalizedProducts = [];
+        $indexType = current($products) instanceof ProductInterface ? $this->productIndexType : $this->productModelIndexType;
+
         foreach ($products as $product) {
             $this->validateProduct($product);
             $normalizedProduct = $this->normalizer->normalize($product, 'indexing');
@@ -70,7 +80,7 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface, RemoverI
             $normalizedProducts[] = $normalizedProduct;
         }
 
-        $this->indexer->bulkIndexes($this->indexType, $normalizedProducts, 'id', Refresh::waitFor());
+        $this->indexer->bulkIndexes($indexType, $normalizedProducts, 'id', Refresh::waitFor());
     }
 
     /**
@@ -78,7 +88,9 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface, RemoverI
      */
     public function remove($productId, array $options = [])
     {
-        $this->indexer->delete($this->indexType, $productId);
+        // TODO: WARNING, HERE WE HARDCORE PRODUCT MODEL INDEX TYPE, TOFIX
+//        $this->indexer->delete($this->indexType, $productId);
+        $this->indexer->delete($this->productModelIndexType, $productId);
     }
 
     /**
@@ -86,7 +98,9 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface, RemoverI
      */
     public function removeAll(array $productIds, array $options = [])
     {
-        $this->indexer->bulkDelete($this->indexType, $productIds);
+        // TODO: WARNING, HERE WE HARDCORE PRODUCT MODEL INDEX TYPE, TOFIX
+//        $this->indexer->bulkDelete($this->indexType, $productIds);
+        $this->indexer->bulkDelete($this->productModelIndexType, $productIds);
     }
 
     /**
@@ -94,7 +108,7 @@ class ProductIndexer implements IndexerInterface, BulkIndexerInterface, RemoverI
      */
     private function validateProduct($product)
     {
-        if (!$product instanceof ProductInterface) {
+        if (!$product instanceof ProductInterface && !$product instanceof ProductModelInterface) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Only products "Pim\Component\Catalog\Model\ProductInterface" can be indexed in the search engine, "%s" provided.',

@@ -114,7 +114,7 @@ class MediaAttributeCopierSpec extends ObjectBehavior
 
         $fileInfo->getKey()->willReturn('key');
 
-        $builder->addOrReplaceProductValue($product, $toAttribute, $toLocale, $toScope, 'key');
+        $builder->addOrReplaceValue($product, $toAttribute, $toLocale, $toScope, 'key');
 
         $this->copyAttributeData(
             $product,
@@ -161,7 +161,7 @@ class MediaAttributeCopierSpec extends ObjectBehavior
 
         $fileInfo->getKey()->shouldNotBeCalled();
 
-        $builder->addOrReplaceProductValue($product, $toAttribute, $toLocale, $toScope, null);
+        $builder->addOrReplaceValue($product, $toAttribute, $toLocale, $toScope, null);
 
         $this->copyAttributeData(
             $product,
@@ -220,7 +220,7 @@ class MediaAttributeCopierSpec extends ObjectBehavior
 
         $toProductValue->getData()->willReturn($toMedia);
 
-        $builder->addOrReplaceProductValue($product, $toAttribute, $toLocale, $toScope, $fileInfo);
+        $builder->addOrReplaceValue($product, $toAttribute, $toLocale, $toScope, $fileInfo);
 
         $this->copyAttributeData(
             $product,

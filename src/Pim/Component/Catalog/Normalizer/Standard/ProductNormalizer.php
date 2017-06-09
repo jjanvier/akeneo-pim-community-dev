@@ -3,6 +3,7 @@
 namespace Pim\Component\Catalog\Normalizer\Standard;
 
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Model\ProductModelInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -40,7 +41,7 @@ class ProductNormalizer implements NormalizerInterface
     public function normalize($product, $format = null, array $context = [])
     {
         $data = $this->propertiesNormalizer->normalize($product, $format, $context);
-        $data[self::FIELD_ASSOCIATIONS] = $this->associationsNormalizer->normalize($product, $format, $context);
+//        $data[self::FIELD_ASSOCIATIONS] = $this->associationsNormalizer->normalize($product, $format, $context);
 
         return $data;
     }
@@ -50,6 +51,6 @@ class ProductNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof ProductInterface && 'standard' === $format;
+        return ($data instanceof ProductInterface || $data instanceof ProductModelInterface) && 'standard' === $format;
     }
 }

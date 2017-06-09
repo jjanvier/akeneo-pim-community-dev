@@ -6,6 +6,7 @@ use Akeneo\Component\StorageUtils\Event\RemoveEvent;
 use Akeneo\Component\StorageUtils\StorageEvents;
 use Pim\Bundle\CatalogBundle\Elasticsearch\ProductIndexer;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Model\ProductModelInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -52,7 +53,7 @@ class IndexProductsSubscriber implements EventSubscriberInterface
     public function indexProduct(GenericEvent $event)
     {
         $product = $event->getSubject();
-        if (!$product instanceof ProductInterface) {
+        if (!$product instanceof ProductInterface && !$product instanceof ProductModelInterface) {
             return;
         }
 
@@ -75,7 +76,7 @@ class IndexProductsSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (!current($products) instanceof ProductInterface) {
+        if (!current($products) instanceof ProductInterface && !current($products) instanceof ProductModelInterface) {
             return;
         }
 

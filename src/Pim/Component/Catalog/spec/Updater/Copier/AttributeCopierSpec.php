@@ -99,12 +99,12 @@ class AttributeCopierSpec extends ObjectBehavior
 
         $product1->getValue('fromAttributeCode', $fromLocale, $fromScope)->willReturn($fromProductValue);
         $builder
-            ->addOrReplaceProductValue($product1, $toAttribute, $toLocale, $toScope, true)
+            ->addOrReplaceValue($product1, $toAttribute, $toLocale, $toScope, true)
             ->willReturn($toProductValue);
 
         $product2->getValue('fromAttributeCode', $fromLocale, $fromScope)->willReturn(null);
         $builder
-            ->addOrReplaceProductValue($product2, $toAttribute, $toLocale, $toScope, null)
+            ->addOrReplaceValue($product2, $toAttribute, $toLocale, $toScope, null)
             ->shouldNotBeCalled();
 
         $products = [$product1, $product2];
@@ -154,12 +154,12 @@ class AttributeCopierSpec extends ObjectBehavior
 
         $product1->getValue('fromAttributeCode', $fromLocale, $fromScope)->willReturn($fromProductValue);
         $builder
-            ->addOrReplaceProductValue($product1, $toAttribute, $toLocale, $toScope, '1970-01-01')
+            ->addOrReplaceValue($product1, $toAttribute, $toLocale, $toScope, '1970-01-01')
             ->willReturn($toProductValue);
 
         $product2->getValue('fromAttributeCode', $fromLocale, $fromScope)->willReturn(null);
         $builder
-            ->addOrReplaceProductValue($product2, $toAttribute, $toLocale, $toScope, null)
+            ->addOrReplaceValue($product2, $toAttribute, $toLocale, $toScope, null)
             ->shouldNotBeCalled();
 
         $products = [$product1, $product2];
@@ -209,12 +209,12 @@ class AttributeCopierSpec extends ObjectBehavior
 
         $product1->getValue('fromAttributeCode', $fromLocale, $fromScope)->willReturn($fromProductValue);
         $builder
-            ->addOrReplaceProductValue($product1, $toAttribute, $toLocale, $toScope, 123)
+            ->addOrReplaceValue($product1, $toAttribute, $toLocale, $toScope, 123)
             ->willReturn($toProductValue);
 
         $product2->getValue('fromAttributeCode', $fromLocale, $fromScope)->willReturn(null);
         $builder
-            ->addOrReplaceProductValue($product2, $toAttribute, $toLocale, $toScope, null)
+            ->addOrReplaceValue($product2, $toAttribute, $toLocale, $toScope, null)
             ->shouldNotBeCalled();
 
         $products = [$product1, $product2];
@@ -264,12 +264,12 @@ class AttributeCopierSpec extends ObjectBehavior
 
         $product1->getValue('fromAttributeCode', $fromLocale, $fromScope)->willReturn($fromProductValue);
         $builder
-            ->addOrReplaceProductValue($product1, $toAttribute, $toLocale, $toScope, 'data')
+            ->addOrReplaceValue($product1, $toAttribute, $toLocale, $toScope, 'data')
             ->willReturn($toProductValue);
 
         $product2->getValue('fromAttributeCode', $fromLocale, $fromScope)->willReturn(null);
         $builder
-            ->addOrReplaceProductValue($product2, $toAttribute, $toLocale, $toScope, null)
+            ->addOrReplaceValue($product2, $toAttribute, $toLocale, $toScope, null)
             ->shouldNotBeCalled();
 
         $products = [$product1, $product2];

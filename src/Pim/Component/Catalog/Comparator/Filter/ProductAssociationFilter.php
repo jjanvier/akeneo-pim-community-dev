@@ -35,7 +35,7 @@ class ProductAssociationFilter implements ProductFilterInterface
     /**
      * {@inheritdoc}
      */
-    public function filter(ProductInterface $product, array $newValues)
+    public function filter($product, array $newValues)
     {
         $originalAssociations = $this->normalizer->normalize($product, 'standard');
         $hasAssociation = $this->hasNewAssociations($newValues);

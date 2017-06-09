@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Pim\Component\Catalog\Completeness\Checker\ProductValueCompleteCheckerInterface;
 use Pim\Component\Catalog\Factory\ProductValueFactory;
+use Pim\Component\Catalog\Model\CanHaveProductModelInterface;
 use Pim\Component\Catalog\Model\ChannelInterface;
 use Pim\Component\Catalog\Model\Completeness;
 use Pim\Component\Catalog\Model\CompletenessInterface;
@@ -201,7 +202,7 @@ class CompletenessCalculator implements CompletenessCalculatorInterface
         $channel = $this->channelRepository->findOneByIdentifier($channelCode);
         $locale = $this->localeRepository->findOneByIdentifier($localeCode);
 
-        $actualValues = $product->getValues();
+        $actualValues = $product->getAllValues();
         $missingAttributes = new ArrayCollection();
         $missingCount = 0;
         $requiredCount = 0;

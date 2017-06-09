@@ -53,14 +53,14 @@ class PropertiesNormalizer extends SerializerAwareNormalizer implements Normaliz
         $data = [];
 
         $data[self::FIELD_IDENTIFIER] = $product->getIdentifier();
-        $data[self::FIELD_FAMILY] = $product->getFamily() ? $product->getFamily()->getCode() : null;
-        $data[self::FIELD_GROUPS] = $this->normalizeGroups($product);
-        $data[self::FIELD_VARIANT_GROUP] = $product->getVariantGroup() ? $product->getVariantGroup()->getCode() : null;
-        $data[self::FIELD_CATEGORIES] = $product->getCategoryCodes();
-        $data[self::FIELD_ENABLED] = (bool) $product->isEnabled();
+//        $data[self::FIELD_FAMILY] = $product->getFamily() ? $product->getFamily()->getCode() : null;
+//        $data[self::FIELD_GROUPS] = $this->normalizeGroups($product);
+//        $data[self::FIELD_VARIANT_GROUP] = $product->getVariantGroup() ? $product->getVariantGroup()->getCode() : null;
+//        $data[self::FIELD_CATEGORIES] = $product->getCategoryCodes();
+//        $data[self::FIELD_ENABLED] = (bool) $product->isEnabled();
         $data[self::FIELD_VALUES] = $this->normalizeValues($product->getValues(), $format, $context);
-        $data[self::FIELD_CREATED] = $this->serializer->normalize($product->getCreated(), $format);
-        $data[self::FIELD_UPDATED] = $this->serializer->normalize($product->getUpdated(), $format);
+//        $data[self::FIELD_CREATED] = $this->serializer->normalize($product->getCreated(), $format);
+//        $data[self::FIELD_UPDATED] = $this->serializer->normalize($product->getUpdated(), $format);
 
         return $data;
     }

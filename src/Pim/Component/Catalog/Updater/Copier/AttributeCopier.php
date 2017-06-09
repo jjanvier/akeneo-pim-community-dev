@@ -98,7 +98,7 @@ class AttributeCopier extends AbstractAttributeCopier
         $fromValue = $fromProduct->getValue($fromAttribute->getCode(), $fromLocale, $fromScope);
         if (null !== $fromValue) {
             $standardData = $this->normalizer->normalize($fromValue, 'standard');
-            $this->productBuilder->addOrReplaceProductValue(
+            $this->productBuilder->addOrReplaceValue(
                 $toProduct,
                 $toAttribute,
                 $toLocale,
