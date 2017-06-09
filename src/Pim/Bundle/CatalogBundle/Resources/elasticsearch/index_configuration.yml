@@ -175,13 +175,6 @@ mappings:
                     mapping:
                         type: 'boolean'
 
-    pim_catalog_product_model:
-        properties:
-            created:
-                type: 'date'
-            updated:
-                type: 'date'
-
 settings:
     analysis:
         normalizer:

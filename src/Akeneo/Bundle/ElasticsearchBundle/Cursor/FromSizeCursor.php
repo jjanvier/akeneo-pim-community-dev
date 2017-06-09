@@ -35,7 +35,7 @@ class FromSizeCursor extends AbstractCursor implements CursorInterface
     /**
      * @var CursorableRepositoryInterface
      */
-    private $productModelRepository;
+    public $productModelRepository;
 
     /**
      * @param Client                        $esClient

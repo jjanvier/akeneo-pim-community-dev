@@ -57,6 +57,10 @@ class ProductDatasource extends Datasource
         ];
         $rows = ['totalRecords' => $productCursor->count(), 'data' => []];
 
+
+        // 1. create model normalizer (format datagrid)
+        // 2. use normalizer registry
+
         foreach ($productCursor as $product) {
             $normalizedProduct = array_merge(
                 $this->normalizer->normalize($product, 'datagrid', $context),

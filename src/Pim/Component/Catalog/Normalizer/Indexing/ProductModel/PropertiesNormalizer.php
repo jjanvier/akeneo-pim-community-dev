@@ -27,7 +27,14 @@ class PropertiesNormalizer extends SerializerAwareNormalizer implements Normaliz
         $data['parent'] = $product->hasModel()
             ? $product->getModel()->getIdentifier() : null;
 
-
+        $data[StandardPropertiesNormalizer::FIELD_CREATED] = $this->serializer->normalize(
+            $product->getCreated(),
+            $format
+        );
+        $data[StandardPropertiesNormalizer::FIELD_UPDATED] = $this->serializer->normalize(
+            $product->getUpdated(),
+            $format
+        );
 
         $data[StandardPropertiesNormalizer::FIELD_VALUES] = !$product->getValues()->isEmpty()
             ? $this->serializer->normalize($product->getValues(), 'indexing', $context) : [];

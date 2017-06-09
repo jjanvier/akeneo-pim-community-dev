@@ -50,22 +50,6 @@ class ProductModel implements ProductModelInterface
     /** @var \Datetime $created */
     protected $created;
 
-    /**
-     * @param \Datetime $created
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-    }
-
-    /**
-     * @param \Datetime $updated
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-    }
-
     /** @var \Datetime $updated */
     protected $updated;
 
@@ -363,4 +347,35 @@ class ProductModel implements ProductModelInterface
         return $codes;
     }
 
+    /**
+     * @param \Datetime $created
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @param \Datetime $updated
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
 }
