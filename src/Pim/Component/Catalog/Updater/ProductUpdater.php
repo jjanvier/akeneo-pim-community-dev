@@ -8,7 +8,9 @@ use Akeneo\Component\StorageUtils\Exception\UnknownPropertyException;
 use Akeneo\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Akeneo\Component\StorageUtils\Updater\PropertySetterInterface;
 use Doctrine\Common\Util\ClassUtils;
+use Pim\Component\Catalog\Event\FulfilledValueEvent;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * Updates a product
@@ -178,6 +180,11 @@ class ProductUpdater implements ObjectUpdaterInterface
                 if ($isFamilyAttribute || $providedData || $hasValue) {
                     $options = ['locale' => $data['locale'], 'scope' => $data['scope']];
                     $this->propertySetter->setData($product, $code, $data['data'], $options);
+
+                    if (null !== $product->getId()) {
+                        $productValue = $product->getValue($code, $data['locale'], $data['scope']);
+                        $product->registerEvent(new FulfilledValueEvent($product->getId(), $productValue));
+                    }
                 }
             }
         }

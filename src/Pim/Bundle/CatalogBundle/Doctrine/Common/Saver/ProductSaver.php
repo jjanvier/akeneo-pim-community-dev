@@ -7,7 +7,10 @@ use Akeneo\Component\StorageUtils\Saver\SaverInterface;
 use Akeneo\Component\StorageUtils\StorageEvents;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Util\ClassUtils;
+use Pim\Component\Catalog\Event\ProductCompletedForChannelAndLocale;
+use Pim\Component\Catalog\Event\ProductUncompletedForChannelAndLocale;
 use Pim\Component\Catalog\Manager\CompletenessManager;
+use Pim\Component\Catalog\Model\CompletenessInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -52,6 +55,8 @@ class ProductSaver implements SaverInterface, BulkSaverInterface
     }
 
     /**
+     * @param ProductInterface $product
+     *
      * {@inheritdoc}
      */
     public function save($product, array $options = [])
@@ -62,12 +67,49 @@ class ProductSaver implements SaverInterface, BulkSaverInterface
 
         $this->eventDispatcher->dispatch(StorageEvents::PRE_SAVE, new GenericEvent($product, $options));
 
+        $completedPerChannelLocale = [];
+        foreach ($product->getCompletenesses() as $completeness) {
+            $completedPerChannelLocale[$completeness->getChannel()->getCode()][$completeness->getLocale()->getCode()] =
+                100 === $completeness->getRatio();
+        }
+
         $this->completenessManager->schedule($product);
         $this->completenessManager->generateMissingForProduct($product);
+
+        foreach ($product->getCompletenesses() as $completeness) {
+            $oldCompletedPerChannelLocale = $completedPerChannelLocale[$completeness->getChannel()->getCode(
+            )][$completeness->getLocale()->getCode()];
+            $newCompletedPerChannelLocale = $completeness->getRatio() === 100;
+            if (true === $oldCompletedPerChannelLocale && false === $newCompletedPerChannelLocale) {
+                $product->registerEvent(
+                    new ProductUncompletedForChannelAndLocale(
+                        $product->getId(),
+                        $completeness->getChannel()->getId(),
+                        $completeness->getLocale()->getId()
+                    )
+                );
+            } elseif (false === $oldCompletedPerChannelLocale && true === $newCompletedPerChannelLocale) {
+                $product->registerEvent(
+                    new ProductCompletedForChannelAndLocale(
+                        $product->getId(),
+                        $completeness->getChannel()->getId(),
+                        $completeness->getLocale()->getId()
+                    )
+                );
+            }
+        }
+
         $this->uniqueDataSynchronizer->synchronize($product);
 
         $this->objectManager->persist($product);
+
+        // TODO: store the events
+
         $this->objectManager->flush();
+
+        foreach ($product->getEvents() as $event) {
+            $this->eventDispatcher->dispatch(get_class($event), $event);
+        }
 
         $this->eventDispatcher->dispatch(StorageEvents::POST_SAVE, new GenericEvent($product, $options));
     }

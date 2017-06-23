@@ -25,6 +25,10 @@ interface ProductInterface extends
     ReferableInterface,
     CategoryAwareInterface
 {
+    public function registerEvent($event);
+
+    public function getEvents();
+
     /**
      * Get the ID of the product
      *

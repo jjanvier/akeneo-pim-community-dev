@@ -81,6 +81,7 @@ abstract class AbstractProduct implements ProductInterface
 
     /** @var ArrayCollection */
     protected $uniqueData;
+    protected $events;
 
     /**
      * Constructor
@@ -93,6 +94,7 @@ abstract class AbstractProduct implements ProductInterface
         $this->groups = new ArrayCollection();
         $this->associations = new ArrayCollection();
         $this->uniqueData = new ArrayCollection();
+        $this->events = [];
     }
 
     /**
@@ -690,5 +692,15 @@ abstract class AbstractProduct implements ProductInterface
         $this->uniqueData->add($uniqueData);
 
         return $this;
+    }
+
+    public function registerEvent($event)
+    {
+        $this->events[] = $event;
+    }
+
+    public function getEvents()
+    {
+        return $this->events;
     }
 }
