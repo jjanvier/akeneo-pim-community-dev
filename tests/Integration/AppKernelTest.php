@@ -1,5 +1,10 @@
 <?php
 
+namespace Akeneo\Test\Integration;
+
+use Acme\Bundle\AppBundle\AcmeAppBundle;
+use Akeneo\Test\IntegrationTestsBundle\AkeneoIntegrationTestsBundle;
+
 /**
  * App kernel for the integration tests.
  *
@@ -7,7 +12,7 @@
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class AppKernelTest extends AppKernel
+class AppKernelTest extends \AppKernel
 {
     /**
      * {@inheritdoc}
@@ -15,8 +20,8 @@ class AppKernelTest extends AppKernel
     protected function registerProjectBundles(): array
     {
         return [
-            new Acme\Bundle\AppBundle\AcmeAppBundle(),
-            new Akeneo\Test\IntegrationTestsBundle\AkeneoIntegrationTestsBundle()
+            new AcmeAppBundle(),
+            new AkeneoIntegrationTestsBundle()
         ];
     }
 

@@ -36,7 +36,7 @@ abstract class TestCase extends KernelTestCase
         $authenticator = new SystemUserAuthenticator(static::$kernel->getContainer());
         $authenticator->createSystemUser();
 
-        $this->testKernel = new \AppKernelTest('test', false);
+        $this->testKernel = new AppKernelTest('test', false);
         $this->testKernel->boot();
 
         $this->catalog = $this->testKernel->getContainer()->get('akeneo_integration_tests.configuration.catalog');

@@ -20,7 +20,7 @@
             "Akeneo\\Test\\Integration\\": "tests/Integration/",
             "Akeneo\\Test\\Acceptance\\": "tests/Acceptance/"
         },
-        "classmap": [ "app/AppKernel.php", "app/AppCache.php", "tests/Integration/AppKernelTest.php" ]
+        "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
     "require": {
         "php": ">=7.1.0",
