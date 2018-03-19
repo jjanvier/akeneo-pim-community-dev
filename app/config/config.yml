@@ -64,3 +64,12 @@ pim_reference_data:
     color:
         class: Acme\Bundle\AppBundle\Entity\Color
         type: simple
+
+akeneo_storage_utils:
+    mapping_overrides:
+        -
+            original: Pim\Component\Catalog\Model\Product
+            override: Acme\Bundle\AppBundle\Entity\Product
+        -
+            original: Pim\Component\Catalog\Model\VariantProduct
+            override: Acme\Bundle\AppBundle\Entity\VariantProduct

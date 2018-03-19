@@ -1,0 +1,440 @@
+{
+    "name": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct",
+    "namespace": "Acme\\Bundle\\AppBundle\\Entity",
+    "rootEntityName": "Pim\\Component\\Catalog\\Model\\AbstractProduct",
+    "customGeneratorDefinition": null,
+    "customRepositoryClassName": "Pim\\Bundle\\CatalogBundle\\Doctrine\\ORM\\Repository\\VariantProductRepository",
+    "isMappedSuperclass": false,
+    "isEmbeddedClass": false,
+    "parentClasses": [
+        "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+    ],
+    "subClasses": [],
+    "embeddedClasses": [],
+    "namedQueries": [],
+    "namedNativeQueries": [],
+    "sqlResultSetMappings": [],
+    "identifier": [
+        "id"
+    ],
+    "inheritanceType": 3,
+    "generatorType": 4,
+    "fieldMappings": {
+        "id": {
+            "fieldName": "id",
+            "type": "integer",
+            "id": true,
+            "columnName": "id",
+            "inherited": "Pim\\Component\\Catalog\\Model\\AbstractProduct",
+            "declared": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "enabled": {
+            "fieldName": "enabled",
+            "type": "boolean",
+            "columnName": "is_enabled",
+            "inherited": "Pim\\Component\\Catalog\\Model\\AbstractProduct",
+            "declared": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "identifier": {
+            "fieldName": "identifier",
+            "type": "string",
+            "length": 255,
+            "unique": true,
+            "nullable": false,
+            "columnName": "identifier",
+            "inherited": "Pim\\Component\\Catalog\\Model\\AbstractProduct",
+            "declared": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "rawValues": {
+            "fieldName": "rawValues",
+            "type": "native_json",
+            "columnName": "raw_values",
+            "inherited": "Pim\\Component\\Catalog\\Model\\AbstractProduct",
+            "declared": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "created": {
+            "fieldName": "created",
+            "type": "datetime",
+            "columnName": "created",
+            "inherited": "Pim\\Component\\Catalog\\Model\\AbstractProduct",
+            "declared": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "updated": {
+            "fieldName": "updated",
+            "type": "datetime",
+            "columnName": "updated",
+            "inherited": "Pim\\Component\\Catalog\\Model\\AbstractProduct",
+            "declared": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "test": {
+            "fieldName": "test",
+            "type": "text",
+            "columnName": "test"
+        }
+    },
+    "fieldNames": {
+        "id": "id",
+        "is_enabled": "enabled",
+        "identifier": "identifier",
+        "raw_values": "rawValues",
+        "created": "created",
+        "updated": "updated",
+        "test": "test"
+    },
+    "columnNames": {
+        "id": "id",
+        "enabled": "is_enabled",
+        "identifier": "identifier",
+        "rawValues": "raw_values",
+        "created": "created",
+        "updated": "updated",
+        "test": "test"
+    },
+    "discriminatorValue": "variant_product",
+    "discriminatorMap": {
+        "product": "Acme\\Bundle\\AppBundle\\Entity\\Product",
+        "variant_product": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct"
+    },
+    "discriminatorColumn": {
+        "name": "product_type",
+        "type": "string",
+        "length": null,
+        "columnDefinition": null,
+        "fieldName": "product_type"
+    },
+    "table": {
+        "name": "pim_catalog_product"
+    },
+    "lifecycleCallbacks": [],
+    "entityListeners": [],
+    "associationMappings": {
+        "parent": {
+            "fieldName": "parent",
+            "targetEntity": "Pim\\Component\\Catalog\\Model\\ProductModel",
+            "inversedBy": "products",
+            "joinColumns": [
+                {
+                    "referencedColumnName": "id",
+                    "name": "product_model_id",
+                    "onDelete": "CASCADE"
+                }
+            ],
+            "type": 2,
+            "mappedBy": null,
+            "isOwningSide": true,
+            "sourceEntity": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct",
+            "fetch": 2,
+            "cascade": [],
+            "isCascadeRemove": false,
+            "isCascadePersist": false,
+            "isCascadeRefresh": false,
+            "isCascadeMerge": false,
+            "isCascadeDetach": false,
+            "sourceToTargetKeyColumns": {
+                "product_model_id": "id"
+            },
+            "joinColumnFieldNames": {
+                "product_model_id": "product_model_id"
+            },
+            "targetToSourceKeyColumns": {
+                "id": "product_model_id"
+            },
+            "orphanRemoval": false
+        },
+        "familyVariant": {
+            "fieldName": "familyVariant",
+            "targetEntity": "Pim\\Component\\Catalog\\Model\\FamilyVariant",
+            "joinColumns": [
+                {
+                    "referencedColumnName": "id",
+                    "name": "family_variant_id"
+                }
+            ],
+            "type": 2,
+            "mappedBy": null,
+            "inversedBy": null,
+            "isOwningSide": true,
+            "sourceEntity": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct",
+            "fetch": 2,
+            "cascade": [],
+            "isCascadeRemove": false,
+            "isCascadePersist": false,
+            "isCascadeRefresh": false,
+            "isCascadeMerge": false,
+            "isCascadeDetach": false,
+            "sourceToTargetKeyColumns": {
+                "family_variant_id": "id"
+            },
+            "joinColumnFieldNames": {
+                "family_variant_id": "family_variant_id"
+            },
+            "targetToSourceKeyColumns": {
+                "id": "family_variant_id"
+            },
+            "orphanRemoval": false
+        },
+        "associations": {
+            "fieldName": "associations",
+            "targetEntity": "Pim\\Component\\Catalog\\Model\\Association",
+            "mappedBy": "owner",
+            "cascade": [
+                "persist",
+                "refresh",
+                "detach"
+            ],
+            "type": 4,
+            "inversedBy": null,
+            "isOwningSide": false,
+            "sourceEntity": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct",
+            "fetch": 2,
+            "isCascadeRemove": false,
+            "isCascadePersist": true,
+            "isCascadeRefresh": true,
+            "isCascadeMerge": false,
+            "isCascadeDetach": true,
+            "orphanRemoval": false
+        },
+        "completenesses": {
+            "fieldName": "completenesses",
+            "targetEntity": "Pim\\Component\\Catalog\\Model\\Completeness",
+            "mappedBy": "product",
+            "cascade": [
+                "remove",
+                "persist",
+                "refresh",
+                "detach"
+            ],
+            "type": 4,
+            "inversedBy": null,
+            "isOwningSide": false,
+            "sourceEntity": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct",
+            "fetch": 2,
+            "isCascadeRemove": true,
+            "isCascadePersist": true,
+            "isCascadeRefresh": true,
+            "isCascadeMerge": false,
+            "isCascadeDetach": true,
+            "orphanRemoval": false
+        },
+        "uniqueData": {
+            "fieldName": "uniqueData",
+            "targetEntity": "Pim\\Component\\Catalog\\Model\\ProductUniqueData",
+            "mappedBy": "product",
+            "cascade": [
+                "remove",
+                "persist",
+                "refresh",
+                "detach"
+            ],
+            "type": 4,
+            "inversedBy": null,
+            "isOwningSide": false,
+            "sourceEntity": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct",
+            "fetch": 2,
+            "isCascadeRemove": true,
+            "isCascadePersist": true,
+            "isCascadeRefresh": true,
+            "isCascadeMerge": false,
+            "isCascadeDetach": true,
+            "orphanRemoval": false
+        },
+        "family": {
+            "fieldName": "family",
+            "targetEntity": "Pim\\Bundle\\CatalogBundle\\Entity\\Family",
+            "joinColumns": [
+                {
+                    "referencedColumnName": "id",
+                    "name": "family_id",
+                    "onDelete": "SET NULL"
+                }
+            ],
+            "type": 2,
+            "mappedBy": null,
+            "inversedBy": null,
+            "isOwningSide": true,
+            "sourceEntity": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct",
+            "fetch": 2,
+            "cascade": [],
+            "isCascadeRemove": false,
+            "isCascadePersist": false,
+            "isCascadeRefresh": false,
+            "isCascadeMerge": false,
+            "isCascadeDetach": false,
+            "sourceToTargetKeyColumns": {
+                "family_id": "id"
+            },
+            "joinColumnFieldNames": {
+                "family_id": "family_id"
+            },
+            "targetToSourceKeyColumns": {
+                "id": "family_id"
+            },
+            "orphanRemoval": false
+        },
+        "groups": {
+            "fieldName": "groups",
+            "targetEntity": "Pim\\Bundle\\CatalogBundle\\Entity\\Group",
+            "joinTable": {
+                "name": "pim_catalog_group_product",
+                "joinColumns": [
+                    {
+                        "referencedColumnName": "id",
+                        "name": "product_id",
+                        "onDelete": "CASCADE"
+                    }
+                ],
+                "inverseJoinColumns": [
+                    {
+                        "referencedColumnName": "id",
+                        "name": "group_id",
+                        "onDelete": "CASCADE"
+                    }
+                ]
+            },
+            "inversedBy": "products",
+            "type": 8,
+            "mappedBy": null,
+            "isOwningSide": true,
+            "sourceEntity": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct",
+            "fetch": 2,
+            "cascade": [],
+            "isCascadeRemove": false,
+            "isCascadePersist": false,
+            "isCascadeRefresh": false,
+            "isCascadeMerge": false,
+            "isCascadeDetach": false,
+            "joinTableColumns": [
+                "product_id",
+                "group_id"
+            ],
+            "isOnDeleteCascade": true,
+            "relationToSourceKeyColumns": {
+                "product_id": "id"
+            },
+            "relationToTargetKeyColumns": {
+                "group_id": "id"
+            },
+            "orphanRemoval": false
+        },
+        "categories": {
+            "fieldName": "categories",
+            "targetEntity": "Pim\\Bundle\\CatalogBundle\\Entity\\Category",
+            "joinTable": {
+                "name": "pim_catalog_category_product",
+                "joinColumns": [
+                    {
+                        "referencedColumnName": "id",
+                        "name": "product_id",
+                        "onDelete": "CASCADE"
+                    }
+                ],
+                "inverseJoinColumns": [
+                    {
+                        "referencedColumnName": "id",
+                        "name": "category_id",
+                        "onDelete": "CASCADE"
+                    }
+                ]
+            },
+            "inversedBy": "products",
+            "type": 8,
+            "mappedBy": null,
+            "isOwningSide": true,
+            "sourceEntity": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct",
+            "fetch": 2,
+            "cascade": [],
+            "isCascadeRemove": false,
+            "isCascadePersist": false,
+            "isCascadeRefresh": false,
+            "isCascadeMerge": false,
+            "isCascadeDetach": false,
+            "joinTableColumns": [
+                "product_id",
+                "category_id"
+            ],
+            "isOnDeleteCascade": true,
+            "relationToSourceKeyColumns": {
+                "product_id": "id"
+            },
+            "relationToTargetKeyColumns": {
+                "category_id": "id"
+            },
+            "orphanRemoval": false
+        }
+    },
+    "isIdentifierComposite": false,
+    "containsForeignIdentifier": false,
+    "idGenerator": {},
+    "sequenceGeneratorDefinition": null,
+    "tableGeneratorDefinition": null,
+    "changeTrackingPolicy": 2,
+    "isVersioned": null,
+    "versionField": null,
+    "cache": null,
+    "reflClass": {
+        "name": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct"
+    },
+    "isReadOnly": false,
+    "reflFields": {
+        "id": {
+            "name": "id",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "enabled": {
+            "name": "enabled",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "identifier": {
+            "name": "identifier",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "rawValues": {
+            "name": "rawValues",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "created": {
+            "name": "created",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "updated": {
+            "name": "updated",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "associations": {
+            "name": "associations",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "completenesses": {
+            "name": "completenesses",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "uniqueData": {
+            "name": "uniqueData",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "family": {
+            "name": "family",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "groups": {
+            "name": "groups",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "categories": {
+            "name": "categories",
+            "class": "Pim\\Component\\Catalog\\Model\\AbstractProduct"
+        },
+        "test": {
+            "name": "test",
+            "class": "Acme\\Bundle\\AppBundle\\Entity\\VariantProduct"
+        },
+        "parent": {
+            "name": "parent",
+            "class": "Pim\\Component\\Catalog\\Model\\VariantProduct"
+        },
+        "familyVariant": {
+            "name": "familyVariant",
+            "class": "Pim\\Component\\Catalog\\Model\\VariantProduct"
+        }
+    }
+}

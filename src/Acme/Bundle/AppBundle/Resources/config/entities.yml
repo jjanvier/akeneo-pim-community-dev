@@ -1,3 +1,5 @@
 parameters:
-    acme_app.entity.color.class:            Acme\Bundle\AppBundle\Entity\Color
-    acme_app.entity.fabric.class:           Acme\Bundle\AppBundle\Entity\Fabric
+    acme_app.entity.color.class: Acme\Bundle\AppBundle\Entity\Color
+    acme_app.entity.fabric.class: Acme\Bundle\AppBundle\Entity\Fabric
+    pim_catalog.entity.product.class: Acme\Bundle\AppBundle\Entity\Product
+    pim_catalog.entity.variant_product.class: Acme\Bundle\AppBundle\Entity\VariantProduct

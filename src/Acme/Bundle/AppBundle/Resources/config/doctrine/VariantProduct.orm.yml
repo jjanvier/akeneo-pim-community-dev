@@ -1,0 +1,5 @@
+Acme\Bundle\AppBundle\Entity\VariantProduct:
+    type: entity
+    fields:
+        test:
+            type: text
