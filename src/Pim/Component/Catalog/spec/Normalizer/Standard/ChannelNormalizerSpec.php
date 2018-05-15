@@ -7,7 +7,7 @@ use Akeneo\Tool\Bundle\MeasureBundle\Family\WeightFamilyInterface;
 use Akeneo\Tool\Component\Classification\Model\CategoryInterface;
 use PhpSpec\ObjectBehavior;
 use Pim\Component\Catalog\Model\ChannelInterface;
-use Pim\Component\Catalog\Model\CurrencyInterface;
+use Akeneo\Channel\Component\Model\CurrencyInterface;
 use Prophecy\Argument;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 

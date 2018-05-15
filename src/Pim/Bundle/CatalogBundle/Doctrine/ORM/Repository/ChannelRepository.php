@@ -2,8 +2,8 @@
 
 namespace Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository;
 
+use Akeneo\Channel\Component\Model\CurrencyInterface;
 use Doctrine\ORM\EntityRepository;
-use Pim\Component\Catalog\Model\CurrencyInterface;
 use Pim\Component\Catalog\Repository\ChannelRepositoryInterface;
 
 /**
